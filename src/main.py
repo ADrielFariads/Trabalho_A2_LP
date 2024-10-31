@@ -17,7 +17,7 @@ player = Player(window_width/2, window_height/2, 100, 5)
 player_group = pygame.sprite.GroupSingle(player)
 
 while running:
-    delta_time = clock.tick(60)/1000
+    delta_time = clock.tick(60)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
