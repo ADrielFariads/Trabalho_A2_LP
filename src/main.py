@@ -27,7 +27,7 @@ while running:
     player_group.update(keys, display_surface.get_rect())
 
 
-    display_surface.fill((50, 50, 50))
+    display_surface.fill((30, 30, 30))
     player_group.draw(display_surface)
 
     pygame.display.flip()
