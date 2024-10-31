@@ -8,7 +8,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (100, 100)).convert_alpha()
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
-        self.health_bar_lenght = 400
+        self.health_bar_lenght = 1000
 
         #player atributes 
         self.speed = speed
@@ -43,15 +43,17 @@ class Player(pygame.sprite.Sprite):
         if self.current_health > 0:
             self.current_health -= damage
 
-        if self.current_health <= 0 :
+        if self.current_health <= 0:
             self.current_health = 0
-
 
     def get_healed(self, heal):
         if self.current_health < self.max_health:
             self.current_health += heal
         if self.current_health >= self.max_health:
             self.current_health = self.max_health
+
+    def health_bar(self, surface):
+        pygame.draw.rect(surface, (255, 0, 0), (10, 10, self.current_health, 10))
 
 
         
