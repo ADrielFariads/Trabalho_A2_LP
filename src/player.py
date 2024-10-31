@@ -4,7 +4,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, posx, posy, health, speed):
         super().__init__()
         #animation
-        
+        self.image = pygame.image.load("assets/images/testimage01.png").convert_alpha()
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
         self.animation_time = 100
