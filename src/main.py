@@ -22,12 +22,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+        #test health bar
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
-                player.get_damaged(10)
+                player.get_damaged(50)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
-                player.get_healed(10)
+                player.get_healed(50)
 
     keys = pygame.key.get_pressed()
     player_group.update(keys, display_surface.get_rect())
