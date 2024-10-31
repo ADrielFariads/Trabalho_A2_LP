@@ -14,7 +14,7 @@ class Player(pygame.sprite.Sprite):
         self.health = health
         
         
-    def update(self, keys): #player moviment 
+    def update(self, keys, screen_rect): #player moviment 
         direction = pygame.math.Vector2(0,0)
 
         if keys[pygame.K_a]:
@@ -31,5 +31,8 @@ class Player(pygame.sprite.Sprite):
 
         self.position += direction * self.speed
         self.rect.center = self.position
+
+        self.rect.clamp_ip(screen_rect)
+        self.position = pygame.math.Vector2(self.rect.center)
 
         

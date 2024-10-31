@@ -24,10 +24,10 @@ while running:
             running = False
 
     keys = pygame.key.get_pressed()
-    player_group.update(keys)
+    player_group.update(keys, display_surface.get_rect())
 
 
-    display_surface.fill((0, 0, 0))
+    display_surface.fill((50, 50, 50))
     player_group.draw(display_surface)
 
     pygame.display.flip()
