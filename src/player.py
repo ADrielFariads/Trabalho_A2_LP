@@ -3,11 +3,17 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, posx, posy, health, speed):
         super().__init__()
-
+        #animation
+        
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
+        self.animation_time = 100
+        self.time_counter = 0
+
+        #player atributes 
         self.speed = speed
         self.health = health
+        
         
     def update(self, keys): #player moviment 
         direction = pygame.math.Vector2(0,0)
