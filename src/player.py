@@ -5,10 +5,9 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         #animation
         self.image = pygame.image.load("assets/images/testimage01.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (50, 50)).convert_alpha()
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
-        self.animation_time = 100
-        self.time_counter = 0
 
         #player atributes 
         self.speed = speed
