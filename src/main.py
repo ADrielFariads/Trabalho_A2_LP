@@ -12,7 +12,7 @@ display_surface = pygame.display.set_mode((window_width, window_height))
 clock = pygame.time.Clock()
 running = True
 
-player = Player(window_width/2, window_height/2, 1000, 5)
+player = Player(window_width/2, window_height/2, 500, 5)
 
 player_group = pygame.sprite.GroupSingle(player)
 
