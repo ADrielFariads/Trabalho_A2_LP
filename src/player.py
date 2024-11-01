@@ -4,8 +4,9 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, posx, posy, health, speed):
         super().__init__()
         #animation
-        self.image = pygame.image.load("assets/images/testimage01.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100, 100)).convert_alpha()
+        #loads the image
+        self.image = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+        
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
         self.health_bar_lenght = 500
