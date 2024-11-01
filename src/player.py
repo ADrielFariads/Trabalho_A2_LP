@@ -9,12 +9,14 @@ class Player(pygame.sprite.Sprite):
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
         self.health_bar_lenght = 500
+        self.health_change_speed = 1
+        self.target_health = health
 
         #player atributes 
         self.speed = speed
         self.max_health = health
         self.current_health = self.max_health
-        self.health_ratio = self.current_health/self.max_health
+        self.health_ratio = self.current_health/self.health_bar_lenght
         
         
         
@@ -39,22 +41,40 @@ class Player(pygame.sprite.Sprite):
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
-    def get_damaged(self, damage):
-        if self.current_health > 0:
-            self.current_health -= damage
 
-        if self.current_health <= 0:
-            self.current_health = 0
+    def get_damaged(self, damage):
+        if self.target_health > 0:
+            self.target_health -= damage
+
+        if self.target_health <= 0:
+            self.target_health = 0
 
     def get_healed(self, heal):
-        if self.current_health < self.max_health:
-            self.current_health += heal
-        if self.current_health >= self.max_health:
-            self.current_health = self.max_health
+        if self.target_health < self.max_health:
+            self.target_health += heal
+
+        if self.target_health >= self.max_health:
+            self.target_health = self.max_health
 
     def health_bar(self, surface):
-        pygame.draw.rect(surface, (255, 0, 0), (10, 10, self.current_health/self.health_ratio, 15))
+        transition_width = 0
+        transition_color = (255, 255, 255)
+        
+        if self.current_health < self.target_health:
+            self.current_health += self.health_change_speed
+            transition_width = int((self.target_health-self.current_health)/self.health_ratio)
+            transition_color = (0, 255, 0)
+        
+        if self.current_health > self.target_health:
+            self.current_health -= self.health_change_speed
+            transition_width = int((self.target_health-self.current_health)/self.health_ratio)
+            transition_color = (255, 255, 0)      
+
+        health_bar_rect = pygame.Rect(10, 10, self.current_health/self.health_ratio, 15)
+        transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
+
+        pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)
+        pygame.draw.rect(surface, transition_color, transition_bar_rect)
         pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_lenght, 15), 4)
-
-
+        
         
