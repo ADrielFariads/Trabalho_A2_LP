@@ -3,10 +3,33 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, posx, posy, health, speed):
         super().__init__()
-        #animation
         #loads the image
-        self.image = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+        sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
         
+
+        #calculating the frame size (just for idle image, remember to refactor a function later)
+        frames_x_axis = 4
+        frame_widht = sprite_sheet.get_width() // frames_x_axis
+        frame_height = sprite_sheet.get_height()
+
+        #generating frames
+        self.frames = []
+        for each in range(frames_x_axis):
+            frame = sprite_sheet.subsurface((each * frame_widht, 0, frame_widht, frame_height))
+            scale_factor = 2
+            redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht)*scale_factor, int(frame_height)*scale_factor))
+            self.frames.append(redimentioned_frame)
+        
+        
+
+        #initial frame setting
+        self.current_frame_index = 0
+        self.animation_speed = 10
+        self.frame_counter = 0
+        self.image = self.frames[self.current_frame_index]
+
+
+        #position logic
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
         self.health_bar_lenght = 500
@@ -21,9 +44,18 @@ class Player(pygame.sprite.Sprite):
         
         
         
-    def update(self, keys, screen_rect): #player moviment 
-        direction = pygame.math.Vector2(0,0)
+    def update(self, keys, screen_rect): 
+        #animation logic
 
+        self.frame_counter += 1
+        if self.frame_counter >= self.animation_speed:
+            self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
+            self.image = self.frames[self.current_frame_index]
+            self.frame_counter = 0
+
+
+        #movement logic
+        direction = pygame.math.Vector2(0,0)
         if keys[pygame.K_a]:
             direction.x = -1
         if keys[pygame.K_d]:
