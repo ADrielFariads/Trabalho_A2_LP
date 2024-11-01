@@ -4,18 +4,18 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, posx, posy, health, speed):
         super().__init__()
         #loads the image
-        sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+        self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
         
 
         #calculating the frame size (just for idle image, remember to refactor a function later)
         frames_x_axis = 4
-        frame_widht = sprite_sheet.get_width() // frames_x_axis
-        frame_height = sprite_sheet.get_height()
+        frame_widht = self.sprite_sheet.get_width() // frames_x_axis
+        frame_height = self.sprite_sheet.get_height()
 
         #generating frames
         self.frames = []
         for each in range(frames_x_axis):
-            frame = sprite_sheet.subsurface((each * frame_widht, 0, frame_widht, frame_height))
+            frame = self.sprite_sheet.subsurface((each * frame_widht, 0, frame_widht, frame_height))
             scale_factor = 2
             redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht)*scale_factor, int(frame_height)*scale_factor))
             self.frames.append(redimentioned_frame)
@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
 
         #initial frame setting
         self.current_frame_index = 0
-        self.animation_speed = 10
+        self.animation_speed = 10 #bigger values for a smothier animation
         self.frame_counter = 0
         self.image = self.frames[self.current_frame_index]
 
@@ -42,11 +42,36 @@ class Player(pygame.sprite.Sprite):
         self.current_health = self.max_health
         self.health_ratio = self.current_health/self.health_bar_lenght
         
-        
-        
-    def update(self, keys, screen_rect): 
-        #animation logic
 
+    def load_frames(self, sprite_sheet, frames_x):
+        """Extract and scale frames from the given sprite sheet."""
+        frames = []
+        frame_width = sprite_sheet.get_width() // frames_x
+        frame_height = sprite_sheet.get_height()
+
+        # Define the scaling factor
+        scale_factor = 2
+        new_frame_width = int(frame_width * scale_factor)
+        new_frame_height = int(frame_height * scale_factor)
+
+        for x in range(frames_x):
+            frame = sprite_sheet.subsurface((x * frame_width, 0, frame_width, frame_height))
+            scaled_frame = pygame.transform.scale(frame, (new_frame_width, new_frame_height))
+            frames.append(scaled_frame)
+        return frames
+
+        
+    def set_action(self, action="idle"):#action setter for animation
+        if action == "idle":
+            self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+            self.frames = self.load_frames(self.sprite_sheet, 4)
+
+        
+
+################# UPDATE METHOD ##########################################################   
+    def update(self, keys, screen_rect):
+
+        #animation logic
         self.frame_counter += 1
         if self.frame_counter >= self.animation_speed:
             self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
@@ -68,13 +93,16 @@ class Player(pygame.sprite.Sprite):
         if direction.length() > 0:
             direction = direction.normalize()
 
+        else:
+            self.set_action("idle")
+
         self.position += direction * self.speed
         self.rect.center = self.position
 
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
-
+################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
         if self.target_health > 0:
             self.target_health -= damage
@@ -89,7 +117,7 @@ class Player(pygame.sprite.Sprite):
         if self.target_health >= self.max_health:
             self.target_health = self.max_health
 
-    def health_bar(self, surface):
+    def health_bar(self, surface): #health bar 
         transition_width = 0
         transition_color = (255, 255, 255)
         
@@ -106,8 +134,10 @@ class Player(pygame.sprite.Sprite):
         health_bar_rect = pygame.Rect(10, 10, self.current_health/self.health_ratio, 15)
         transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
 
-        pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)
-        pygame.draw.rect(surface, transition_color, transition_bar_rect)
-        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_lenght, 15), 4)
+        pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health
+        pygame.draw.rect(surface, transition_color, transition_bar_rect) #heal/damage animation
+        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_lenght, 15), 2) #white rect arround the health
+
+
         
         
