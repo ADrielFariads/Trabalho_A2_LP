@@ -1,6 +1,7 @@
 import pygame 
 
 from player import Player
+from guns import Gun
 
 #initial setup
 
@@ -15,8 +16,10 @@ running = True
 
 player = Player(window_width/2, window_height/2, 500, 5)
 
-player_group = pygame.sprite.GroupSingle(player)
+gun = Gun(player, "assets\\images\\Guns\\1_1.png", 10, 2, "bullet")
 
+player_group = pygame.sprite.GroupSingle(player)
+gun_group = pygame.sprite.GroupSingle(gun)
 
 
 #game loop
@@ -37,12 +40,16 @@ while running:
 
     keys = pygame.key.get_pressed()
     
+    #updating methods
     player_group.update(keys, display_surface.get_rect())
+    gun_group.update()
 
 
+    #drawning the objects in the screen
     display_surface.fill((30, 30, 30))
     player.health_bar(display_surface)
     player_group.draw(display_surface)
+    gun_group.draw(display_surface)
 
     pygame.display.flip()
     

@@ -78,9 +78,11 @@ class Player(pygame.sprite.Sprite):
             self.sprite_sheet = pygame.image.load("assets/images/Player/Run1.png")
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
-        
-
-################# UPDATE METHOD ##########################################################   
+################# GETTER METHODS ###################################################
+    def get_position(self):
+        return self.position
+    
+################# UPDATE METHOD #################################################### 
     def update(self, keys, screen_rect):
 
         #animation logic
