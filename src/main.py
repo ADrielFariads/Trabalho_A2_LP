@@ -11,10 +11,12 @@ display_surface = pygame.display.set_mode((window_width, window_height))
 clock = pygame.time.Clock()
 running = True
 
+#class instances
 player = Player(window_width/2, window_height/2, 500, 5)
 
 player_group = pygame.sprite.GroupSingle(player)
 
+#game loop
 while running:
     delta_time = clock.tick(60)
 
@@ -43,7 +45,7 @@ while running:
     
 
 
-
+  
 pygame.quit()
 
 
