@@ -66,6 +66,9 @@ class Player(pygame.sprite.Sprite):
             self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 4)
         
+        if action == "walk":
+            self.sprite_sheet = pygame.image.load("assets\images\Player\Run1.png")
+            self.frames = self.load_frames(self.sprite_sheet, 6)
 
         
 
@@ -93,6 +96,7 @@ class Player(pygame.sprite.Sprite):
 
         if direction.length() > 0:
             direction = direction.normalize()
+            self.set_action("walk")
 
         else:
             self.set_action("idle")
