@@ -1,7 +1,7 @@
 import pygame 
 
 from player import Player
-from background import Scenario
+from background import Scenario, load_images
 
 #initial setup
 
@@ -13,8 +13,8 @@ clock = pygame.time.Clock()
 running = True
 
 #class instances
-
-background = Scenario("assets\\images\\background")
+background_images = load_images("assets\\images\\background")
+background = Scenario(background_images)
 
 player = Player(window_width/2, window_height/2, 500, 5)
 
