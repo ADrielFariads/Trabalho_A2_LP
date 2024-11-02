@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
         
 ################# ANIMATING FRAMES ##########################################################
     def load_frames(self, sprite_sheet, frames_x):
-        """Extract and scale frames from the given sprite sheet."""
+        "Extract and scale frames from the given sprite sheet."
         frames = []
         frame_width = sprite_sheet.get_width() // frames_x
         frame_height = sprite_sheet.get_height()
