@@ -5,7 +5,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
-        
+        self.current_action = "idle"
 
         #calculating the frame size (just for idle image, remember to refactor a function later)
         frames_x_axis = 4
@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.frames = []
         for each in range(frames_x_axis):
             frame = self.sprite_sheet.subsurface((each * frame_widht, 0, frame_widht, frame_height))
-            scale_factor = 2
+            scale_factor = 2 # makes the image a little bigger
             redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht)*scale_factor, int(frame_height)*scale_factor))
             self.frames.append(redimentioned_frame)
         
@@ -25,9 +25,9 @@ class Player(pygame.sprite.Sprite):
         #initial frame setting
         self.current_frame_index = 0
         self.animation_speed = 10 #bigger values for a smothier animation
-        self.frame_counter = 0
-        self.image = self.frames[self.current_frame_index]
-
+        self.frame_counter = 0 #counter of animation
+        self.image = self.frames[self.current_frame_index] #current image 
+        self.facing_right = True #side facing animation
 
         #position logic
         self.position = pygame.math.Vector2(posx, posy)
@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.current_health = self.max_health
         self.health_ratio = self.current_health/self.health_bar_lenght
         
-
+################# ANIMATING FRAMES ##########################################################
     def load_frames(self, sprite_sheet, frames_x):
         """Extract and scale frames from the given sprite sheet."""
         frames = []
@@ -60,13 +60,21 @@ class Player(pygame.sprite.Sprite):
             frames.append(scaled_frame)
         return frames
 
-        
+
+################# ACTIONS LOGIC ################################## 
     def set_action(self, action="idle"):#action setter for animation
+        
+        if self.current_action != action:
+            self.current_action = action
+            self.current_frame_index = 0
+
         if action == "idle":
+            self.current_action = "idle"
             self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 4)
         
         if action == "walk":
+            self.current_action = "walk"
             self.sprite_sheet = pygame.image.load("assets\images\Player\Run1.png")
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
@@ -87,18 +95,22 @@ class Player(pygame.sprite.Sprite):
         direction = pygame.math.Vector2(0,0)
         if keys[pygame.K_a]:
             direction.x = -1
+            self.facing_right = False
+
         if keys[pygame.K_d]:
             direction.x = 1
+            self.facing_right = True
+
         if keys[pygame.K_w]:
             direction.y = -1
         if keys[pygame.K_s]:
             direction.y = 1
 
-        if direction.length() > 0:
+        if direction.length() > 0: #walk detection for animation
             direction = direction.normalize()
             self.set_action("walk")
 
-        else:
+        else:   #idle animation setter
             self.set_action("idle")
 
         self.position += direction * self.speed
@@ -106,6 +118,12 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
+
+        current_image = self.frames[self.current_frame_index]
+        if not self.facing_right:
+            self.image = pygame.transform.flip(current_image, True, False)
+        else:
+            self.image = current_image
 
 ################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
