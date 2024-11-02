@@ -75,7 +75,7 @@ class Player(pygame.sprite.Sprite):
         
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets\images\Player\Run1.png")
+            self.sprite_sheet = pygame.image.load("assets/images/Player/Run1.png")
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
         
