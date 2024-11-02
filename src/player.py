@@ -33,7 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
         self.health_bar_lenght = 500
-        self.health_change_speed = 1
+        self.health_change_speed = 2
         self.target_health = health
 
         #player atributes 
@@ -143,20 +143,22 @@ class Player(pygame.sprite.Sprite):
     def health_bar(self, surface): #health bar 
         transition_width = 0
         transition_color = (255, 255, 255)
-        
+        health_bar_rect = pygame.Rect(10, 10, self.current_health/self.health_ratio, 15)
+        transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
+
         if self.current_health < self.target_health:
             self.current_health += self.health_change_speed
             transition_width = int((self.target_health-self.current_health)/self.health_ratio)
             transition_color = (0, 255, 0)
-        
+            transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
+
         if self.current_health > self.target_health:
             self.current_health -= self.health_change_speed
-            transition_width = int((self.target_health-self.current_health)/self.health_ratio)
-            transition_color = (255, 255, 0)      
+            transition_width = int(abs((self.target_health-self.current_health)/self.health_ratio))
+            transition_color = (255, 255, 0) 
+            transition_bar_rect = pygame.Rect(health_bar_rect.right - transition_width, 10, transition_width, 15)
 
-        health_bar_rect = pygame.Rect(10, 10, self.current_health/self.health_ratio, 15)
-        transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
-
+        
         pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health
         pygame.draw.rect(surface, transition_color, transition_bar_rect) #heal/damage animation
         pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_lenght, 15), 2) #white rect arround the health
