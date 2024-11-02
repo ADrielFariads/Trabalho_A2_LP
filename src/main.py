@@ -1,6 +1,7 @@
 import pygame 
 
 from player import Player
+from background import Scenario
 
 #initial setup
 
@@ -12,9 +13,14 @@ clock = pygame.time.Clock()
 running = True
 
 #class instances
+
+background = Scenario("assets\\images\\background")
+
 player = Player(window_width/2, window_height/2, 500, 5)
 
 player_group = pygame.sprite.GroupSingle(player)
+
+
 
 #game loop
 while running:
@@ -33,11 +39,11 @@ while running:
                 player.get_healed(50)
 
     keys = pygame.key.get_pressed()
+    
     player_group.update(keys, display_surface.get_rect())
 
 
-    
-    display_surface.fill((30, 30, 30))
+    background.draw(display_surface)
     player.health_bar(display_surface)
     player_group.draw(display_surface)
 
