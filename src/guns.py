@@ -20,15 +20,16 @@ class Gun(pygame.sprite.Sprite):
 
     def update_position(self):
         self.position = self.player.get_position()
-        self.rect.center = (self.position[0], self.position[1]+10)
+        self.rect.center = (self.position[0]-10, self.position[1]+15)
 
     def update(self):
         self.update_position()
         if self.player.facing_right:
             self.image = self.original_image
+            self.rect.center = (self.position[0]-10, self.position[1]+15)
         else:
             self.image = pygame.transform.flip(self.original_image, True, False)
-    
+            self.rect.center = (self.position[0], self.position[1]+15)
 
         
     
