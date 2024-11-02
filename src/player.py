@@ -65,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         if action == "idle":
             self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 4)
+        
 
         
 
