@@ -11,16 +11,22 @@ window_width, window_height = 1280, 720
 display_surface = pygame.display.set_mode((window_width, window_height))
 
 ### testing background
+background_group = pygame.sprite.Group()
+class Tile(pygame.sprite.Sprite):
+    def __init__(self,pos, surface, *groups):
+        super().__init__(*groups)
+        self.image = surface
+        self.rect = self.image.get_rect(topleft = pos)
+
 tmx_data = load_pygame("assets\\tmx\\test_map.tmx")
 
 layer = tmx_data.get_layer_by_name("background")
-for x, y, surface in layer.tiles():
-    print(x * 32)
-    print(y * 32)
-    print(surface)
 
-object_layer = tmx_data.get_layer_by_name("objects")
-
+for layer in tmx_data.visible_layers:
+    if hasattr(layer, 'data'):
+        for x, y, surf in layer.tiles():
+            pos = (x*32, y*32)
+            Tile(pos, surf, background_group)
 
 clock = pygame.time.Clock()
 running = True
@@ -32,6 +38,7 @@ player = Player(window_width/2, window_height/2, 500, 5)
 gun = Gun(player, "assets\\images\\Guns\\2_1.png", 10, 2, "bullet")
 
 player_group = pygame.sprite.GroupSingle(player)
+
 gun_group = pygame.sprite.GroupSingle(gun)
 
 
