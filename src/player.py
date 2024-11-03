@@ -126,8 +126,9 @@ class Player(pygame.sprite.Sprite):
 
         original_position = self.position.copy()
         if pygame.sprite.spritecollide(self, self.colliders, False):
-            self.position = original_position
-            self.rect.center = self.position
+        
+            self.position = original_position  
+        self.rect.center = self.position
 
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:

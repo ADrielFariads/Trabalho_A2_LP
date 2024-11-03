@@ -30,18 +30,19 @@ for layer in tmx_data.visible_layers:
         for x, y, surf in layer.tiles():
             pos = (x*32, y*32)
             Tile(pos, surf, background_group)
+            
 for obj in tmx_data.objects:
     pos = (obj.x, obj.y)
-    rock_tile = Tile(pos, obj.image, background_group)
+    rock_tile = Tile(pos, obj.image, rock_group)
     rock_group.add(rock_tile)
 
-
+print(rock_group)
 clock = pygame.time.Clock()
 running = True
 
 #class instances
 
-rock_group = pygame.sprite.Group()
+
 
 player = Player(window_width/2, window_height/2, 500, 3, rock_group)
 
@@ -51,7 +52,7 @@ player_group = pygame.sprite.GroupSingle(player)
 
 gun_group = pygame.sprite.GroupSingle(gun)
 
-
+print(player.colliders)
 
 #game loop
 while running:
@@ -82,9 +83,12 @@ while running:
     #drawning the objects in the screen
     display_surface.fill((30, 30, 30))
     background_group.draw(display_surface)
+    rock_group.draw(display_surface)
     player.health_bar(display_surface)
     player_group.draw(display_surface)
     gun_group.draw(display_surface)
+
+
 
     pygame.display.flip()
     
