@@ -10,8 +10,11 @@ pygame.init()
 window_width, window_height = 1280, 720
 display_surface = pygame.display.set_mode((window_width, window_height))
 
+### testing background
 tmx_data = load_pygame("assets\\tmx\\test_map.tmx")
-print(dir(tmx_data))
+print(tmx_data.layers)
+
+
 
 clock = pygame.time.Clock()
 running = True
