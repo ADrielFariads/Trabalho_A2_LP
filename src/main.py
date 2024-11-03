@@ -12,8 +12,14 @@ display_surface = pygame.display.set_mode((window_width, window_height))
 
 ### testing background
 tmx_data = load_pygame("assets\\tmx\\test_map.tmx")
-print(tmx_data.layers)
 
+layer = tmx_data.get_layer_by_name("background")
+for x, y, surface in layer.tiles():
+    print(x * 32)
+    print(y * 32)
+    print(surface)
+
+object_layer = tmx_data.get_layer_by_name("objects")
 
 
 clock = pygame.time.Clock()
