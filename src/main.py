@@ -1,4 +1,5 @@
-import pygame 
+import pygame
+from pytmx.util_pygame import load_pygame 
 
 from player import Player
 from guns import Gun
@@ -8,6 +9,9 @@ from guns import Gun
 pygame.init()
 window_width, window_height = 1280, 720
 display_surface = pygame.display.set_mode((window_width, window_height))
+
+tmx_data = load_pygame("assets\\tmx\\test_map.tmx")
+print(dir(tmx_data))
 
 clock = pygame.time.Clock()
 running = True
