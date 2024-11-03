@@ -7,7 +7,7 @@ from guns import Gun
 #initial setup
 
 pygame.init()
-window_width, window_height = 1280, 720
+window_width, window_height = 940, 640
 display_surface = pygame.display.set_mode((window_width, window_height))
 
 ### testing background
@@ -27,6 +27,11 @@ for layer in tmx_data.visible_layers:
         for x, y, surf in layer.tiles():
             pos = (x*32, y*32)
             Tile(pos, surf, background_group)
+for obj in tmx_data.objects:
+    pos = (obj.x, obj.y)
+    Tile(pos, obj.image, background_group)
+
+
 
 clock = pygame.time.Clock()
 running = True
@@ -67,6 +72,7 @@ while running:
 
     #drawning the objects in the screen
     display_surface.fill((30, 30, 30))
+    background_group.draw(display_surface)
     player.health_bar(display_surface)
     player_group.draw(display_surface)
     gun_group.draw(display_surface)
