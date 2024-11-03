@@ -16,7 +16,7 @@ running = True
 
 player = Player(window_width/2, window_height/2, 500, 5)
 
-gun = Gun(player, "assets\\images\\Guns\\1_1.png", 10, 2, "bullet")
+gun = Gun(player, "assets\\images\\Guns\\2_1.png", 10, 2, "bullet")
 
 player_group = pygame.sprite.GroupSingle(player)
 gun_group = pygame.sprite.GroupSingle(gun)
