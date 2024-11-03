@@ -1,7 +1,7 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, posx, posy, health, speed, colidders):
+    def __init__(self, posx, posy, health, speed, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
@@ -124,11 +124,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
-        original_position = self.position.copy()
-        if pygame.sprite.spritecollide(self, self.colliders, False):
+        # original_position = self.position.copy()
+        # if pygame.sprite.spritecollide(self, self.colliders, False):
         
-            self.position = original_position  
-        self.rect.center = self.position
+        #     self.position = original_position  
+        # self.rect.center = self.position
 
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:
