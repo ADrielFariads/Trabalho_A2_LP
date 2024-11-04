@@ -4,6 +4,12 @@ from pytmx.util_pygame import load_pygame
 
 pygame.init()
 
+class Background(pygame.sprite.Sprite):
+    def __init__(self, tmx_file_path, *groups):
+        super().__init__(*groups)
+        
+tmx_data = load_pygame("assets\\tmx\\map001.tmx")
+
 
 
 
