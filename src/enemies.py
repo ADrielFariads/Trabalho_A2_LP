@@ -33,11 +33,17 @@ class Enemy(pygame.sprite.Sprite):
     def track_player(self):
         player_pos = pygame.math.Vector2(self.target.rect.center)
         current_pos = pygame.math.Vector2(self.rect.center)
-        direction = (player_pos - current_pos).normalize()
+        self.direction = (player_pos - current_pos).normalize()
+
+        movement = self.direction * self.speed
+        self.rect.center += movement
+
     
 
     def update(self):
-        
         #checks the mob's death
         if self.health <= 0:
             self.kill()
+            return None
+        
+        self.track_player()

@@ -26,6 +26,7 @@ class Game:
         self.player = Player(640, 360, 100, 3)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 2, Bullet)
         
+        
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
