@@ -1,8 +1,8 @@
 import pygame
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,pos_x, pos_y, image, health, speed, damage, range, player, group):
-        super().__init__(group)
+    def __init__(self,pos_x, pos_y, image, health, speed, damage, range, player):
+        super().__init__()
         #load image
         self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(center=(pos_x, pos_y))
@@ -30,11 +30,18 @@ class Enemy(pygame.sprite.Sprite):
     def atack(self, target):
         target.get_damaged(self.damage)
 
+    def player_distance(self):
+        player_pos = pygame.math.Vector2(self.target.rect.center)
+        current_pos = pygame.math.Vector2(self.rect.center)
+        distance = current_pos.distance_to(player_pos)
+        return distance
+
     def track_player(self):
         player_pos = pygame.math.Vector2(self.target.rect.center)
         current_pos = pygame.math.Vector2(self.rect.center)
-        self.direction = (player_pos - current_pos).normalize()
-
+        if player_pos != current_pos:
+            self.direction = (player_pos - current_pos).normalize()
+        else: self.direction = pygame.math.Vector2(0, 0)
         movement = self.direction * self.speed
         self.rect.center += movement
 
@@ -42,8 +49,11 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         #checks the mob's death
+        
         if self.health <= 0:
             self.kill()
             return None
-        
-        self.track_player()
+        if self.player_distance() > self.range:
+            self.track_player()
+        else:
+            self.atack(self.target)

@@ -1,10 +1,12 @@
 import pygame
 from pytmx.util_pygame import load_pygame
+import random
 
 from player import Player
 from guns import Gun, Bullet
 from camera import Camera
-from background import Background  # Importando a classe Background
+from background import Background  
+from enemies import Enemy
 
 # initial setup
 class Game:
@@ -23,14 +25,15 @@ class Game:
         self.background = Background("assets\\background_files\\map001.tmx", 16, self.display_surface)  
 
         # sprites
-        self.player = Player(640, 360, 100, 3)
+        self.player = Player(640, 360, 1000, 3)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 2, Bullet)
-        
-        
+        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblin\goblin.png", 100, 3, 5, 10, self.player)
+
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
         self.bullet_group = pygame.sprite.Group()
+        self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         
 
@@ -50,6 +53,7 @@ class Game:
 
             # updates
             self.player.update(keys, self.display_surface.get_rect())
+            self.enemies_group.update()
             self.gun.update()
             self.bullet_group.update()
 
@@ -61,6 +65,7 @@ class Game:
             self.player_group.draw(self.display_surface)
             self.gun_group.draw(self.display_surface)
             self.bullet_group.draw(self.display_surface)
+            self.enemies_group.draw(self.display_surface)
             self.player.health_bar(self.display_surface)
 
             pygame.display.flip()
