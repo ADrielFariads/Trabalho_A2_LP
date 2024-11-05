@@ -2,7 +2,7 @@ import pygame
 from pytmx.util_pygame import load_pygame
 
 from player import Player
-from guns import Gun
+from guns import Gun, Bullet
 from camera import Camera
 from background import Background  # Importando a classe Background
 
@@ -24,7 +24,7 @@ class Game:
 
         # sprites
         self.player = Player(640, 360, 100, 10)
-        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 2, "bullet")
+        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 2, Bullet)
         
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
