@@ -34,21 +34,21 @@ class Gun(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.original_image, True, False)
             self.rect.center = (self.position[0], self.position[1]+15)
 
-    def shoot(self):
+    def shoot(self, bullet_group):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= self.cool_down:
             self.last_shot_time = current_time
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            bullet = self.bullet_class(self.rect.center, mouse_x, mouse_y)
-
+            bullet = self.bullet_class(self.rect.center, mouse_x, mouse_y, bullet_group)
+            print("hi")
             return bullet
         return None
         
     
 class Bullet(pygame.sprite.Sprite):
 
-    def __init__(self, position, target_x, target_y, *groups):
-        super().__init__(*groups)
+    def __init__(self, position, target_x, target_y, group):
+        super().__init__()
         self.image = pygame.Surface((5,5))
         self.image.fill((200, 200, 200))
         self.rect = self.image.get_rect(center=position)

@@ -23,12 +23,13 @@ class Game:
         self.background = Background("assets\\background_files\\map001.tmx", 16, self.display_surface)  
 
         # sprites
-        self.player = Player(640, 360, 100, 10)
+        self.player = Player(640, 360, 100, 3)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 2, Bullet)
         
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
+        self.bullet_group = pygame.sprite.Group()
 
 
     def run(self):
@@ -39,12 +40,16 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    self.gun.shoot(self.bullet_group)
 
             keys = pygame.key.get_pressed()
 
             # updates
             self.player.update(keys, self.display_surface.get_rect())
             self.gun.update()
+            self.bullet_group.update()
 
             #self.camera.update(self.player_group)
             self.display_surface.fill((30, 30, 30))
@@ -53,6 +58,9 @@ class Game:
             self.background.draw(self.camera)
             self.player_group.draw(self.display_surface)
             self.gun_group.draw(self.display_surface)
+            self.bullet_group.draw(self.display_surface)
+            
+            self.player.health_bar(self.display_surface)
 
             pygame.display.flip()
 
