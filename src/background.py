@@ -31,11 +31,8 @@ class Background:
                     pos = (x * self.tile_size, y * self.tile_size)
                     Tile(pos=pos, image=surf, groups=self.sprite_group)
         
-        # Load collision objects
-        for obj in tmx_data.objects:
-               if obj.type == "limiters":
-                 rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                 self.collision_obj.append(rect)
+        #load objects
+        
     
     def draw(self, camera):
         # Draw all tiles on the screen
