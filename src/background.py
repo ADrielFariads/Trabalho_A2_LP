@@ -33,28 +33,15 @@ class Background:
         
         # Load collision objects
         for obj in tmx_data.objects:
-            if obj.type == "limiters":
-                rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
-                self.collision_obj.append(rect)
+               if obj.type == "limiters":
+                 rect = pygame.Rect(obj.x, obj.y, obj.width, obj.height)
+                 self.collision_obj.append(rect)
     
-    def draw(self):
+    def draw(self, camera):
         # Draw all tiles on the screen
-        self.screen.fill((30, 30, 30))
         self.sprite_group.draw(self.screen)
 
-if __name__ == "__main__":
-    window_width, window_height = 940, 640
-    screen = pygame.display.set_mode((window_width, window_height))
-
-    background = Background(map_path="assets\\background_files\\map001.tmx", tile_size=16, screen=screen)
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-        
-        background.draw()
-        
-        pygame.display.update()
+        #using camera logic
+        for tile in self.sprite_group:
+            # Aply camera to the tiles
+            self.screen.blit(tile.image, camera.apply(tile))
