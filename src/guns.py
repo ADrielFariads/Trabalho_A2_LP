@@ -40,7 +40,6 @@ class Gun(pygame.sprite.Sprite):
             self.last_shot_time = current_time
             mouse_x, mouse_y = pygame.mouse.get_pos()
             bullet = self.bullet_class(self.rect.center, mouse_x, mouse_y, bullet_group)
-            print("hi")
             return bullet
         return None
         
@@ -48,9 +47,10 @@ class Gun(pygame.sprite.Sprite):
 class Bullet(pygame.sprite.Sprite):
 
     def __init__(self, position, target_x, target_y, group):
-        super().__init__()
+        super().__init__(group)
+        print("hi")
         self.image = pygame.Surface((5,5))
-        self.image.fill((200, 200, 200))
+        self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect(center=position)
 
         self.speed = 15
@@ -66,7 +66,7 @@ class Bullet(pygame.sprite.Sprite):
     def update(self):
         self.rect.x += self.dx * self.speed
         self.rect.y += self.dy * self.speed
-        
+        print('hi')
         if self.rect.x < 0 or self.rect.x > 1280 or self.rect.y < 0 or self.rect.y > 720:
             self.kill()
 

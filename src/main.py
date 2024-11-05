@@ -59,7 +59,6 @@ class Game:
             self.player_group.draw(self.display_surface)
             self.gun_group.draw(self.display_surface)
             self.bullet_group.draw(self.display_surface)
-            
             self.player.health_bar(self.display_surface)
 
             pygame.display.flip()
