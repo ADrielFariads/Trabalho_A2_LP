@@ -25,10 +25,12 @@ class Game:
 
         #sprites
         self.player = Player(640, 360, 100, 3)
+        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 2, "bullet")
         
         #groups
         self.all_sprites = pygame.sprite.Group(self.player)
         self.player_group = pygame.sprite.GroupSingle(self.player)
+        self.gun_group = pygame.sprite.GroupSingle(self.gun)
 
         
 
@@ -45,6 +47,8 @@ class Game:
 
             # updates
             self.player.update(keys, self.display_surface.get_rect())
+            self.gun.update()
+
             self.camera.update(self.player_group)
 
             
@@ -53,7 +57,7 @@ class Game:
             self.world.draw(self.display_surface, self.camera)
 
             self.player_group.draw(self.display_surface)
-            
+            self.gun_group.draw(self.display_surface)
             
 
             
