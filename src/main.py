@@ -2,17 +2,23 @@ import pygame
 
 from player import Player
 from guns import Gun
+from camera import Camera
+from world import World
+
 
 #initial setup
 
 pygame.init()
 window_width, window_height = 1280, 720
+world_width, world_height = 3000, 3000 
 display_surface = pygame.display.set_mode((window_width, window_height))
 
 clock = pygame.time.Clock()
 running = True
 
 #class instances
+camera = Camera(window_width, window_height)
+world = World(world_width, world_height, num_rectangles=100)
 
 player = Player(window_width/2, window_height/2, 500, 5)
 
@@ -45,11 +51,22 @@ while running:
     gun_group.update()
 
 
+    camera.update(player_group)
+    camera.update(gun_group)
+
+    
+
     #drawning the objects in the screen
     display_surface.fill((30, 30, 30))
     player.health_bar(display_surface)
-    player_group.draw(display_surface)
-    gun_group.draw(display_surface)
+
+    world.draw(display_surface, camera)
+
+    for sprite in player_group:
+        display_surface.blit(sprite.image, camera.apply(sprite))
+    for sprite in gun_group:
+        display_surface.blit(sprite.image, camera.apply(sprite))
+
 
     pygame.display.flip()
     
