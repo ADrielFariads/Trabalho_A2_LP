@@ -1,0 +1,66 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "map001.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "Water_coasts.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "details.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
+        "map001.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 834.6666666666666,
+                "y": 333.99999999999994
+            }
+        },
+        "plants.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 0.33,
+            "scaleInEditor": 1
+        },
+        "water.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "C:/Users/adrie/tiled stuff/newmap/PNG/Objects_separetely",
+    "map.height": 50,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 80,
+    "openFiles": [
+        "map001.tmx",
+        "water.tsx",
+        "Water_coasts.tsx",
+        "details.tsx",
+        "plants.tsx"
+    ],
+    "project": "new_project.tiled-project",
+    "recentFiles": [
+        "plants.tsx",
+        "details.tsx",
+        "Water_coasts.tsx",
+        "water.tsx",
+        "map001.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    },
+    "tileset.type": 1
+}

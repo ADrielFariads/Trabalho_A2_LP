@@ -8,12 +8,18 @@ class Background(pygame.sprite.Sprite):
     def __init__(self, tmx_file_path, *groups):
         super().__init__(*groups)
         
-tmx_data = load_pygame("assets\\tmx\\map001.tmx")
 
 
 
 
-screen = pygame.display.set_mode((1280, 720))
+
+
+window_width, window_height = 940, 640
+screen = pygame.display.set_mode((window_width, window_height))
+
+
+tmx_data = load_pygame("assets\\background_files\\map001.tmx")
+
 running = True
 
 
