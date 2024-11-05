@@ -6,7 +6,7 @@ class Enemy(pygame.sprite.Sprite):
         #load image
         self.image = pygame.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(center=(pos_x, pos_y))
-
+        
         #atributes
         self.max_health = health
         self.health = health
@@ -17,7 +17,7 @@ class Enemy(pygame.sprite.Sprite):
         #player interaction
         self.target = player
 
-
+    #fight logic
     def get_damaged(self, damage):
         self.health -= damage
     
@@ -30,6 +30,11 @@ class Enemy(pygame.sprite.Sprite):
     def atack(self, target):
         target.get_damaged(self.damage)
 
+    def track_player(self):
+        player_pos = pygame.math.Vector2(self.target.rect.center)
+        current_pos = pygame.math.Vector2(self.rect.center)
+        direction = (player_pos - current_pos).normalize()
+    
 
     def update(self):
         

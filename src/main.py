@@ -31,6 +31,7 @@ class Game:
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
         self.bullet_group = pygame.sprite.Group()
 
+        
 
     def run(self):
         while self.running:
@@ -62,6 +63,7 @@ class Game:
             self.player.health_bar(self.display_surface)
 
             pygame.display.flip()
+
 
         pygame.quit()
 
