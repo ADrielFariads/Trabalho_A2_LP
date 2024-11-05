@@ -51,7 +51,7 @@ class Game:
             self.gun.update()
             self.bullet_group.update()
 
-            self.camera.update(self.player)
+            #self.camera.update(self.player_group) #not working yet
             self.display_surface.fill((30, 30, 30))
 
             # drawings
