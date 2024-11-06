@@ -27,12 +27,15 @@ class Game:
         # sprites
         self.player = Player(640, 360, 1000, 3)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 500, Bullet)
-        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 100, 2, 2,10, 10, self.player)
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
         self.bullet_group = pygame.sprite.Group()
+
+
+        #enemies generation
+        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 10, 2, 100, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         
