@@ -65,6 +65,7 @@ class Game:
 
             # drawings
             self.background.draw(self.camera)
+            
             self.player_group.draw(self.display_surface)
             self.gun_group.draw(self.display_surface)
             self.bullet_group.draw(self.display_surface)
