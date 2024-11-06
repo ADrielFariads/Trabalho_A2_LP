@@ -48,6 +48,7 @@ class Bullet(pygame.sprite.Sprite):
 
     def __init__(self, position, target_x, target_y, group):
         super().__init__(group)
+
         self.image = pygame.Surface((5,5))
         self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect(center=position)

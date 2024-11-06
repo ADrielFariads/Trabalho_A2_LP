@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
         self.current_action = "idle"
 
-        #calculating the frame size (just for idle image, remember to refactor a function later)
+        #calculating the frame size 
         frames_x_axis = 4
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
         frame_height = self.sprite_sheet.get_height()

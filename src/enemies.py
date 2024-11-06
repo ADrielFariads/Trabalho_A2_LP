@@ -1,21 +1,50 @@
 import pygame
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,pos_x, pos_y, image, health, speed, damage, range, player):
+    def __init__(self,pos_x, pos_y, sprite_sheet, health, speed, damage, attack_range,attack_speed, player):
         super().__init__()
-        #load image
-        self.image = pygame.image.load(image).convert_alpha()
+        #loading image
+        self.sprite_sheet = pygame.image.load(sprite_sheet).convert_alpha()
+
+        frames_x_axis = 11
+        frame_widht = self.sprite_sheet.get_width() // frames_x_axis
+        frame_height = self.sprite_sheet.get_height()
+
+        self.frames = []
+        for each in range(frames_x_axis):
+            frame = self.sprite_sheet.subsurface((each * frame_widht, 0, frame_widht, frame_height))
+    
+            redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht), int(frame_height)))
+            self.frames.append(redimentioned_frame)
+
+        #initial frame setting
+        self.current_frame_index = 0
+        self.animation_speed = 10 #bigger values for a smothier animation
+        self.frame_counter = 0 #counter of animation
+
+        self.position = pygame.math.Vector2(pos_x, pos_y)
+        self.image = self.frames[self.current_frame_index]
         self.rect = self.image.get_rect(center=(pos_x, pos_y))
+
+
         
         #atributes
         self.max_health = health
         self.health = health
         self.speed = speed
         self.damage = damage
-        self.range = range
+        self.atack_range = attack_range
 
         #player interaction
         self.target = player
+
+    def animate(self):
+        # Increment frame counter and update frame index
+        self.frame_counter += 1
+        if self.frame_counter >= self.animation_speed:
+            self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
+            self.image = self.frames[self.current_frame_index]
+            self.frame_counter = 0
 
     #fight logic
     def get_damaged(self, damage):
@@ -53,7 +82,10 @@ class Enemy(pygame.sprite.Sprite):
         if self.health <= 0:
             self.kill()
             return None
-        if self.player_distance() > self.range:
+        if self.player_distance() > self.atack_range:
             self.track_player()
         else:
             self.atack(self.target)
+
+        #animation logic
+        self.animate()
