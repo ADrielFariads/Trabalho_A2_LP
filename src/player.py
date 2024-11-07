@@ -84,7 +84,11 @@ class Player(pygame.sprite.Sprite):
 ################# GETTER METHODS ###################################################
     def get_position(self):
         return self.position
-    
+
+################# COLLISION METHOD ####################################################     
+    def collision(self, direction):
+        pass
+
 ################# UPDATE METHOD #################################################### 
     def update(self, keys, screen_rect):
 
@@ -118,17 +122,16 @@ class Player(pygame.sprite.Sprite):
         else:   #idle animation setter
             self.set_action("idle")
 
-        self.position += direction * self.speed
-        self.rect.center = self.position
+        self.position.x += direction.x * self.speed
+        self.rect.centerx = self.position.x
+
+        self.position.y += direction.y * self.speed
+        self.rect.centery = self.position.y
 
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
-        # original_position = self.position.copy()
-        # if pygame.sprite.spritecollide(self, self.colliders, False):
         
-        #     self.position = original_position  
-        # self.rect.center = self.position
 
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:

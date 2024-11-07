@@ -5,7 +5,7 @@ import random
 from player import Player
 from guns import Gun, Bullet
 from camera import Camera
-from background import Background  
+from background import Background, Tile, CollisionSprite
 from enemies import Enemy
 
 # initial setup
@@ -25,7 +25,7 @@ class Game:
         self.background = Background("assets\\background_files\\map002.tmx", 16, self.display_surface)  
 
         # sprites
-        self.player = Player(640, 360, 1000, 3)
+        self.player = Player(640, 360, 1000, 5, self.background.collision_group)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 500, Bullet)
 
         # groups
@@ -35,7 +35,7 @@ class Game:
 
 
         #enemies generation
-        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 30, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         
@@ -66,6 +66,8 @@ class Game:
             # drawings
             self.background.draw(self.camera)
             
+
+
             self.player_group.draw(self.display_surface)
             self.gun_group.draw(self.display_surface)
             self.bullet_group.draw(self.display_surface)
