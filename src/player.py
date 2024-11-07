@@ -35,6 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.health_bar_lenght = 500
         self.health_change_speed = 2
         self.target_health = health
+        self.direction = pygame.math.Vector2(0,0)
 
         #colidders
         self.colliders = colidders
@@ -87,7 +88,23 @@ class Player(pygame.sprite.Sprite):
 
 ################# COLLISION METHOD ####################################################     
     def collision(self, direction):
-        pass
+        for sprite in self.colliders:
+            if sprite.rect.colliderect(self.rect):
+                if direction == "horizontal":
+                    if self.direction.x > 0:
+                        self.rect.right = sprite.rect.left
+
+                    if self.direction.x < 0:
+                        self.rect.left = sprite.rect.right
+
+                if direction == "vertical":
+                    if self.direction.y > 0:
+                        self.rect.bottom = sprite.rect.top
+
+                    if self.direction.y < 0:
+                        self.rect.top = sprite.rect.bottom
+
+                
 
 ################# UPDATE METHOD #################################################### 
     def update(self, keys, screen_rect):
@@ -101,32 +118,35 @@ class Player(pygame.sprite.Sprite):
 
 
         #movement logic
-        direction = pygame.math.Vector2(0,0)
+        self.direction.x = 0
+        self.direction.y = 0
         if keys[pygame.K_a]:
-            direction.x = -1
+            self.direction.x = -1
             self.facing_right = False
 
         if keys[pygame.K_d]:
-            direction.x = 1
+            self.direction.x = 1
             self.facing_right = True
 
         if keys[pygame.K_w]:
-            direction.y = -1
+            self.direction.y = -1
         if keys[pygame.K_s]:
-            direction.y = 1
+            self.direction.y = 1
 
-        if direction.length() > 0: #walk detection for animation
-            direction = direction.normalize()
+        if self.direction.length() > 0: #walk detection for animation
+            self.direction = self.direction.normalize()
             self.set_action("walk")
 
         else:   #idle animation setter
             self.set_action("idle")
 
-        self.position.x += direction.x * self.speed
+        self.position.x += self.direction.x * self.speed
         self.rect.centerx = self.position.x
+        self.collision("horizontal")
 
-        self.position.y += direction.y * self.speed
+        self.position.y += self.direction.y * self.speed
         self.rect.centery = self.position.y
+        self.collision("vertical")
 
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
