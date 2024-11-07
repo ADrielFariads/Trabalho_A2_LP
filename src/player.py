@@ -32,6 +32,9 @@ class Player(pygame.sprite.Sprite):
         #position logic
         self.position = pygame.math.Vector2(posx, posy)
         self.rect = self.image.get_rect(center = (posx, posy))
+        self.hitbox = pygame.Rect(self.rect.x, self.rect.y, self.rect.width - 40, self.rect.height)
+
+
         self.health_bar_lenght = 500
         self.health_change_speed = 2
         self.target_health = health
@@ -118,6 +121,8 @@ class Player(pygame.sprite.Sprite):
 
 
         #movement logic
+        self.hitbox.center = self.rect.center
+        
         self.direction.x = 0
         self.direction.y = 0
         if keys[pygame.K_a]:
