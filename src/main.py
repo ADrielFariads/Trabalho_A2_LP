@@ -7,6 +7,7 @@ from guns import Gun, Bullet
 from camera import Camera
 from background import Background, Tile, CollisionSprite
 from enemies import Enemy
+from groups import AllSprites_group
 
 # initial setup
 class Game:
