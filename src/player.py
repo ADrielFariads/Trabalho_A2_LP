@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
         self.current_action = "idle"
 
-        #calculating the frame size (just for idle image, remember to refactor a function later)
+        #calculating the frame size 
         frames_x_axis = 4
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
         frame_height = self.sprite_sheet.get_height()
@@ -84,7 +84,11 @@ class Player(pygame.sprite.Sprite):
 ################# GETTER METHODS ###################################################
     def get_position(self):
         return self.position
-    
+
+################# COLLISION METHOD ####################################################     
+    def collision(self, direction):
+        pass
+
 ################# UPDATE METHOD #################################################### 
     def update(self, keys, screen_rect):
 
@@ -118,17 +122,16 @@ class Player(pygame.sprite.Sprite):
         else:   #idle animation setter
             self.set_action("idle")
 
-        self.position += direction * self.speed
-        self.rect.center = self.position
+        self.position.x += direction.x * self.speed
+        self.rect.centerx = self.position.x
+
+        self.position.y += direction.y * self.speed
+        self.rect.centery = self.position.y
 
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
-        # original_position = self.position.copy()
-        # if pygame.sprite.spritecollide(self, self.colliders, False):
         
-        #     self.position = original_position  
-        # self.rect.center = self.position
 
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:
