@@ -22,7 +22,7 @@ class Game:
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
 
         # Initialize background
-        self.background = Background("assets\\background_files\\map001.tmx", 16, self.display_surface)  
+        self.background = Background("assets\\background_files\\map002.tmx", 16, self.display_surface)  
 
         # sprites
         self.player = Player(640, 360, 1000, 3)
@@ -35,7 +35,7 @@ class Game:
 
 
         #enemies generation
-        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 10, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 30, 2, 100, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         
