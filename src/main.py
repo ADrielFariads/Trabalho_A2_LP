@@ -7,14 +7,14 @@ from guns import Gun, Bullet
 from camera import Camera
 from background import Background, Tile, CollisionSprite
 from enemies import Enemy
-from groups import AllSprites_group
+from groups import AllSpritesgroup
 
 # initial setup
 class Game:
     def __init__(self):
         # initial setup
         pygame.init()
-        self.display_surface = pygame.display.set_mode((1280, 720))
+        self.display_surface = pygame.display.set_mode((1280, 800))
         pygame.display.set_caption("Cosmic Survivor")
         self.running = True
         self.clock = pygame.time.Clock()
@@ -39,7 +39,7 @@ class Game:
         self.enemies_group = pygame.sprite.Group()
 
         #camera interaction
-        self.all_sprites = AllSprites_group()
+        self.all_sprites = AllSpritesgroup()
         self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group)
 
         

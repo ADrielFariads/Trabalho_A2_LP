@@ -13,7 +13,7 @@ class Tile(pygame.sprite.Sprite):
 class CollisionSprite(pygame.sprite.Sprite):
     def __init__(self,pos, size, *groups):
         super().__init__(*groups)
-        self.image = pygame.Surface(size)
+        self.image = pygame.Surface(size, pygame.SRCALPHA)
         self.rect = self.image.get_rect(topleft=pos)
 
 class Background:
@@ -43,14 +43,5 @@ class Background:
             self.collision_group.add(CollisionSprite((obj.x, obj.y), (obj.width, obj.height)))
 
 
-    def draw(self, camera):
-        # Draw all tiles on the screen
-        self.ground_group.draw(self.screen)
-        self.collision_group.draw(self.screen)
-
-        #using camera logic
-        for tile in self.ground_group:
-            # Aply camera to the tiles
-            self.screen.blit(tile.image, camera.apply(tile))
 
         
