@@ -35,12 +35,12 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        #self.enemy1 = Enemy(300, 300, "assets\\images\\enemies\\goblins\\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
-        self.enemies_group = pygame.sprite.Group()
+        self.enemy1 = Enemy(300, 300, "assets\\images\\enemies\\goblins\\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
-        self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group)
+        self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group, self.player, self.gun_group, self.enemies_group, self.bullet_group)
 
         
 
@@ -71,8 +71,6 @@ class Game:
             self.all_sprites.draw(self.player.rect.center)
 
 
-            self.player_group.draw(self.display_surface)
-            self.gun_group.draw(self.display_surface)
             self.bullet_group.draw(self.display_surface)
         
             self.player.health_bar(self.display_surface)
