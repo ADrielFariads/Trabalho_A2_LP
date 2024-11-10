@@ -81,6 +81,11 @@ class Player(pygame.sprite.Sprite):
             self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Walk1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
+        if action == "walkup":
+            self.current_action = "walkup"
+            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkUp.png").convert_alpha() 
+            self.frames = self.load_frames(self.sprite_sheet, 8)
+
 ################# GETTER METHODS ###################################################
     def get_position(self):
         return self.position
@@ -110,14 +115,17 @@ class Player(pygame.sprite.Sprite):
             direction.x = 1
             self.facing_right = True
 
-        if keys[pygame.K_w]:
-            direction.y = -1
+        if keys[pygame.K_w]: 
+            direction.y = -1 
+            self.set_action("walkup")
+            
         if keys[pygame.K_s]:
             direction.y = 1
 
         if direction.length() > 0: #walk detection for animation
             direction = direction.normalize()
-            self.set_action("walk")
+            if not keys[pygame.K_w]:
+                self.set_action("walk")
 
         else:   #idle animation setter
             self.set_action("idle")
