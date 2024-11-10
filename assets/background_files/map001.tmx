@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="80" height="50" tilewidth="16" tileheight="16" infinite="0" nextlayerid="14" nextobjectid="78">
+ <tileset firstgid="1" source="Water_coasts.tsx"/>
+ <tileset firstgid="1561" source="water.tsx"/>
+ <tileset firstgid="3109" source="details.tsx"/>
+ <tileset firstgid="3319" source="plants.tsx"/>
+ <layer id="6" name="water0" width="80" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztwwENAAAMAiADPIb9MxrksNFLqqqqqqqqqqqqqqqqqqqq6vsDPOjuHw==
+  </data>
+ </layer>
+ <layer id="7" name="water1" width="80" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2DcOwkAYBWG33Iacb0LONyHnEzMukav1ChnEfNL06C/w0yaJJEkqUrmUJBWqUo3q1KAmtahNHepSj/qlon/xdxlwjyGNaEwTmtKM5rSgJa1oTRvv92bLPXa0pwMd6URnutCVbnSnBz29n/6Q/9NxvF8c7xfHnRDHnSBJnxHyfVdWyPddWSHfd0mSVKx0N/o2lF+6G30byi/djb4NSZKkEG7XOG7XOG5XSfoN7oU47oU47gVJkvJ5AbmmZdo=
+  </data>
+ </layer>
+ <layer id="8" name="ground" width="80" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztl0lKxEAUhlMLZz2Ds57BWXe6VsFhpzdwOIEKNugRVLBBz6Bit8MRVNSb6M6/ME0SuhKKrk69WvwPPhrSj07x8V76TxSxXOsIHIOTArpUQiWmjF792Q16QAfojK+16xym+7jWBbgEVwUMq4RqTBm9+nMEjIJBMBRfa9c5TPdxrR/wCwZUGGyATbAFtj3cx3UmX9D/GoC3BntgHxyAQw/3cZ3J0PxJ0spMLuK7pQDOHgKtzCT9FdOYybw5nAVzkfw5Q0XP5LzKn0P6s0M7XDD4q4E6/dGfkD/ur5s/zh/9Sfrj+wf9Sfrj+wf9SfpjfqE/SX/ML/Qn6Y/5hf4k/TG/0J+kP+YX+pP0x/xCf5L+mF/oT9If8wv9SfpjfqE/SX/ML/Qn6Y/5hf7K4gycg0dQA3WDP+aXfG7ALfgEX+A7QH+nOEMFzKiE/gDcaZ7As8FZuiTzi3Z3DapgXSVMgEkhZzY769tfL+hT/7N1F2W5Bw8B7YTNzqbLR34ZA+PxbL1FWd7BR0D+bHbWt7+8//68mkLvtMo+E31gu7PpWkbvimreLdOumbDpM+1oUa3iN9dU9pnoA9udTdcOendV826Zds2ETZ9pR1msP+LKeuM=
+  </data>
+ </layer>
+ <layer id="9" name="smaller_details" width="80" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmuGNwyAMhTMAC3WJ9oa4mwIIbJs1jkhYdRO4HCUpDnmfFPVP1ZKH/TCGYQAAAADaYdUw+PC48Iyq9WjOhwma6aifhn7FOPX89NBvxayJ/SO2tHp+RyKmYV54JV8fYoz+q5mfeObNppE/0zjGRv+/hWFjo3km3UwcL829BH+Zwhhu4bmz8bWEYiunDddV4vy3xjD9HPNqo15rKwftivEsryXk7hLpa4p0JPhfzyA+z8UNaywAAACQBDXNOblKb/wR3vMrvqve6K2ANd+Jni32iWt4nHHsonc8A/3WzHH2k9CF+nQ25q5TWHNKsIu8pbMM8H8of4/M2177DDlfrGHK+Kx0X6VzphJyvvguJp53pfh0XSR9vkpBXVlPrz64hO4n7R0zV9nX8XPdvWoaj9qoiiNyl+K517qVztRzXlDrD3Tniu8DeoPuaKWorTH4HRK+B73SOrXHb9B9Jdt5LB6JvljsAQAAAAD0zC/StlpG
+  </data>
+ </layer>
+ <objectgroup id="11" name="plants">
+  <object id="18" gid="3330" x="116" y="190.667" width="128" height="128"/>
+  <object id="19" gid="3330" x="68" y="676" width="128" height="128"/>
+  <object id="20" gid="3335" x="846.667" y="677.333" width="32" height="32"/>
+  <object id="21" gid="3335" x="878.667" y="469.333" width="32" height="32"/>
+  <object id="22" gid="3335" x="492" y="328" width="32" height="32"/>
+  <object id="23" gid="3325" x="274" y="686" width="32" height="32"/>
+  <object id="24" gid="3325" x="1006" y="480" width="32" height="32"/>
+  <object id="25" gid="3325" x="994" y="626" width="32" height="32"/>
+  <object id="26" gid="3325" x="420" y="392" width="32" height="32"/>
+  <object id="27" gid="3325" x="182" y="462" width="32" height="32"/>
+  <object id="28" gid="3325" x="382" y="172" width="32" height="32"/>
+  <object id="30" gid="3333" x="1038" y="376" width="64" height="64"/>
+  <object id="31" gid="3333" x="724" y="602" width="64" height="64"/>
+  <object id="32" gid="3333" x="354" y="460" width="64" height="64"/>
+  <object id="33" gid="3333" x="162" y="418" width="64" height="64"/>
+  <object id="34" gid="3333" x="544" y="232" width="64" height="64"/>
+  <object id="35" gid="3333" x="732" y="314" width="64" height="64"/>
+  <object id="36" gid="3333" x="702" y="606" width="64" height="64"/>
+  <object id="37" gid="3333" x="348" y="600" width="64" height="64"/>
+  <object id="38" gid="3333" x="70" y="256" width="64" height="64"/>
+  <object id="39" gid="3332" x="146" y="676" width="64" height="64"/>
+  <object id="40" gid="3332" x="58" y="682" width="64" height="64"/>
+  <object id="41" gid="3332" x="898" y="220" width="64" height="64"/>
+  <object id="42" gid="3332" x="854" y="426" width="64" height="64"/>
+  <object id="43" gid="3332" x="810" y="208" width="64" height="64"/>
+  <object id="44" gid="3332" x="934" y="200" width="64" height="64"/>
+  <object id="45" gid="3323" x="1106" y="206" width="64" height="64"/>
+  <object id="46" gid="3323" x="1126" y="480" width="64" height="64"/>
+  <object id="47" gid="3323" x="1072" y="648" width="64" height="64"/>
+  <object id="48" gid="3327" x="612" y="486" width="128" height="128"/>
+  <object id="49" gid="3327" x="565" y="499" width="128" height="128"/>
+  <object id="50" gid="3327" x="631" y="518" width="128" height="128"/>
+  <object id="51" gid="3328" x="244" y="156" width="128" height="128"/>
+  <object id="52" gid="3328" x="268" y="158" width="128" height="128"/>
+  <object id="53" gid="3327" x="250" y="134" width="128" height="128"/>
+ </objectgroup>
+ <objectgroup id="13" name="limiters" visible="0">
+  <object id="62" type="limiters" x="8" y="28">
+   <polygon points="0,0 600,1.33333 598.667,-26.6667 -5.33333,-29.3333"/>
+  </object>
+  <object id="64" type="limiters" x="640.5" y="66">
+   <polygon points="0,0 -34,-2 -33.5,-64 0.5,-63.5"/>
+  </object>
+  <object id="65" type="limiters" x="641.5" y="30.5">
+   <polygon points="0,0 380.5,-4.5 378.5,-28.5 0.5,-28.5"/>
+  </object>
+  <object id="66" type="limiters" x="1020.67" y="0">
+   <polygon points="0,0 4,55.3333 80.6667,62 84,1.33333"/>
+  </object>
+  <object id="67" type="limiters" x="1102" y="2">
+   <polygon points="0,0 3.33333,84.6667 76,91.3333 81.3333,0.666667"/>
+  </object>
+  <object id="68" type="limiters" x="1184" y="2">
+   <polygon points="0,0 0.666667,117.333 2,124.667 92,128 96,-2"/>
+  </object>
+  <object id="69" type="limiters" x="1216.67" y="123.333">
+   <polygon points="0,0 -1.33333,535.333 65.3333,534.667 62,0.666667"/>
+  </object>
+  <object id="71" type="limiters" x="1171.33" y="659.333">
+   <polygon points="0,0 110,-2.66667 112,140.667 -2.66667,140"/>
+  </object>
+  <object id="72" type="limiters" x="1165.33" y="703.333">
+   <polygon points="0,0 -42.6667,0 -47.3333,94 8.66667,94"/>
+  </object>
+  <object id="73" type="limiters" x="1115.33" y="757.333">
+   <polygon points="0,0 1.33333,44.6667 -495.333,42.6667 -487.333,-6.66667"/>
+  </object>
+  <object id="74" type="limiters" x="620" y="696">
+   <polygon points="0,0 1.33333,102.667 -82.6667,104 -76,-1.33333"/>
+  </object>
+  <object id="75" type="limiters" x="432" y="728">
+   <polygon points="0,0 108,1.33333 114.667,70.6667 -8,70.6667"/>
+  </object>
+  <object id="76" type="limiters" x="428" y="768">
+   <polygon points="0,0 -1.33333,29.3333 -430.667,34.6667 -424,4"/>
+  </object>
+  <object id="77" type="limiters" x="37.3333" y="765.333">
+   <polygon points="0,0 -5.33333,-734.667 -30.6667,-737.333 -33.3333,-1.33333"/>
+  </object>
+ </objectgroup>
+</map>

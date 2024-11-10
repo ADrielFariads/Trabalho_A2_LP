@@ -1,132 +1,86 @@
-import pygame, sys
-from button import Button
+import pygame
+from pytmx.util_pygame import load_pygame
+import random
+
 from player import Player
-from guns import Gun
+from guns import Gun, Bullet
+from camera import Camera
+from background import Background, Tile, CollisionSprite
+from enemies import Enemy
 
-#initial setup
-pygame.init()
+# initial setup
+class Game:
+    def __init__(self):
+        # initial setup
+        pygame.init()
+        self.display_surface = pygame.display.set_mode((1280, 720))
+        pygame.display.set_caption("Cosmic Survivor")
+        self.running = True
+        self.clock = pygame.time.Clock()
 
-window_width, window_height = 1280, 720
-display_surface = pygame.display.set_mode((window_width, window_height))
+        # camera settings
+        self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
 
-BG = pygame.image.load("assets/images/Menu/Background.png")
+        # Initialize background
+        self.background = Background("assets\\background_files\\map002.tmx", 16, self.display_surface)  
 
-def get_font(size): 
-    return pygame.font.Font("assets/images/Menu/font.ttf", size)
+        # sprites
+        self.player = Player(640, 360, 1000, 5, self.background.collision_group)
+        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 500, Bullet)
 
-clock = pygame.time.Clock()
-running = True
-
-#class instances
-
-player = Player(window_width/2, window_height/2, 500, 5)
-
-gun = Gun(player, "assets\\images\\Guns\\1_1.png", 10, 2, "bullet")
-
-player_group = pygame.sprite.GroupSingle(player)
-gun_group = pygame.sprite.GroupSingle(gun)
+        # groups
+        self.player_group = pygame.sprite.GroupSingle(self.player)
+        self.gun_group = pygame.sprite.GroupSingle(self.gun)
+        self.bullet_group = pygame.sprite.Group()
 
 
-def play():
-    global running
-    global delta_time
-    while running:
-        delta_time = clock.tick(60)
+        #enemies generation
+        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemies_group = pygame.sprite.Group(self.enemy1)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-            #test health bar
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_DOWN:
-                    player.get_damaged(50)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    player.get_healed(50)
-
-        keys = pygame.key.get_pressed()
         
-        
-        #updating methods
-        player_group.update(keys, display_surface.get_rect())
-        gun_group.update()
+
+    def run(self):
+        while self.running:
+            delta_time = self.clock.tick(60)
+
+            # event loop
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    self.gun.shoot(self.bullet_group)
+
+            keys = pygame.key.get_pressed()
+
+            # updates
+            self.player.update(keys, self.display_surface.get_rect())
+            self.enemies_group.update()
+            self.gun.update()
+            self.bullet_group.update()
+
+            #self.camera.update(self.player_group) #not working yet
+            self.display_surface.fill((30, 30, 30))
+
+            # drawings
+            self.background.draw(self.camera)
+            
 
 
-        #drawning the objects in the screen
-        display_surface.fill((30, 30, 30))
-        player.health_bar(display_surface)
-        player_group.draw(display_surface)
-        gun_group.draw(display_surface)
+            self.player_group.draw(self.display_surface)
+            self.gun_group.draw(self.display_surface)
+            self.bullet_group.draw(self.display_surface)
+            self.enemies_group.draw(self.display_surface)
+            self.player.health_bar(self.display_surface)
 
-        pygame.display.flip()
+            pygame.display.flip()
 
-    
-def options():
-    while True:
-        OPTIONS_MOUSE_POS = pygame.mouse.get_pos()
 
-        display_surface.fill("white")
+        pygame.quit()
 
-        OPTIONS_TEXT = get_font(40).render("This is the OPTIONS screen.", True, "Black")
-        OPTIONS_RECT = OPTIONS_TEXT.get_rect(center=(640, 260))
-        display_surface.blit(OPTIONS_TEXT, OPTIONS_RECT)
 
-        OPTIONS_BACK = Button(image=None, pos=(640, 460), 
-                            text_input="BACK", font=get_font(75), base_color="Black", hovering_color="Green")
 
-        OPTIONS_BACK.changeColor(OPTIONS_MOUSE_POS)
-        OPTIONS_BACK.update(display_surface)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if OPTIONS_BACK.checkForInput(OPTIONS_MOUSE_POS):
-                    main_menu()
-
-        pygame.display.update()
-
-def main_menu():
-    while True:
-        display_surface.blit(BG, (0, 0))
-
-        MENU_MOUSE_POS = pygame.mouse.get_pos()
-        #shadows
-        MENU_TEXT_SHADOW = get_font(80).render("COSMIC SURVIVOR", True, "black")
-        MENU_RECT_SHADOW = MENU_TEXT_SHADOW.get_rect(center=(642, 102))
-        display_surface.blit(MENU_TEXT_SHADOW, MENU_RECT_SHADOW)
-        #main texts
-        MENU_TEXT = get_font(80).render("COSMIC SURVIVOR", True, "#b68f40")
-        MENU_RECT = MENU_TEXT.get_rect(center=(640, 100))
-
-        PLAY_BUTTON = Button(image=pygame.image.load("assets/images/Menu/Play Rect.png"), pos=(640, 250), 
-                            text_input="PLAY", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("assets/images/Menu/Options Rect.png"), pos=(640, 400), 
-                            text_input="OPTIONS", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("assets/images/Menu/Quit Rect.png"), pos=(640, 550), 
-                            text_input="QUIT", font=get_font(75), base_color="#d7fcd4", hovering_color="White")
-
-        display_surface.blit(MENU_TEXT, MENU_RECT)
-
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
-            button.changeColor(MENU_MOUSE_POS)
-            button.update(display_surface)
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    play()
-                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    options()
-                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    pygame.quit()
-                    sys.exit()
-
-        pygame.display.update()
-
-main_menu()
+if __name__ == "__main__":
+    game = Game()
+    game.run()
