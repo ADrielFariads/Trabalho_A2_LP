@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
         directions = 4
         frames_x_axis = 11
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
-        frame_height = self.sprite_sheet.get_height() // 5
+        frame_height = self.sprite_sheet.get_height() // directions
 
         self.frames = []
         for direction in range(directions):
@@ -102,16 +102,16 @@ class Enemy(pygame.sprite.Sprite):
                 self.attack_counter = 0
             
 
-        if self.direction.x > 0:
+        if self.direction.x > 0 and self.direction.x >= (self.direction.y **2) **(1/2):
             self.frames = self.divided_frames[1]
 
-        elif self.direction.x < 0:
+        elif self.direction.x < 0 and (self.direction.x**2) **(1/2) >= (self.direction.y**2) **(1/2):
             self.frames = self.divided_frames[3]
 
-        elif self.direction.y < 0: 
+        elif self.direction.y < 0 and (self.direction.y**2) **(1/2) > (self.direction.x**2) **(1/2): 
             self.frames = self.divided_frames[2]
 
-        elif self.direction.y > 0: 
+        elif self.direction.y > 0 and self.direction.y > (self.direction.x**2) **(1/2): 
             self.frames = self.divided_frames[0]
 
 
