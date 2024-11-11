@@ -35,7 +35,7 @@ class Game:
 
 
         #enemies generation
-        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         
