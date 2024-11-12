@@ -54,7 +54,7 @@ class Game:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    self.gun.shoot(self.bullet_group, self.all_sprites.offset)
+                    self.gun.shoot(self.bullet_group)
 
             keys = pygame.key.get_pressed()
 
