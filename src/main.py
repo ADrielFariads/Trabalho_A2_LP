@@ -35,7 +35,7 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.enemy1 = Enemy(300, 300, "assets\\images\\enemies\\goblins\\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemy1 = Enemy(800, 800, "assets\\images\\enemies\\goblins\\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         #camera interaction
@@ -54,7 +54,7 @@ class Game:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    self.gun.shoot(self.bullet_group)
+                    self.gun.shoot(self.bullet_group, self.all_sprites.offset)
 
             keys = pygame.key.get_pressed()
 
