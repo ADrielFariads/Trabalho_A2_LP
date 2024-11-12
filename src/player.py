@@ -112,48 +112,48 @@ class Player(pygame.sprite.Sprite):
 
         #movement logic
         direction = pygame.math.Vector2(0,0)
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] and not keys[pygame.K_d]:  # left only
             direction.x = -1
             self.facing_right = False
+            self.set_action("walk")
 
-        if keys[pygame.K_d]:
+        elif keys[pygame.K_d] and not keys[pygame.K_a]:  # right only
             direction.x = 1
             self.facing_right = True
+            self.set_action("walk")
 
-        if keys[pygame.K_w]: 
-            direction.y = -1 
+        elif keys[pygame.K_w] and not keys[pygame.K_s]:  # up only
+            direction.y = -1
             self.set_action("walkup")
-            
-        if keys[pygame.K_s]:
+
+        elif keys[pygame.K_s] and not keys[pygame.K_w]:  # down only
             direction.y = 1
             self.set_action("walkdown")
 
-        if direction.length() > 0: #walk detection for animation
-            direction = direction.normalize()
-            if not keys[pygame.K_w]:
-                self.set_action("walk")
-            if not keys[pygame.K_s]:
-                self.set_action("walk")
-
-        else:   #idle animation setter
+    #      
+        if direction.length() == 0: #verify is player is idle
             self.set_action("idle")
 
+        
+        if direction.length() > 0:  #updates the direction of the player
+            direction = direction.normalize()
+
         self.position.x += direction.x * self.speed
-        self.rect.centerx = self.position.x
-
         self.position.y += direction.y * self.speed
-        self.rect.centery = self.position.y
+        self.rect.center = self.position
 
+        # Impede que o personagem saia dos limites da tela
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
-        
+        # Atualiza o quadro de animação
+        self.frame_counter += 1
+        if self.frame_counter >= self.animation_speed:
+            self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
+            self.frame_counter = 0
 
         current_image = self.frames[self.current_frame_index]
-        if not self.facing_right:
-            self.image = pygame.transform.flip(current_image, True, False)
-        else:
-            self.image = current_image
+        self.image = pygame.transform.flip(current_image, True, False) if not self.facing_right else current_image
         
 
 ################# HEALTH LOGIC ##############################################################
