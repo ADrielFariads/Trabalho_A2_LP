@@ -23,7 +23,7 @@ class Game:
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
 
         # Initialize background
-        self.background = Background("assets\\background_files\\map004.tmx", 16, self.display_surface)  
+        self.background = Background("assets\\background_files\\map002.tmx", 16, self.display_surface)  
 
         # sprites
         self.player = Player((640, 360), 1000, 5, self.background.collision_group)
