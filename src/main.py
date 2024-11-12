@@ -33,12 +33,9 @@ class Game:
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
         self.bullet_group = pygame.sprite.Group()
 
-
-        #enemies generation
-        self.enemy1 = Enemy(300, 300, "assets\images\enemies\goblins\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
+        # enemies generation
+        self.enemy1 = Enemy(300, 300, "assets\\images\\enemies\\goblins\\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
-
-        
 
     def run(self):
         while self.running:
@@ -56,17 +53,14 @@ class Game:
 
             # updates
             self.player.update(keys, self.display_surface.get_rect())
-            self.enemies_group.update()
             self.gun.update()
             self.bullet_group.update()
+            self.enemies_group.update()
 
-            #self.camera.update(self.player_group) #not working yet
             self.display_surface.fill((30, 30, 30))
 
             # drawings
             self.background.draw(self.camera)
-            
-
 
             self.player_group.draw(self.display_surface)
             self.gun_group.draw(self.display_surface)
@@ -76,9 +70,7 @@ class Game:
 
             pygame.display.flip()
 
-
         pygame.quit()
-
 
 
 if __name__ == "__main__":
