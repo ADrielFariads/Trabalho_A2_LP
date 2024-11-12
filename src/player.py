@@ -78,8 +78,18 @@ class Player(pygame.sprite.Sprite):
         
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Walk1.png").convert_alpha()
+            self.sprite_sheet = pygame.image.load("assets/images/Player/Walk1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 6)
+
+        if action == "walkup":
+            self.current_action = "walkup"
+            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkUp.png").convert_alpha() 
+            self.frames = self.load_frames(self.sprite_sheet, 8)
+
+        if action == "walkdown":
+            self.current_action = "walkdown"
+            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkDown.png").convert_alpha() 
+            self.frames = self.load_frames(self.sprite_sheet, 8)
 
 ################# GETTER METHODS ###################################################
     def get_position(self):
@@ -102,43 +112,48 @@ class Player(pygame.sprite.Sprite):
 
         #movement logic
         direction = pygame.math.Vector2(0,0)
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] and not keys[pygame.K_d]:  # Esquerda apenas
             direction.x = -1
             self.facing_right = False
-
-        if keys[pygame.K_d]:
-            direction.x = 1
-            self.facing_right = True
-
-        if keys[pygame.K_w]:
-            direction.y = -1
-        if keys[pygame.K_s]:
-            direction.y = 1
-
-        if direction.length() > 0: #walk detection for animation
-            direction = direction.normalize()
             self.set_action("walk")
 
-        else:   #idle animation setter
+        elif keys[pygame.K_d] and not keys[pygame.K_a]:  # Direita apenas
+            direction.x = 1
+            self.facing_right = True
+            self.set_action("walk")
+
+        elif keys[pygame.K_w] and not keys[pygame.K_s]:  # Para cima apenas
+            direction.y = -1
+            self.set_action("walkup")
+
+        elif keys[pygame.K_s] and not keys[pygame.K_w]:  # Para baixo apenas
+            direction.y = 1
+            self.set_action("walkdown")
+
+        # Se não há direção de movimento, define animação como 'idle'
+        if direction.length() == 0:
             self.set_action("idle")
 
+        # Atualiza a posição do jogador
+        if direction.length() > 0:
+            direction = direction.normalize()
+
         self.position.x += direction.x * self.speed
-        self.rect.centerx = self.position.x
-
         self.position.y += direction.y * self.speed
-        self.rect.centery = self.position.y
+        self.rect.center = self.position
 
+        # Impede que o personagem saia dos limites da tela
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
-        
+        # Atualiza o quadro de animação
+        self.frame_counter += 1
+        if self.frame_counter >= self.animation_speed:
+            self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
+            self.frame_counter = 0
 
         current_image = self.frames[self.current_frame_index]
-        if not self.facing_right:
-            self.image = pygame.transform.flip(current_image, True, False)
-        else:
-            self.image = current_image
-        
+        self.image = pygame.transform.flip(current_image, True, False) if not self.facing_right else current_image
 
 ################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
