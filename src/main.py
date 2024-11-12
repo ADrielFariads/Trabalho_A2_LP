@@ -14,7 +14,7 @@ class Game:
     def __init__(self):
         # initial setup
         pygame.init()
-        self.display_surface = pygame.display.set_mode((1280, 800))
+        self.display_surface = pygame.display.set_mode((1080, 640))
         pygame.display.set_caption("Cosmic Survivor")
         self.running = True
         self.clock = pygame.time.Clock()
@@ -23,10 +23,10 @@ class Game:
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
 
         # Initialize background
-        self.background = Background("assets\\background_files\\map002.tmx", 16, self.display_surface)  
+        self.background = Background("assets\\background_files\\map004.tmx", 16, self.display_surface)  
 
         # sprites
-        self.player = Player(640, 360, 1000, 5, self.background.collision_group)
+        self.player = Player((640, 360), 1000, 5, self.background.collision_group)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 500, Bullet)
 
         # groups
@@ -70,8 +70,6 @@ class Game:
             # drawings
             self.all_sprites.draw(self.player.rect.center)
 
-
-            self.bullet_group.draw(self.display_surface)
         
             self.player.health_bar(self.display_surface)
 

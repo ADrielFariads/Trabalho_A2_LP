@@ -1,7 +1,7 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, posx, posy, health, speed, colidders=None):
+    def __init__(self, pos, health, speed, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
@@ -30,9 +30,8 @@ class Player(pygame.sprite.Sprite):
         self.facing_right = True #side facing animation
 
         #position logic
-        self.position = pygame.math.Vector2(posx, posy)
-        self.rect = self.image.get_rect(center = (posx, posy))
-        self.hitbox = pygame.Rect(self.rect.x, self.rect.y, self.rect.width - 40, self.rect.height)
+        self.position = pygame.math.Vector2(pos)
+        self.rect = self.image.get_rect(center = (pos))
 
 
         self.health_bar_lenght = 500
@@ -121,7 +120,6 @@ class Player(pygame.sprite.Sprite):
 
 
         #movement logic
-        self.hitbox.center = self.rect.center
         
         self.direction.x = 0
         self.direction.y = 0
@@ -153,7 +151,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = self.position.y
         self.collision("vertical")
 
-        self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
 
         

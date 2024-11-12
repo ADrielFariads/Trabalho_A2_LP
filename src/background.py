@@ -14,7 +14,13 @@ class CollisionSprite(pygame.sprite.Sprite):
     def __init__(self,pos, size, *groups):
         super().__init__(*groups)
         self.image = pygame.Surface(size, pygame.SRCALPHA)
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(center=pos)
+
+class PlantSprite(pygame.sprite.Sprite):
+    def __init__(self, image, pos, *groups):
+        super().__init__(*groups)
+        self.image = image
+        self.rect = self.image.get_rect(center=pos).inflate(-64, -64)
 
 class Background:
     def __init__(self, map_path, tile_size, screen):
@@ -23,7 +29,6 @@ class Background:
         self.screen = screen
         self.ground_group = pygame.sprite.Group()
         self.collision_group = pygame.sprite.Group()
-        self.collision_obj = []
         
         # Load the map and set up tiles and collision objects
         self.load_map()
@@ -39,9 +44,13 @@ class Background:
                     Tile(pos=pos, image=surf, groups=self.ground_group)
         
         #load objects
-        for obj in self.tmx_data.objects: 
-            self.collision_group.add(CollisionSprite((obj.x, obj.y), (obj.width, obj.height)))
-
+        for obj in self.tmx_data.objects:
+            if obj.type == "plants":
+                print(obj.height, obj.width)
+                print(obj.x, obj.y)
+                self.collision_group.add(PlantSprite(obj.image, (obj.x, obj.y)))
+            if obj.type == "limiters":
+                self.collision_group.add(CollisionSprite((obj.x, obj.y), (obj.width, obj.width)))
 
 
         
