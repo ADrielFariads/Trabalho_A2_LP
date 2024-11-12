@@ -1,13 +1,13 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, posx, posy, health, speed):
+    def __init__(self, posx, posy, health, speed, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
         self.current_action = "idle"
 
-        #calculating the frame size (just for idle image, remember to refactor a function later)
+        #calculating the frame size 
         frames_x_axis = 4
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
         frame_height = self.sprite_sheet.get_height()
@@ -35,6 +35,9 @@ class Player(pygame.sprite.Sprite):
         self.health_bar_lenght = 500
         self.health_change_speed = 2
         self.target_health = health
+
+        #colidders
+        self.colliders = colidders
 
         #player atributes 
         self.speed = speed
@@ -75,13 +78,17 @@ class Player(pygame.sprite.Sprite):
         
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/Run1.png")
+            self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Walk1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
 ################# GETTER METHODS ###################################################
     def get_position(self):
         return self.position
-    
+
+################# COLLISION METHOD ####################################################     
+    def collision(self, direction):
+        pass
+
 ################# UPDATE METHOD #################################################### 
     def update(self, keys, screen_rect):
 
@@ -115,17 +122,23 @@ class Player(pygame.sprite.Sprite):
         else:   #idle animation setter
             self.set_action("idle")
 
-        self.position += direction * self.speed
-        self.rect.center = self.position
+        self.position.x += direction.x * self.speed
+        self.rect.centerx = self.position.x
+
+        self.position.y += direction.y * self.speed
+        self.rect.centery = self.position.y
 
         self.rect.clamp_ip(screen_rect)
         self.position = pygame.math.Vector2(self.rect.center)
+
+        
 
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:
             self.image = pygame.transform.flip(current_image, True, False)
         else:
             self.image = current_image
+        
 
 ################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
