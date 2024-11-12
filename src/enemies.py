@@ -6,20 +6,16 @@ class Enemy(pygame.sprite.Sprite):
         #loading image
         self.sprite_sheet = pygame.image.load(sprite_sheet).convert_alpha()
 
-        directions = 4
         frames_x_axis = 11
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
-        frame_height = self.sprite_sheet.get_height() // directions
+        frame_height = self.sprite_sheet.get_height()
 
         self.frames = []
-        for direction in range(directions):
-            for each in range(frames_x_axis):
-                frame = self.sprite_sheet.subsurface((each * frame_widht, direction * frame_height, frame_widht, frame_height))
-        
-                redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht), int(frame_height)))
-                self.frames.append(redimentioned_frame)
-
-        self.divided_frames = [self.frames[i:i+11] for i in range(0, len(self.frames), 11)] #Dividing the list in subslists to each direction
+        for each in range(frames_x_axis):
+            frame = self.sprite_sheet.subsurface((each * frame_widht, 0, frame_widht, frame_height))
+    
+            redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht), int(frame_height)))
+            self.frames.append(redimentioned_frame)
 
         #initial frame setting
         self.current_frame_index = 0
@@ -100,19 +96,6 @@ class Enemy(pygame.sprite.Sprite):
             if self.attack_counter >= self.attack_delay:
                 self.attack(self.target)
                 self.attack_counter = 0
-            
-
-        if self.direction.x > 0 and self.direction.x >= (self.direction.y **2) **(1/2):
-            self.frames = self.divided_frames[1]
-
-        elif self.direction.x < 0 and (self.direction.x**2) **(1/2) >= (self.direction.y**2) **(1/2):
-            self.frames = self.divided_frames[3]
-
-        elif self.direction.y < 0 and (self.direction.y**2) **(1/2) > (self.direction.x**2) **(1/2): 
-            self.frames = self.divided_frames[2]
-
-        elif self.direction.y > 0 and self.direction.y > (self.direction.x**2) **(1/2): 
-            self.frames = self.divided_frames[0]
 
 
 

@@ -1,7 +1,7 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, posx, posy, health, speed, colidders=None):
+    def __init__(self, pos, health, speed, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
@@ -24,17 +24,20 @@ class Player(pygame.sprite.Sprite):
 
         #initial frame setting
         self.current_frame_index = 0
-        self.animation_speed = 10 #bigger values for a smothier animation
+        self.animation_speed = 8 #bigger values for a smothier animation
         self.frame_counter = 0 #counter of animation
         self.image = self.frames[self.current_frame_index] #current image 
         self.facing_right = True #side facing animation
 
         #position logic
-        self.position = pygame.math.Vector2(posx, posy)
-        self.rect = self.image.get_rect(center = (posx, posy))
+        self.position = pygame.math.Vector2(pos)
+        self.rect = self.image.get_rect(center = (pos))
+
+
         self.health_bar_lenght = 500
         self.health_change_speed = 2
         self.target_health = health
+        self.direction = pygame.math.Vector2(0,0)
 
         #colidders
         self.colliders = colidders
@@ -97,7 +100,21 @@ class Player(pygame.sprite.Sprite):
 
 ################# COLLISION METHOD ####################################################     
     def collision(self, direction):
-        pass
+        for sprite in self.colliders:
+            if sprite.rect.colliderect(self.rect):
+                if direction == "horizontal":
+                    if self.direction.x > 0:
+                        self.rect.right = sprite.rect.left
+
+                    if self.direction.x < 0:
+                        self.rect.left = sprite.rect.right
+
+                if direction == "vertical":
+                    if self.direction.y > 0:
+                        self.rect.bottom = sprite.rect.top
+
+                    if self.direction.y < 0:
+                        self.rect.top = sprite.rect.bottom
 
 ################# UPDATE METHOD #################################################### 
     def update(self, keys, screen_rect):
@@ -111,36 +128,45 @@ class Player(pygame.sprite.Sprite):
 
 
         #movement logic
-        direction = pygame.math.Vector2(0,0)
-        if keys[pygame.K_a] and not keys[pygame.K_d]:  # Esquerda apenas
-            direction.x = -1
+        self.direction.x = 0
+        self.direction.y = 0
+        if keys[pygame.K_a] and not keys[pygame.K_d]:  # left only
+            self.direction.x = -1
             self.facing_right = False
             self.set_action("walk")
 
-        elif keys[pygame.K_d] and not keys[pygame.K_a]:  # Direita apenas
-            direction.x = 1
+        elif keys[pygame.K_d] and not keys[pygame.K_a]:  # right only
+            self.direction.x = 1
             self.facing_right = True
             self.set_action("walk")
 
-        elif keys[pygame.K_w] and not keys[pygame.K_s]:  # Para cima apenas
-            direction.y = -1
+        elif keys[pygame.K_w] and not keys[pygame.K_s]:  # up only
+            self.direction.y = -1
             self.set_action("walkup")
 
-        elif keys[pygame.K_s] and not keys[pygame.K_w]:  # Para baixo apenas
-            direction.y = 1
+        elif keys[pygame.K_s] and not keys[pygame.K_w]:  # down only
+            self.direction.y = 1
             self.set_action("walkdown")
 
-        # Se não há direção de movimento, define animação como 'idle'
-        if direction.length() == 0:
+         
+        if self.direction.length() == 0: #verify is player is idle
             self.set_action("idle")
 
-        # Atualiza a posição do jogador
-        if direction.length() > 0:
-            direction = direction.normalize()
+        
+        if self.direction.length() > 0:  #updates the direction of the player
+            self.direction = self.direction.normalize()
 
-        self.position.x += direction.x * self.speed
-        self.position.y += direction.y * self.speed
-        self.rect.center = self.position
+        # Atualiza a posição do jogador
+        if self.direction.length() > 0:
+            self.direction = self.direction.normalize()
+
+        self.position.x += self.direction.x * self.speed
+        self.rect.centerx = self.position.x
+        self.collision("horizontal")
+
+        self.position.y += self.direction.y * self.speed
+        self.rect.centery = self.position.y
+        self.collision("vertical")
 
         # Impede que o personagem saia dos limites da tela
         self.rect.clamp_ip(screen_rect)
@@ -148,12 +174,12 @@ class Player(pygame.sprite.Sprite):
 
         # Atualiza o quadro de animação
         self.frame_counter += 1
-        if self.frame_counter >= self.animation_speed:
-            self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
-            self.frame_counter = 0
-
         current_image = self.frames[self.current_frame_index]
-        self.image = pygame.transform.flip(current_image, True, False) if not self.facing_right else current_image
+        if not self.facing_right:
+            self.image = pygame.transform.flip(current_image, True, False)
+        else:
+            self.image = current_image
+        
 
 ################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
