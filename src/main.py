@@ -69,7 +69,7 @@ class Game:
 
             # drawings
             self.all_sprites.draw(self.player.rect.center)
-
+            self.bullet_group.draw(self.display_surface)
         
             self.player.health_bar(self.display_surface)
 
