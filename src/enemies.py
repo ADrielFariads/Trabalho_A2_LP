@@ -1,12 +1,19 @@
+"""
+Module for enemies creation and enemies generation
+
+"""
+
+
 import pygame
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self,pos_x, pos_y, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group):
+    def __init__(self, pos, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group):
         super().__init__()
+
         #loading image
         self.sprite_sheet = pygame.image.load(sprite_sheet).convert_alpha()
 
-        frames_x_axis = 11
+        frames_x_axis = 11 #frames in sprite sheet
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
         frame_height = self.sprite_sheet.get_height()
 
@@ -22,9 +29,11 @@ class Enemy(pygame.sprite.Sprite):
         self.animation_speed = 10 #bigger values for a smothier animation
         self.frame_counter = 0 #counter of animation
 
-        self.position = pygame.math.Vector2(pos_x, pos_y)
+        self.x = pos[0]
+        self.y = pos[1]
+        self.position = pygame.math.Vector2(self.x, self.y)
         self.image = self.frames[self.current_frame_index]
-        self.rect = self.image.get_rect(center=(pos_x, pos_y))
+        self.rect = self.image.get_rect(center=(self.x, self.y))
 
 
         
@@ -68,6 +77,8 @@ class Enemy(pygame.sprite.Sprite):
         distance = current_pos.distance_to(player_pos)
         return distance
 
+
+    #
     def track_player(self):
         player_pos = pygame.math.Vector2(self.target.rect.center)
         current_pos = pygame.math.Vector2(self.rect.center)
@@ -96,8 +107,6 @@ class Enemy(pygame.sprite.Sprite):
             if self.attack_counter >= self.attack_delay:
                 self.attack(self.target)
                 self.attack_counter = 0
-
-
 
 
         #animation logic

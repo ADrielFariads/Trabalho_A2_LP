@@ -5,7 +5,7 @@ import random
 from player import Player
 from guns import Gun, Bullet
 from camera import Camera
-from background import Background, Tile, CollisionSprite
+from background import Background
 from enemies import Enemy
 from groups import AllSpritesgroup
 
