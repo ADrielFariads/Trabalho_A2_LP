@@ -59,14 +59,14 @@ class Gun(pygame.sprite.Sprite):
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, position, target_x, target_y,offset, group):
+    def __init__(self, position, target_x, target_y, group):
         super().__init__(group)
-        self.pos = position-offset
+        self.pos = position
         self.image = pygame.Surface((10, 10))  # Create a bullet with a 10x10 surface
         self.image.fill((255, 0, 0))  # Set bullet color to red
         self.rect = self.image.get_rect(center=position)  # Set bullet's initial position
 
-        self.speed = 1  # Set the bullet's speed
+        self.speed = 10  # Set the bullet's speed
 
         # Calculate direction to the target (mouse position)
         self.dx = target_x - self.rect.centerx

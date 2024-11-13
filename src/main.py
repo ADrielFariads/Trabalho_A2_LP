@@ -40,7 +40,7 @@ class Game:
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
-        self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group, self.player, self.bullet_group)
+        self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group, self.player,self.gun_group, self.bullet_group)
 
         
 
@@ -48,21 +48,20 @@ class Game:
 
         while self.running:
             delta_time = self.clock.tick(60)
-            
+            keys = pygame.key.get_pressed()
+
             # event loop
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    target = pygame.mouse.get_pos()
-                    print(self.all_sprites.offset)
-                    self.bullet_group.add(Bullet(self.player.position, target[0], target[1], self.all_sprites.offset, self.bullet_group))
-                    self.all_sprites.add(self.bullet_group)
-                    print(self.all_sprites)
+                    self.all_sprites.add(self.gun.shoot(self.bullet_group, self.all_sprites.offset))
+
+                    
 
 
-            keys = pygame.key.get_pressed()
+            
 
             # updates
             self.player.update(keys, self.display_surface.get_rect())
