@@ -22,7 +22,9 @@ class Gun(pygame.sprite.Sprite):
         self.last_shot_time = 0  # Time of the last shot
 
     def get_direction(self):
+        # Get the direction to the mouse position
         mouse_position = pygame.Vector2(pygame.mouse.get_pos())  # Get mouse position for aiming
+        return mouse_position
 
     def update_position(self):
         # Update the gun's position to follow the player's position
@@ -50,21 +52,21 @@ class Gun(pygame.sprite.Sprite):
             mouse_x -= camera_offset.x
             mouse_y -= camera_offset.y
 
-            # Create and return a new bullet
-            bullet = self.bullet_class(self.rect.center, mouse_x, mouse_y, bullet_group)
+            # Create and return a new bullet from the player's position
+            bullet = self.bullet_class(self.player.get_position(), mouse_x, mouse_y, bullet_group)
             return bullet
         return None
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, position, target_x, target_y, group):
+    def __init__(self, position, target_x, target_y,offset, group):
         super().__init__(group)
-
-        self.image = pygame.Surface((5,5))  # Create a bullet with a 5x5 surface
+        self.pos = position-offset
+        self.image = pygame.Surface((10, 10))  # Create a bullet with a 10x10 surface
         self.image.fill((255, 0, 0))  # Set bullet color to red
         self.rect = self.image.get_rect(center=position)  # Set bullet's initial position
 
-        self.speed = 15  # Set the bullet's speed
+        self.speed = 1  # Set the bullet's speed
 
         # Calculate direction to the target (mouse position)
         self.dx = target_x - self.rect.centerx
@@ -75,8 +77,10 @@ class Bullet(pygame.sprite.Sprite):
         if distance != 0:
             self.dx /= distance
             self.dy /= distance
-    
+
     def update(self):
         # Move the bullet towards the target based on its speed
         self.rect.x += self.dx * self.speed
         self.rect.y += self.dy * self.speed
+        
+

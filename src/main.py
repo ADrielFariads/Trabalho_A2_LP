@@ -27,7 +27,7 @@ class Game:
 
         # sprites
         self.player = Player((640, 360), 1000, 5, self.background.collision_group)
-        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 500, Bullet)
+        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 100, Bullet)
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -40,21 +40,27 @@ class Game:
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
-        self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group, self.player, self.gun_group, self.enemies_group, self.bullet_group)
+        self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group, self.player, self.bullet_group)
 
         
 
     def run(self):
+
         while self.running:
             delta_time = self.clock.tick(60)
-
+            
             # event loop
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    self.gun.shoot(self.bullet_group, self.all_sprites.offset)
+                    target = pygame.mouse.get_pos()
+                    print(self.all_sprites.offset)
+                    self.bullet_group.add(Bullet(self.player.position, target[0], target[1], self.all_sprites.offset, self.bullet_group))
+                    self.all_sprites.add(self.bullet_group)
+                    print(self.all_sprites)
+
 
             keys = pygame.key.get_pressed()
 
@@ -64,12 +70,11 @@ class Game:
             self.gun.update()
             self.bullet_group.update()
 
-            #self.camera.update(self.player_group) #not working yet
+            self.camera.update(self.player_group) #not working yet
             self.display_surface.fill((30, 30, 30))
 
             # drawings
             self.all_sprites.draw(self.player.rect.center)
-
         
             self.player.health_bar(self.display_surface)
 
