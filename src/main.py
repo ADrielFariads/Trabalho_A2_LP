@@ -6,7 +6,7 @@ from player import Player
 from guns import Gun, Bullet
 from camera import Camera
 from background import Background
-from enemies import Enemy
+from enemies import Enemy, Goblin
 from groups import AllSpritesgroup
 
 # initial setup
@@ -23,10 +23,10 @@ class Game:
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
 
         # Initialize background
-        self.background = Background("assets\\background_files\\map004.tmx", 16, self.display_surface)  
+        self.background = Background("assets\\background_files\\map005.tmx", 16, self.display_surface)  
 
         # sprites
-        self.player = Player((640, 360), 1000, 5, self.background.collision_group)
+        self.player = Player((1000, 1000), 1000, 8, self.background.collision_group)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 100, Bullet)
 
         # groups
@@ -35,7 +35,7 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.enemy1 = Enemy((800, 800), "assets\\images\\enemies\\goblins\\goblin_front_view.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemy1 = Goblin((800, 800), self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         #camera interaction
@@ -57,6 +57,8 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self.all_sprites.add(self.gun.shoot(self.bullet_group, self.all_sprites.offset))
+                
+                
 
                     
 

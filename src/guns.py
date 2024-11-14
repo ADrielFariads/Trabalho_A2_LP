@@ -66,7 +66,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image.fill((255, 0, 0))  # Set bullet color to red
         self.rect = self.image.get_rect(center=position)  # Set bullet's initial position
 
-        self.speed = 10  # Set the bullet's speed
+        self.speed = 25  # Set the bullet's speed
 
         # Calculate direction to the target (mouse position)
         self.dx = target_x - self.rect.centerx

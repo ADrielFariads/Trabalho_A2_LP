@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
 
         #initial frame setting
         self.current_frame_index = 0
-        self.animation_speed = 10 #bigger values for a smothier animation
+        self.animation_speed = 8 #bigger values for a smothier animation
         self.frame_counter = 0 #counter of animation
         self.image = self.frames[self.current_frame_index] #current image 
         self.facing_right = True #side facing animation
