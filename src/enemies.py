@@ -8,22 +8,23 @@ import pygame
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group):
+    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group):
         super().__init__()
 
         #loading image
         self.sprite_sheet = pygame.image.load(sprite_sheet).convert_alpha()
 
-        frames_x_axis = 11 #frames in sprite sheet
-        frame_widht = self.sprite_sheet.get_width() // frames_x_axis
-        frame_height = self.sprite_sheet.get_height()
+        frames_x_axis = frames_x #frames in sprite sheet
+        frames_y_axis = frames_y
+        frame_width = self.sprite_sheet.get_width() // frames_x_axis
+        frame_height = self.sprite_sheet.get_height() // frames_y
 
         self.frames = []
-        for each in range(frames_x_axis):
-            frame = self.sprite_sheet.subsurface((each * frame_widht, 0, frame_widht, frame_height))
-    
-            redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht), int(frame_height)))
-            self.frames.append(redimentioned_frame)
+        for y in range(frames_y_axis):
+            for x in range(frames_x_axis):
+                frame = self.sprite_sheet.subsurface((x * frame_width, y * frame_height, frame_width, frame_height))
+                redimentioned_frame = pygame.transform.scale(frame, (int(frame_width), int(frame_height)))
+                self.frames.append(redimentioned_frame)
 
         #initial frame setting
         self.current_frame_index = 0
@@ -90,13 +91,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center += movement
 
     def behavior(self):
-        if self.player_distance() > self.attack_range:
-            self.track_player()
-        else:
-            if self.attack_counter >= self.attack_delay:
-                self.attack(self.target)
-                self.attack_counter = 0
-        self.attack_counter += 1 
+        pass
 
     def update(self):
         #checks the mob's death
@@ -120,14 +115,26 @@ class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
 
         self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin_front_view.png"
-        self.frames = 11
+        self.frames_x = 11
+        self.frames_y = 1
         self.health = 50
-        self.speed = 4
         self.speed = 4
         self.damage = 100
         self.attack_delay = 50
         self.attack_range = 50
-        super().__init__(pos, self.sprite_sheet, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        super().__init__(pos, self.sprite_sheet, self.frames_x,self.frames_y, self.health,  self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+
+    def behavior(self):
+        if self.player_distance() > self.attack_range:
+            self.track_player()
+        else:
+            if self.attack_counter >= self.attack_delay:
+                self.attack(self.target)
+                self.attack_counter = 0
+        self.attack_counter += 1 
+
+
+
 
 
 def generate_goblins(num_goblins, map_width, map_height, player, bullets_group, goblins_group):
@@ -141,3 +148,16 @@ def generate_goblins(num_goblins, map_width, map_height, player, bullets_group, 
 
         # Adicionar o goblin ao grupo de inimigos existente
         goblins_group.add(goblin)
+
+class Andromaluis(Enemy):
+    def __init__(self, pos, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group):
+
+        self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
+        self.frames_x = 8
+        self.frames_y = 3
+        self.health = 500
+        self.speed = 1
+        self.damage = 100
+        self.attack_delay = 1000
+        self.attack_range = 500
+        super().__init__(pos, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group)
