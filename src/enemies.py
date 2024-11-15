@@ -123,6 +123,7 @@ class Goblin(Enemy):
         self.frames = 11
         self.health = 50
         self.speed = 4
+        self.speed = 4
         self.damage = 100
         self.attack_delay = 50
         self.attack_range = 50
