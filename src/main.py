@@ -4,7 +4,7 @@ import random
 import cProfile
 
 from player import Player
-from guns import Gun, Bullet
+from guns import Gun, Bullet, MachineGun
 from camera import Camera
 from background import Background
 from enemies import Goblin, generate_goblins
@@ -30,7 +30,7 @@ class Game:
 
         # sprites
         self.player = Player((1000, 1000), 1000, 10,self.map_bounds, self.background.collision_group)
-        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 300, Bullet, self.map_bounds)
+        self.gun = MachineGun(self.player, self.map_bounds)
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
