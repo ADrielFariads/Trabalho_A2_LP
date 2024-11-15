@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
 
         #initial frame setting
         self.current_frame_index = 0
-        self.animation_speed = 8 #bigger values for a smothier animation
+        self.animation_speed = 5 #bigger values for a smothier animation
         self.frame_counter = 0 #counter of animation
         self.image = self.frames[self.current_frame_index] #current image 
         self.facing_right = True #side facing animation
@@ -81,7 +81,7 @@ class Player(pygame.sprite.Sprite):
         
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Walk1.png").convert_alpha()
+            self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Run1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
 ################# GETTER METHODS ###################################################

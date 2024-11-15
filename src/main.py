@@ -23,10 +23,10 @@ class Game:
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
 
         # Initialize background
-        self.background = Background("assets\\background_files\\map005.tmx", 16, self.display_surface)  
+        self.background = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)  
 
         # sprites
-        self.player = Player((1000, 1000), 1000, 8, self.background.collision_group)
+        self.player = Player((1000, 1000), 1000, 12, self.background.collision_group)
         self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 100, Bullet)
 
         # groups
