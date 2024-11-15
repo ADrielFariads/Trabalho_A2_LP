@@ -38,7 +38,7 @@ class Game:
 
         #enemies generation
         self.enemies_group = pygame.sprite.Group()
-        #generate_goblins(10, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
+        generate_goblins(1, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
@@ -73,7 +73,7 @@ class Game:
             #    self.all_sprites.add(self.enemies_group)
 
             # updates
-            self.player.update(keys)
+            self.player.update(keys, self.gun)
             self.enemies_group.update()
             self.gun.update()
             self.bullet_group.update()

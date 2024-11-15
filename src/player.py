@@ -110,7 +110,7 @@ class Player(pygame.sprite.Sprite):
                 
 
 ################# UPDATE METHOD #################################################### 
-    def update(self, keys):
+    def update(self, keys, gun):
 
         #animation logic
         self.frame_counter += 1
@@ -156,6 +156,8 @@ class Player(pygame.sprite.Sprite):
 
         
         self.rect.clamp_ip(self.map_bounds) #keeps the player in the map rect
+        gun.update()
+        
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:
             self.image = pygame.transform.flip(current_image, True, False)

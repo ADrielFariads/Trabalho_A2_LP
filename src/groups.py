@@ -1,4 +1,5 @@
 import pygame
+from guns import Gun
 
 class AllSpritesgroup(pygame.sprite.Group):
     def __init__(self):

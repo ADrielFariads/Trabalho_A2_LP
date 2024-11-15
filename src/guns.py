@@ -29,14 +29,14 @@ class Gun(pygame.sprite.Sprite):
 
     def update_position(self):
         # Update the gun's position to follow the player's position
-        self.position = self.player.get_position()
-        self.rect.center = (self.position[0]-10, self.position[1]+15)
+        pass
         
 
     def update(self):
         # Update gun's position based on player movement
-        self.rect.clamp_ip(self.map_bounds)
-        self.update_position()
+        self.position = self.player.get_position()
+        self.rect.center = (self.position[0]-10, self.position[1]+15)
+
         if self.player.facing_right:
             self.image = self.original_image
             self.rect.center = (self.position[0]-10, self.position[1]+15)
