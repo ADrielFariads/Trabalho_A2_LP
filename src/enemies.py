@@ -104,10 +104,10 @@ class Enemy(pygame.sprite.Sprite):
         if self.player_distance() > self.attack_range:
             self.track_player()
         else:
-            self.attack_counter += 1 
             if self.attack_counter >= self.attack_delay:
                 self.attack(self.target)
                 self.attack_counter = 0
+        self.attack_counter += 1 
 
 
         #animation logic
@@ -120,7 +120,7 @@ class Goblin(Enemy):
         self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin_front_view.png"
         self.frames = 11
         self.health = 50
-        self.speed = 3
+        self.speed = 4
         self.damage = 100
         self.attack_delay = 50
         self.attack_range = 50
