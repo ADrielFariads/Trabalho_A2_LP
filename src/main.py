@@ -60,9 +60,8 @@ class Game:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        bullet = self.gun.shoot(self.bullet_group, self.all_sprites.offset)
-                        if bullet != None:                            
-                            self.all_sprites.add(bullet)
+                        self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                        
                 
                     
 
