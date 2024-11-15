@@ -7,7 +7,7 @@ from player import Player
 from guns import Gun, Bullet, MachineGun
 from camera import Camera
 from background import Background
-from enemies import Goblin, generate_goblins
+from enemies import Goblin, generate_goblins, Andromaluis
 from groups import AllSpritesgroup
 
 # initial setup
@@ -39,7 +39,7 @@ class Game:
 
         #enemies generation
         self.enemies_group = pygame.sprite.Group()
-        generate_goblins(1, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
+        #generate_goblins(1, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
@@ -61,12 +61,15 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                        print(self.all_sprites)
                         
                 
                     
-
+            self.all_sprites.add(self.enemies_group)
             if len(self.enemies_group) == 0:
-                generate_goblins(5, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
+                miniboss = Andromaluis((1000, 1000), self.player, self.bullet_group, self.enemies_group)
+                self.enemies_group.add(miniboss)
+                print(self.enemies_group)
                 self.all_sprites.add(self.enemies_group)
 
             # updates

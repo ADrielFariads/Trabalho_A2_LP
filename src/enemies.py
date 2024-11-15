@@ -149,8 +149,9 @@ def generate_goblins(num_goblins, map_width, map_height, player, bullets_group, 
         # Adicionar o goblin ao grupo de inimigos existente
         goblins_group.add(goblin)
 
+
 class Andromaluis(Enemy):
-    def __init__(self, pos, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group):
+    def __init__(self, pos,player, bullets_group, enemy_group):
 
         self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
         self.frames_x = 8
@@ -160,4 +161,10 @@ class Andromaluis(Enemy):
         self.damage = 100
         self.attack_delay = 1000
         self.attack_range = 500
-        super().__init__(pos, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group)
+        self.enemy_group = enemy_group
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+
+    def get_damaged(self, damage):
+        generate_goblins(1, 1000, 1000, self.target, self.bullets, self.enemy_group)
+        return super().get_damaged(damage)
+        
