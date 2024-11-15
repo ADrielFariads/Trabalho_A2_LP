@@ -8,6 +8,7 @@ from camera import Camera
 from background import Background, Tile, CollisionSprite
 from enemies import Enemy
 from groups import AllSpritesgroup
+from button import Button
 
 # initial setup
 class Game:
@@ -18,6 +19,11 @@ class Game:
         pygame.display.set_caption("Cosmic Survivor")
         self.running = True
         self.clock = pygame.time.Clock()
+
+        # Menu
+        button_img = pygame.image.load("assets\\images\\Menu\\Play_Rect.png")
+        self.play_button = Button(button_img, [540,300], "PLAY", pygame.font.Font("assets\\images\\Menu\\font.ttf", 36), (255,255,255), (0,0,0))
+        
 
         # camera settings
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
@@ -43,8 +49,21 @@ class Game:
         self.all_sprites.add(self.background.ground_group, self.background.collision_group, self.enemies_group, self.player, self.gun_group, self.enemies_group, self.bullet_group)
 
         
-
+    
     def run(self):
+        playing = True
+        while playing:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    playing = False
+                if self.play_button.checkForInput():
+                    playing = False
+
+            self.display_surface.fill((30,30,30))
+            self.play_button.update(self.display_surface)
+            self.play_button.changeColor()
+            pygame.display.update()
+
         while self.running:
             delta_time = self.clock.tick(60)
 
