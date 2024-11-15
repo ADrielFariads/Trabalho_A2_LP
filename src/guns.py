@@ -2,8 +2,8 @@ import pygame
 import math
 
 class Gun(pygame.sprite.Sprite):
-    def __init__(self, player, image, damage, cool_down, bullet, map_bounds, *groups):
-        super().__init__(*groups)
+    def __init__(self, player, image, damage, cool_down, bullet, map_bounds):
+        super().__init__()
         self.image = pygame.image.load(image).convert_alpha()  # Load gun image
         self.player = player  # Reference to the player
 
@@ -21,8 +21,6 @@ class Gun(pygame.sprite.Sprite):
         self.bullet_class = bullet  # Bullet class to use when shooting
         self.cool_down = cool_down  # Shooting cooldown in milliseconds
         self.last_shot_time = 0  # Time of the last shot
-        self.sound = pygame.mixer.Sound("assets\\audio\\machine_gun.wav")
-        self.sound.set_volume(0.5)
 
     def get_direction(self):
         # Get the direction to the mouse position
@@ -46,22 +44,6 @@ class Gun(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.original_image, True, False)  # Flip image if player is facing left
             self.rect.center = (self.position[0], self.position[1]+15)
 
-    def shoot(self, bullet_group, camera_offset):
-        # Shoot a bullet if enough time has passed since last shot
-        current_time = pygame.time.get_ticks()
-        if current_time - self.last_shot_time >= self.cool_down:
-            self.last_shot_time = current_time
-            mouse_x, mouse_y = pygame.mouse.get_pos()
-
-            # Adjust mouse position based on camera offset
-            mouse_x -= camera_offset.x
-            mouse_y -= camera_offset.y
-
-            # Create and return a new bullet from the player's position
-            bullet = self.bullet_class(self.player.get_position(), mouse_x, mouse_y, bullet_group)
-            self.sound.play()
-            return bullet
-
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -72,7 +54,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image.fill((255, 0, 0))  # Set bullet color to red
         self.rect = self.image.get_rect(center=position)  # Set bullet's initial position
 
-        self.speed = 25  # Set the bullet's speed
+        self.speed = 20 # Set the bullet's speed
 
         # Calculate direction to the target (mouse position)
         self.dx = target_x - self.rect.centerx
@@ -86,7 +68,52 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self):
         # Move the bullet towards the target based on its speed
+        self.speed +=1
         self.rect.x += self.dx * self.speed
         self.rect.y += self.dy * self.speed
         
 
+class MachineGun(Gun):
+    def __init__(self, player, map_bounds):
+        texture = "assets\\images\\Guns\\2_1.png"
+        damage = 10 
+        speed = 500 
+         
+        bullet_class = Bullet  
+        self.sound = pygame.mixer.Sound("assets\\audio\\machine_gun.wav")
+        self.sound.set_volume(0.5)
+        super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
+        self.shot_delay = 500
+
+    def shoot_single_bullet(self, bullet_group, camera_offset):
+        """
+        creates a single shoot
+        """
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+
+        # Ajusta a posição do mouse com o deslocamento da câmera
+        mouse_x -= camera_offset.x
+        mouse_y -= camera_offset.y
+
+        # Cria e retorna uma nova bala da classe especificada (Bullet)
+        bullet = self.bullet_class(self.player.get_position(), mouse_x, mouse_y, bullet_group)
+        return bullet  
+    
+    def shoot(self, bullet_group, offset, all_sprites_group):
+        current_time = pygame.time.get_ticks()
+        
+        if current_time - self.last_shot_time >= self.cool_down:
+            self.last_shot_time = current_time
+            num_bullets = 5
+            self.sound.play()
+
+            for i in range(num_bullets):
+                bullet = self.shoot_single_bullet(bullet_group, offset)
+                image = pygame.image.load("assets\\images\\Bullets\\7.png")
+
+                width = image.get_width()
+                height = image.get_height()
+
+                bullet.image = pygame.transform.scale(image, ((int(width*2)), (int(height*2))))
+                bullet.speed -= i
+                all_sprites_group.add(bullet)
