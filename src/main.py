@@ -1,12 +1,13 @@
 import pygame
 from pytmx.util_pygame import load_pygame
 import random
+import cProfile
 
 from player import Player
 from guns import Gun, Bullet
 from camera import Camera
 from background import Background
-from enemies import Enemy, Goblin
+from enemies import Goblin, generate_goblins
 from groups import AllSpritesgroup
 
 # initial setup
@@ -24,10 +25,11 @@ class Game:
 
         # Initialize background
         self.background = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)  
+        self.map_bounds = pygame.Rect(620, 380, 2780, 1600) #rect for keep the player in the map
 
         # sprites
-        self.player = Player((1000, 1000), 1000, 12, self.background.collision_group)
-        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 100, Bullet)
+        self.player = Player((1000, 1000), 1000, 10,self.map_bounds, self.background.collision_group)
+        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 100, Bullet, self.map_bounds)
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -35,8 +37,8 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.enemy1 = Goblin((800, 800), self.player, self.bullet_group)
-        self.enemies_group = pygame.sprite.Group(self.enemy1)
+        self.enemies_group = pygame.sprite.Group()
+        #generate_goblins(10, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
@@ -47,8 +49,9 @@ class Game:
     def run(self):
 
         while self.running:
-            delta_time = self.clock.tick(60)
+            self.clock.tick(60)
             keys = pygame.key.get_pressed()
+            
 
             # event loop
             for event in pygame.event.get():
@@ -57,16 +60,20 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self.all_sprites.add(self.gun.shoot(self.bullet_group, self.all_sprites.offset))
+                    print(self.player.position, self.gun.position)
+                    
                 
                 
 
                     
 
 
-            
+            #if len(self.enemies_group) == 0:
+            #    generate_goblins(15, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
+            #    self.all_sprites.add(self.enemies_group)
 
             # updates
-            self.player.update(keys, self.display_surface.get_rect())
+            self.player.update(keys)
             self.enemies_group.update()
             self.gun.update()
             self.bullet_group.update()

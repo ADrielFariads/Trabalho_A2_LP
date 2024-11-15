@@ -1,7 +1,7 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, health, speed, colidders=None):
+    def __init__(self, pos, health, speed, map_bounds, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
@@ -41,6 +41,7 @@ class Player(pygame.sprite.Sprite):
 
         #colidders
         self.colliders = colidders
+        self.map_bounds = map_bounds
 
         #player atributes 
         self.speed = speed
@@ -109,7 +110,7 @@ class Player(pygame.sprite.Sprite):
                 
 
 ################# UPDATE METHOD #################################################### 
-    def update(self, keys, screen_rect):
+    def update(self, keys):
 
         #animation logic
         self.frame_counter += 1
@@ -154,7 +155,7 @@ class Player(pygame.sprite.Sprite):
         self.position = pygame.math.Vector2(self.rect.center)
 
         
-
+        self.rect.clamp_ip(self.map_bounds) #keeps the player in the map rect
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:
             self.image = pygame.transform.flip(current_image, True, False)

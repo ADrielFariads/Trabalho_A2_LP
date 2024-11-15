@@ -5,6 +5,7 @@ Module for enemies creation and enemies generation
 
 
 import pygame
+import random
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, sprite_sheet, health, speed, damage, attack_range, attack_delay, player, bullets_group):
@@ -44,7 +45,7 @@ class Enemy(pygame.sprite.Sprite):
         self.damage = damage
         self.attack_range = attack_range
         self.attack_delay = attack_delay
-        self.attack_counter = 0 #time between attacks
+        self.attack_counter = 50 #time between attacks
 
         #player interaction
         self.target = player
@@ -121,6 +122,19 @@ class Goblin(Enemy):
         self.health = 50
         self.speed = 3
         self.damage = 100
-        self.attack_delay = 100
-        self.attack_range = 10
+        self.attack_delay = 50
+        self.attack_range = 50
         super().__init__(pos, self.sprite_sheet, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+
+
+def generate_goblins(num_goblins, map_width, map_height, player, bullets_group, goblins_group):
+    for _ in range(num_goblins):
+        # Gerar uma posição aleatória dentro dos limites do mapa
+        random_x = random.randint(0, map_width)
+        random_y = random.randint(0, map_height)
+
+        # Criar um novo goblin na posição aleatória
+        goblin = Goblin((random_x, random_y), player, bullets_group)
+
+        # Adicionar o goblin ao grupo de inimigos existente
+        goblins_group.add(goblin)

@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Gun(pygame.sprite.Sprite):
-    def __init__(self, player, image, damage, cool_down, bullet, *groups):
+    def __init__(self, player, image, damage, cool_down, bullet, map_bounds, *groups):
         super().__init__(*groups)
         self.image = pygame.image.load(image).convert_alpha()  # Load gun image
         self.player = player  # Reference to the player
@@ -12,6 +12,7 @@ class Gun(pygame.sprite.Sprite):
         self.original_image = pygame.transform.scale(self.image, (self.image_width * 2, self.image_height * 2))
 
         self.position = self.player.get_position()  # Set initial gun position
+        self.map_bounds = map_bounds
 
         self.image = self.original_image
         self.rect = self.image.get_rect(center=self.player.get_position())  # Get rect for the gun's position
@@ -30,9 +31,11 @@ class Gun(pygame.sprite.Sprite):
         # Update the gun's position to follow the player's position
         self.position = self.player.get_position()
         self.rect.center = (self.position[0]-10, self.position[1]+15)
+        
 
     def update(self):
         # Update gun's position based on player movement
+        self.rect.clamp_ip(self.map_bounds)
         self.update_position()
         if self.player.facing_right:
             self.image = self.original_image
