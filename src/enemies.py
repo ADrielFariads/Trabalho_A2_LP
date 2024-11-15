@@ -89,7 +89,14 @@ class Enemy(pygame.sprite.Sprite):
         movement = self.direction * self.speed
         self.rect.center += movement
 
-    
+    def behavior(self):
+        if self.player_distance() > self.attack_range:
+            self.track_player()
+        else:
+            if self.attack_counter >= self.attack_delay:
+                self.attack(self.target)
+                self.attack_counter = 0
+        self.attack_counter += 1 
 
     def update(self):
         #checks the mob's death
@@ -101,13 +108,8 @@ class Enemy(pygame.sprite.Sprite):
         if pygame.sprite.spritecollide(self, self.bullets, True):
             self.get_damaged(10)
 
-        if self.player_distance() > self.attack_range:
-            self.track_player()
-        else:
-            if self.attack_counter >= self.attack_delay:
-                self.attack(self.target)
-                self.attack_counter = 0
-        self.attack_counter += 1 
+        self.behavior()
+        
 
 
         #animation logic
