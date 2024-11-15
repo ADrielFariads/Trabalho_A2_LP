@@ -15,6 +15,7 @@ class Game:
     def __init__(self):
         # initial setup
         pygame.init()
+        pygame.mixer.init()
         self.display_surface = pygame.display.set_mode((1080, 640))
         pygame.display.set_caption("Cosmic Survivor")
         self.running = True
@@ -29,7 +30,7 @@ class Game:
 
         # sprites
         self.player = Player((1000, 1000), 1000, 10,self.map_bounds, self.background.collision_group)
-        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 100, Bullet, self.map_bounds)
+        self.gun = Gun(self.player, "assets\\images\\Guns\\2_1.png", 10, 300, Bullet, self.map_bounds)
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -59,18 +60,15 @@ class Game:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    self.all_sprites.add(self.gun.shoot(self.bullet_group, self.all_sprites.offset))
-                    print(self.player.position, self.gun.position)
-                    
+                        bullet = self.gun.shoot(self.bullet_group, self.all_sprites.offset)
+                        if bullet != None:                            
+                            self.all_sprites.add(bullet)
                 
-                
-
                     
 
-
-            #if len(self.enemies_group) == 0:
-            #    generate_goblins(15, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
-            #    self.all_sprites.add(self.enemies_group)
+            if len(self.enemies_group) == 0:
+                generate_goblins(5, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
+                self.all_sprites.add(self.enemies_group)
 
             # updates
             self.player.update(keys, self.gun)

@@ -21,6 +21,8 @@ class Gun(pygame.sprite.Sprite):
         self.bullet_class = bullet  # Bullet class to use when shooting
         self.cool_down = cool_down  # Shooting cooldown in milliseconds
         self.last_shot_time = 0  # Time of the last shot
+        self.sound = pygame.mixer.Sound("assets\\audio\\machine_gun.wav")
+        self.sound.set_volume(0.5)
 
     def get_direction(self):
         # Get the direction to the mouse position
@@ -57,8 +59,9 @@ class Gun(pygame.sprite.Sprite):
 
             # Create and return a new bullet from the player's position
             bullet = self.bullet_class(self.player.get_position(), mouse_x, mouse_y, bullet_group)
+            self.sound.play()
             return bullet
-        return None
+
 
 
 class Bullet(pygame.sprite.Sprite):

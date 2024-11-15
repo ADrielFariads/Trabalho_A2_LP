@@ -20,7 +20,7 @@ class PlantSprite(pygame.sprite.Sprite):
     def __init__(self, image, pos, width, height, *groups):
         super().__init__(*groups)
         self.image = image
-        self.rect = pygame.rect.Rect(pos[0], pos[1], width, height).inflate(-100, -100)
+        self.rect = pygame.rect.Rect(pos[0], pos[1], width, height).inflate(-80, -80)
         self.rect.center = (pos[0], pos[1])
 
 class Background:
