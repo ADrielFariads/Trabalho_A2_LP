@@ -17,12 +17,15 @@ class Game:
         pygame.init()
         self.display_surface = pygame.display.set_mode((1080, 640))
         pygame.display.set_caption("Cosmic Survivor")
+        self.playing = False
         self.running = True
         self.clock = pygame.time.Clock()
 
         # Menu
-        button_img = pygame.image.load("assets\\images\\Menu\\Play_Rect.png")
-        self.play_button = Button(button_img, [540,300], "PLAY", pygame.font.Font("assets\\images\\Menu\\font.ttf", 36), (255,255,255), (0,0,0))
+        self.button_img = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha() 
+        self.selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
+        font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 36)
+        self.play_button = Button(self.button_img, [540,300], "PLAY", font, (255,255,255), (0,0,0))
         
 
         # camera settings
@@ -51,26 +54,25 @@ class Game:
         
     
     def run(self):
-        playing = True
-        while playing:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    playing = False
-                if self.play_button.checkForInput():
-                    playing = False
-
-            self.display_surface.fill((30,30,30))
-            self.play_button.update(self.display_surface)
-            self.play_button.changeColor()
-            pygame.display.update()
-
         while self.running:
-            delta_time = self.clock.tick(60)
-
-            # event loop
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                if self.play_button.checkForInput():
+                    self.running = False
+                    self.playing = True
+
+            self.display_surface.fill((30,30,30))
+            self.play_button.update(self.display_surface)
+            self.play_button.changeColor(self.button_img, self.selected_button)
+            pygame.display.update()
+
+        while self.playing:
+            delta_time = self.clock.tick(60)
+            # event loop
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.playing = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self.gun.shoot(self.bullet_group)

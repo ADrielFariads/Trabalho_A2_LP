@@ -27,10 +27,12 @@ class Button():
 				return True
 		return False
 
-	def changeColor(self):
+	def changeColor(self, normal_button, selected_button):
 		mouse_x, mouse_y = pygame.mouse.get_pos()
 
 		if self.rect.collidepoint(mouse_x, mouse_y):
 			self.text = self.font.render(self.text_input, True, self.hovering_color)
+			self.image = selected_button
 		else:
+			self.image = normal_button
 			self.text = self.font.render(self.text_input, True, self.base_color)
