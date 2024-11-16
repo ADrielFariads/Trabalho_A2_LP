@@ -36,3 +36,19 @@ class Button():
 		else:
 			self.image = normal_button
 			self.text = self.font.render(self.text_input, True, self.base_color)
+
+class Titles:
+
+	def __init__(self, pos_x, pos_y, text, color, font_size):
+
+		font = pygame.font.Font("assets\\images\\Menu\\font.ttf", font_size)
+		self.font = font
+		self.pos_x = pos_x
+		self.pos_y = pos_y
+		self.text = text
+		self.color = color
+
+	def draw(self, screen):
+		text_surface = self.font.render(self.text, True, self.color)
+		text_rect = text_surface.get_rect(center=(self.pos_x, self.pos_y))
+		screen.blit(text_surface,text_rect)

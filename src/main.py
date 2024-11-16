@@ -8,7 +8,7 @@ from camera import Camera
 from background import Background, Tile, CollisionSprite
 from enemies import Enemy
 from groups import AllSpritesgroup
-from button import Button
+from menu import Button, Titles
 
 # initial setup
 class Game:
@@ -22,10 +22,12 @@ class Game:
         self.clock = pygame.time.Clock()
 
         # Menu
+        self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
         self.button_img = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha() 
         self.selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
         font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 36)
-        self.play_button = Button(self.button_img, [540,300], "PLAY", font, (255,255,255), (0,0,0))
+        self.play_button = Button(self.button_img, [540,350], "PLAY", font, (255,255,255), (0,0,0))
+        self.menu_title = Titles(540,150,"Cosmic Survivor", (255,255,255), 56)
         
 
         # camera settings
@@ -62,9 +64,11 @@ class Game:
                     self.running = False
                     self.playing = True
 
-            self.display_surface.fill((30,30,30))
+            self.display_surface.blit(self.menu_background, (0,0))
             self.play_button.update(self.display_surface)
             self.play_button.changeColor(self.button_img, self.selected_button)
+            self.menu_title.draw(self.display_surface)
+            
             pygame.display.update()
 
         while self.playing:
