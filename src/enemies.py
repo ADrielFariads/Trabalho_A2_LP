@@ -163,9 +163,21 @@ class Andromaluis(Enemy):
         self.attack_delay = 1000
         self.attack_range = 500
         self.enemy_group = enemy_group
+
+        #skill atributes
+        self.generation_interval = 1000
+        self.generation_timer = 0
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
-    def get_damaged(self, damage): #generates goblins near itself when receiving damage
-        generate_goblins(1, self.y-100, self.y+100, self.x-100, self.x+100, self.target, self.bullets, self.enemy_group)
-        return super().get_damaged(damage)
+    def behavior(self):
+        distance_to_enemy = self.target.position - self.position
+
+        if distance_to_enemy.length() < 200:
+            if self.generation_timer <= 0:
+                generate_goblins(3, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
+                self.generation_timer = self.generation_interval
+            else:
+                self.generation_timer -= 1
+            
+        
         
