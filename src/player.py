@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite):
 
 
         self.health_bar_lenght = 500
-        self.health_change_speed = 2
+        self.health_change_speed = 25
         self.target_health = health
         self.direction = pygame.math.Vector2(0,0)
 
@@ -213,6 +213,10 @@ class Player(pygame.sprite.Sprite):
             transition_width = int(abs((self.target_health-self.current_health)/self.health_ratio))
             transition_color = (255, 255, 0) 
             transition_bar_rect = pygame.Rect(health_bar_rect.right - transition_width, 10, transition_width, 15)
+        
+        if self.current_health == 0:
+            return self.current_health
+        
 
         
         pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health
@@ -220,5 +224,5 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_lenght, 15), 2) #white rect arround the health
 
 
-        
-        
+
+          

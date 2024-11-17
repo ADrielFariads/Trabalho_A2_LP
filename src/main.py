@@ -25,8 +25,8 @@ class Game:
         self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
         self.button_img = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha() 
         self.selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
-        font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 36)
-        self.play_button = Button(self.button_img, [540,350], "PLAY", font, (255,255,255), (0,0,0))
+        font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
+        self.play_button = Button(self.button_img, self.selected_button, [540,350], "PLAY", font, (255,255,255), (0,0,0), 0.7)
         self.menu_title = Titles(540,150,"Cosmic Survivor", (255,255,255), 56)
         
 
@@ -46,7 +46,7 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.enemy1 = Enemy(800, 800, "assets\\images\\enemies\\goblins\\goblin.png", 50, 2, 100, 10, 100, self.player, self.bullet_group)
+        self.enemy1 = Enemy(800, 800, "assets\\images\\enemies\\goblins\\goblin.png", 50, 2, 10000, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
 
         #camera interaction
@@ -66,7 +66,7 @@ class Game:
 
             self.display_surface.blit(self.menu_background, (0,0))
             self.play_button.update(self.display_surface)
-            self.play_button.changeColor(self.button_img, self.selected_button)
+            self.play_button.changeColor()
             self.menu_title.draw(self.display_surface)
             
             pygame.display.update()
@@ -97,11 +97,16 @@ class Game:
             self.bullet_group.draw(self.display_surface)
         
             self.player.health_bar(self.display_surface)
+            if self.player.current_health == 0:
 
+                self.playing = False
+                self.running = True
+                continue
+                
             pygame.display.flip()
 
 
-        pygame.quit()
+    pygame.quit()
 
 
 
