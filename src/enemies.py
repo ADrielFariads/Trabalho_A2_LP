@@ -100,8 +100,9 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
             return None
         
-        if pygame.sprite.spritecollide(self, self.bullets, True):
-            self.get_damaged(10)
+        collided_bullets = pygame.sprite.spritecollide(self, self.bullets, True)
+        for bullet in collided_bullets:
+            self.get_damaged(bullet.damage)
 
         self.behavior()
         
@@ -137,11 +138,11 @@ class Goblin(Enemy):
 
 
 
-def generate_goblins(num_goblins, map_width, map_height, player, bullets_group, goblins_group):
+def generate_goblins(num_goblins, top, bottom, left, right, player, bullets_group, goblins_group):
     for _ in range(num_goblins):
         # Gerar uma posição aleatória dentro dos limites do mapa
-        random_x = random.randint(0, map_width)
-        random_y = random.randint(0, map_height)
+        random_x = random.randint(left, right)
+        random_y = random.randint(top, bottom)
 
         # Criar um novo goblin na posição aleatória
         goblin = Goblin((random_x, random_y), player, bullets_group)
@@ -164,7 +165,7 @@ class Andromaluis(Enemy):
         self.enemy_group = enemy_group
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
-    def get_damaged(self, damage):
-        generate_goblins(1, 1000, 1000, self.target, self.bullets, self.enemy_group)
+    def get_damaged(self, damage): #generates goblins near itself when receiving damage
+        generate_goblins(1, self.y-100, self.y+100, self.x-100, self.x+100, self.target, self.bullets, self.enemy_group)
         return super().get_damaged(damage)
         

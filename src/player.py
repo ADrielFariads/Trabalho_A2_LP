@@ -144,6 +144,8 @@ class Player(pygame.sprite.Sprite):
         else:   #idle animation setter
             self.set_action("idle")
 
+
+        ##collisions
         self.position.x += self.direction.x * self.speed
         self.rect.centerx = self.position.x
         self.collision("horizontal")
@@ -152,12 +154,23 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = self.position.y
         self.collision("vertical")
 
+
+
         self.position = pygame.math.Vector2(self.rect.center)
 
         
-        self.rect.clamp_ip(self.map_bounds) #keeps the player in the map rect
-        gun.update()
-        
+        if self.position.x < self.map_bounds.left: 
+            self.position.x = self.map_bounds.left
+        elif self.position.x > self.map_bounds.right:
+            self.position.x = self.map_bounds.right
+
+        if self.position.y < self.map_bounds.top: 
+            self.position.y = self.map_bounds.top
+        elif self.position.y > self.map_bounds.bottom:
+            self.position.y = self.map_bounds.bottom
+
+
+
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:
             self.image = pygame.transform.flip(current_image, True, False)

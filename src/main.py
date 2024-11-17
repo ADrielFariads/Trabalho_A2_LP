@@ -26,7 +26,7 @@ class Game:
 
         # Initialize background
         self.background = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)  
-        self.map_bounds = pygame.Rect(620, 380, 2780, 1600) #rect for keep the player in the map
+        self.map_bounds = pygame.Rect(690, 420, 2650, 1500) #rect for keep the player in the map
 
         # sprites
         self.player = Player((1000, 1000), 1000, 10,self.map_bounds, self.background.collision_group)
@@ -61,13 +61,11 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                        print(self.all_sprites)
-                        
-                
-                    
+                        print(self.player.position)
+                          
             self.all_sprites.add(self.enemies_group)
             if len(self.enemies_group) == 0:
-                miniboss = Andromaluis((1000, 1000), self.player, self.bullet_group, self.enemies_group)
+                miniboss = Andromaluis(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group, self.enemies_group)
                 self.enemies_group.add(miniboss)
                 print(self.enemies_group)
                 self.all_sprites.add(self.enemies_group)
