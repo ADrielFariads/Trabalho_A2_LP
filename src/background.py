@@ -38,11 +38,11 @@ class Background:
         self.tmx_data = load_pygame(self.map_path)
         
         # Load tile layers
-        for layer in self.tmx_data.visible_layers:
-            if hasattr(layer, 'data'):
-                for x, y, surf in layer.tiles():
-                    pos = (x * self.tile_size, y * self.tile_size)
-                    Tile(pos=pos, image=surf, groups=self.ground_group)
+        # for layer in self.tmx_data.visible_layers:
+        #     if hasattr(layer, 'data'):
+        #         for x, y, surf in layer.tiles():
+        #             pos = (x * self.tile_size, y * self.tile_size)
+        #             Tile(pos=pos, image=surf, groups=self.ground_group)
         
         #load objects
         for obj in self.tmx_data.objects:

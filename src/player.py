@@ -88,7 +88,7 @@ class Player(pygame.sprite.Sprite):
         
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Run1.png").convert_alpha()
+            self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Walk1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
 ################# GETTER METHODS ###################################################
@@ -97,26 +97,27 @@ class Player(pygame.sprite.Sprite):
 
 ################# COLLISION METHOD ####################################################     
     def collision(self, direction):
-        for sprite in self.colliders:
-            if sprite.rect.colliderect(self.rect):
-                if direction == "horizontal":
-                    if self.direction.x > 0:
-                        self.rect.right = sprite.rect.left
+        if self.colliders != None:
+            for sprite in self.colliders:
+                if sprite.rect.colliderect(self.rect):
+                    if direction == "horizontal":
+                        if self.direction.x > 0:
+                            self.rect.right = sprite.rect.left
 
-                    if self.direction.x < 0:
-                        self.rect.left = sprite.rect.right
+                        if self.direction.x < 0:
+                            self.rect.left = sprite.rect.right
 
-                if direction == "vertical":
-                    if self.direction.y > 0:
-                        self.rect.bottom = sprite.rect.top
+                    if direction == "vertical":
+                        if self.direction.y > 0:
+                            self.rect.bottom = sprite.rect.top
 
-                    if self.direction.y < 0:
-                        self.rect.top = sprite.rect.bottom
+                        if self.direction.y < 0:
+                            self.rect.top = sprite.rect.bottom
 
-                
+                    
 
 ################# UPDATE METHOD #################################################### 
-    def update(self, keys, gun):
+    def update(self, keys):
 
         #animation logic
         self.frame_counter += 1
@@ -225,7 +226,7 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(surface, transition_color, transition_bar_rect) #heal/damage animation
         pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_length, 15), 2) #white rect arround the health
 
-###### level logic ###################################
+######## level logic ######################################################################
     def level_up(self):
         self.current_level += 1 
         print("level up", self.current_level)
