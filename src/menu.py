@@ -61,8 +61,7 @@ class Button():
             self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
 
-
-class Titles:
+class Titles():
 
     def __init__(self, pos_x, pos_y, text, color, font_size):
         font = pygame.font.Font("assets/images/Menu/font.ttf", font_size)

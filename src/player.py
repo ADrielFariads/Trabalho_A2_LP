@@ -213,10 +213,6 @@ class Player(pygame.sprite.Sprite):
             transition_width = int(abs((self.target_health-self.current_health)/self.health_ratio))
             transition_color = (255, 255, 0) 
             transition_bar_rect = pygame.Rect(health_bar_rect.right - transition_width, 10, transition_width, 15)
-        
-        if self.current_health == 0:
-            return self.current_health
-        
 
         
         pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health

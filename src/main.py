@@ -28,6 +28,8 @@ class Game:
         font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
         self.play_button = Button(self.button_img, self.selected_button, [540,350], "PLAY", font, (255,255,255), (0,0,0), 0.7)
         self.menu_title = Titles(540,150,"Cosmic Survivor", (255,255,255), 56)
+
+        self.paused_back_button = Button(self.button_img, self.selected_button, [540,350], "BACK", font, (255,255,255), (0,0,0), 0.7)
         
 
         # camera settings
@@ -56,54 +58,81 @@ class Game:
         
     
     def run(self):
+
         while self.running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                if self.play_button.checkForInput():
-                    self.running = False
-                    self.playing = True
-
-            self.display_surface.blit(self.menu_background, (0,0))
-            self.play_button.update(self.display_surface)
-            self.play_button.changeColor()
-            self.menu_title.draw(self.display_surface)
             
-            pygame.display.update()
-
-        while self.playing:
-            delta_time = self.clock.tick(60)
-            # event loop
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                    if event.type == pygame.QUIT:
+                        self.running = False
+
+            if self.playing:
+
+                delta_time = self.clock.tick(60)
+                # event loop
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.running = False
+                    
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        self.gun.shoot(self.bullet_group)
+                    
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                        self.paused = True
+
+                        if self.paused:
+
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                    self.running = False
+                                if self.paused_back_button.checkForInput():
+                                    self.paused = False
+
+                        self.display_surface.blit(self.menu_background, (0,0))
+                        self.paused_back_button.update(self.display_surface)
+                        self.paused_back_button.changeColor()
+
+                        
+                            
+
+
+
+                keys = pygame.key.get_pressed()
+
+                # updates
+                self.player.update(keys, self.display_surface.get_rect())
+                self.enemies_group.update()
+                self.gun.update()
+                self.bullet_group.update()
+
+                #self.camera.update(self.player_group) #not working yet
+                self.display_surface.fill((30, 30, 30))
+
+                # drawings
+                self.all_sprites.draw(self.player.rect.center)
+                self.bullet_group.draw(self.display_surface)
+            
+                self.player.health_bar(self.display_surface)
+                
+                if self.player.current_health == 0:
                     self.playing = False
+
+            else:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        self.running = False
+                    if self.play_button.checkForInput():
+                        self.playing = True
+
+                self.display_surface.blit(self.menu_background, (0,0))
+                self.play_button.update(self.display_surface)
+                self.play_button.changeColor()
+                self.menu_title.draw(self.display_surface)
                 
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    self.gun.shoot(self.bullet_group)
+                pygame.display.update()
 
-            keys = pygame.key.get_pressed()
 
-            # updates
-            self.player.update(keys, self.display_surface.get_rect())
-            self.enemies_group.update()
-            self.gun.update()
-            self.bullet_group.update()
-
-            #self.camera.update(self.player_group) #not working yet
-            self.display_surface.fill((30, 30, 30))
-
-            # drawings
-            self.all_sprites.draw(self.player.rect.center)
-            self.bullet_group.draw(self.display_surface)
-        
-            self.player.health_bar(self.display_surface)
-            if self.player.current_health == 0:
-
-                self.playing = False
-                self.running = True
-                continue
-                
             pygame.display.flip()
+
 
 
     pygame.quit()
