@@ -34,10 +34,16 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (pos))
 
 
-        self.health_bar_lenght = 500
+        #health bar logic
+        self.health_bar_length = 500
         self.health_change_speed = 2
         self.target_health = health
         self.direction = pygame.math.Vector2(0,0)
+
+        #experience logic
+        self.experience_bar_lenght = 500
+        self.experience = 0
+        self.current_level = 1
 
         #colidders
         self.colliders = colidders
@@ -47,7 +53,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = speed
         self.max_health = health
         self.current_health = self.max_health
-        self.health_ratio = self.current_health/self.health_bar_lenght
+        self.health_ratio = self.current_health/self.health_bar_length
         
 ################# ANIMATING FRAMES ##########################################################
     def load_frames(self, sprite_sheet, frames_x):
@@ -176,6 +182,9 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(current_image, True, False)
         else:
             self.image = current_image
+
+        if self.experience >= self.experience_bar_lenght:
+            self.level_up()
         
 
 ################# HEALTH LOGIC ##############################################################
@@ -214,8 +223,16 @@ class Player(pygame.sprite.Sprite):
         
         pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health
         pygame.draw.rect(surface, transition_color, transition_bar_rect) #heal/damage animation
-        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_lenght, 15), 2) #white rect arround the health
+        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_length, 15), 2) #white rect arround the health
 
+###### level logic ###################################
+    def level_up(self):
+        self.current_level += 1 
+        print("level up", self.current_level)
+        self.experience = 0
 
-        
+    def experience_bar(self, surface):
+        experience_rect = pygame.Rect(10, 50, self.experience, 15)
+        pygame.draw.rect(surface, (0, 0, 255), experience_rect)
+        pygame.draw.rect(surface, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
         

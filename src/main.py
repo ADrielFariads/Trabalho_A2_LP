@@ -63,10 +63,9 @@ class Game:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                           
             self.all_sprites.add(self.enemies_group)
-            if len(self.enemies_group) == 0:
+            if len(self.enemies_group) <= 10:
                 miniboss = Andromaluis(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group, self.enemies_group)
                 self.enemies_group.add(miniboss)
-                print(self.enemies_group)
                 self.all_sprites.add(self.enemies_group)
 
             # updates
@@ -82,6 +81,7 @@ class Game:
             self.all_sprites.draw(self.player.rect.center)
         
             self.player.health_bar(self.display_surface)
+            self.player.experience_bar(self.display_surface)
 
             pygame.display.flip()
 

@@ -74,7 +74,7 @@ class Bullet(pygame.sprite.Sprite):
 class MachineGun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\2_1.png"
-        damage = 100
+        damage = 50
         speed = 500 
          
         bullet_class = Bullet  

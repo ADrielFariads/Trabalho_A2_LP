@@ -51,6 +51,7 @@ class Enemy(pygame.sprite.Sprite):
         #player interaction
         self.target = player
         self.bullets = bullets_group
+        self.experience_given = 10
 
     def animate(self):
         # Increment frame counter and update frame index
@@ -97,6 +98,7 @@ class Enemy(pygame.sprite.Sprite):
         #checks the mob's death
         
         if self.health <= 0:
+            self.target.experience += self.damage
             self.kill()
             return None
         
@@ -123,6 +125,7 @@ class Goblin(Enemy):
         self.damage = 100
         self.attack_delay = 50
         self.attack_range = 50
+        self.experience_given = 30
         super().__init__(pos, self.sprite_sheet, self.frames_x,self.frames_y, self.health,  self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
     def behavior(self):
@@ -163,6 +166,7 @@ class Andromaluis(Enemy):
         self.attack_delay = 1000
         self.attack_range = 500
         self.enemy_group = enemy_group
+        self.experience_given = 100
 
         #skill atributes
         self.generation_interval = 500
@@ -175,7 +179,6 @@ class Andromaluis(Enemy):
         distance_to_enemy = self.target.position - self.position
 
         if distance_to_enemy.length() < 500:
-            print("near")
             if self.generation_timer <= 0:
                 generate_goblins(3, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
