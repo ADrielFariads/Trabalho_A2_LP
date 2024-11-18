@@ -23,8 +23,8 @@ class Enemy(pygame.sprite.Sprite):
         for y in range(frames_y_axis):
             for x in range(frames_x_axis):
                 frame = self.sprite_sheet.subsurface((x * frame_width, y * frame_height, frame_width, frame_height))
-                redimentioned_frame = pygame.transform.scale(frame, (int(frame_width), int(frame_height)))
-                self.frames.append(redimentioned_frame)
+                single_frame = pygame.transform.scale(frame, (int(frame_width), int(frame_height)))
+                self.frames.append(single_frame)
 
         #initial frame setting
         self.current_frame_index = 0
@@ -165,19 +165,43 @@ class Andromaluis(Enemy):
         self.enemy_group = enemy_group
 
         #skill atributes
-        self.generation_interval = 1000
+        self.generation_interval = 500
         self.generation_timer = 0
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+
+
 
     def behavior(self):
         distance_to_enemy = self.target.position - self.position
 
-        if distance_to_enemy.length() < 200:
+        if distance_to_enemy.length() < 500:
+            print("near")
             if self.generation_timer <= 0:
                 generate_goblins(3, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
             else:
                 self.generation_timer -= 1
             
+class Centipede(Enemy):
+    def __init__(self, pos, player, bullets_group):
+        self.sprite_sheet = "assets\\images\\enemies\\Centipeder\\Centipede_walk.png"
+        self.frames_x = 4
+        self.frames_y = 1
+        self.health = 50
+        self.speed = 3
+        self.damage = 40
+        self.attack_delay = 50
+        self.attack_range = 50
+
+
+        super().__init__(pos, self.sprite_sheet, self.frames_x,self.frames_y, self.health,  self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
         
-        
+
+    def behavior(self):
+        if self.player_distance() > self.attack_range:
+            self.track_player()
+        else:
+            if self.attack_counter >= self.attack_delay:
+                self.attack(self.target)
+                self.attack_counter = 0
+        self.attack_counter += 1 

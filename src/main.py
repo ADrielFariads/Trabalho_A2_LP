@@ -7,7 +7,7 @@ from player import Player
 from guns import Gun, Bullet, MachineGun
 from camera import Camera
 from background import Background
-from enemies import Goblin, generate_goblins, Andromaluis
+from enemies import Goblin, generate_goblins, Andromaluis, Centipede
 from groups import AllSpritesgroup
 
 # initial setup
@@ -38,8 +38,8 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.enemies_group = pygame.sprite.Group()
-        #generate_goblins(1, 4000, 3000, self.player, self.bullet_group, self.enemies_group)
+        self.centipede = Centipede((1000, 1000), self.player, self.bullet_group)
+        self.enemies_group = pygame.sprite.Group(self.centipede)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
