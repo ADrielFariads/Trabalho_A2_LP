@@ -8,7 +8,7 @@ from camera import Camera
 from background import Background, Tile, CollisionSprite
 from enemies import Enemy
 from groups import AllSpritesgroup
-from menu import Button, Titles
+from menu import Button, Text
 
 # initial setup
 class Game:
@@ -26,12 +26,14 @@ class Game:
         self.button_img = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha() 
         self.selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
         font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
-        self.play_button = Button(self.button_img, self.selected_button, [540,350], "PLAY", font, (255,255,255), (0,0,0), 0.7)
-        self.menu_title = Titles(540,150,"Cosmic Survivor", (255,255,255), 56)
+        self.play_button = Button(self.button_img, self.selected_button, [540,300], "PLAY", font, (255,255,255), (0,0,0), 0.7)
+        self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
+        self.options_button = Button(self.button_img, self.selected_button, [540,400], "OPTIONS", font, (255,255,255), (0,0,0), 0.7)
 
-        self.paused_back_button = Button(self.button_img, self.selected_button, [300,350], "BACK", font, (255,255,255), (0,0,0), 1)
+        self.back_button = Button(self.button_img, self.selected_button, [300,350], "BACK", font, (255,255,255), (0,0,0), 1)
         self.paused_menu_button = Button(self.button_img, self.selected_button, [750,350], "MENU", font, (255,255,255), (0,0,0), 1)
-        self.paused_title = Titles(540,150,"Game Paused", (255,255,255), 56)
+        self.paused_text = Text(540,150,"Game Paused", (255,255,255), 56)
+        self.options_text = Text(540,250, "Press Esc to pause", (255,255,255), 50)
 
         # camera settings
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
@@ -79,22 +81,24 @@ class Game:
                         while self.paused:
 
                             for event in pygame.event.get():
-                                if event.type == pygame.QUIT:
+                                if event.type == pygame.QUIT:                                  
                                     self.running = False
-                                if self.paused_back_button.checkForInput():
+                                    self.paused = False
+                                if self.back_button.checkForInput():
                                     self.paused = False
                                 if self.paused_menu_button.checkForInput():
                                     self.playing = False
+                                    self.paused = False
 
 
                             self.display_surface.blit(self.menu_background, (0,0))
-                            self.paused_back_button.update(self.display_surface)
-                            self.paused_back_button.changeColor()
+                            self.back_button.update(self.display_surface)
+                            self.back_button.changeColor()
 
 
                             self.paused_menu_button.update(self.display_surface)
                             self.paused_menu_button.changeColor()
-                            self.paused_title.draw(self.display_surface)
+                            self.paused_text.draw(self.display_surface)
                             pygame.display.update()
                 keys = pygame.key.get_pressed()
 
@@ -122,11 +126,31 @@ class Game:
                         self.running = False
                     if self.play_button.checkForInput():
                         self.playing = True
+                    if self.options_button.checkForInput():
+                        self.options = True
+                        while self.options:
+                            self.display_surface.blit(self.menu_background, (0,0))
+                            self.back_button.update(self.display_surface)
+                            self.back_button.changeColor()
+                            self.options_text.draw(self.display_surface)
+
+                            pygame.display.update()
+                            for event in pygame.event.get():
+                                if event.type == pygame.QUIT: 
+                                    self.options = False
+                                    self.running = False
+                                if self.back_button.checkForInput():
+                                    self.options = False
+
+
+
 
                 self.display_surface.blit(self.menu_background, (0,0))
                 self.play_button.update(self.display_surface)
                 self.play_button.changeColor()
-                self.menu_title.draw(self.display_surface)
+                self.options_button.update(self.display_surface)
+                self.options_button.changeColor()
+                self.menu_text.draw(self.display_surface)
                 
                 pygame.display.update()
 
