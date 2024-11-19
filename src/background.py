@@ -20,7 +20,7 @@ class PlantSprite(pygame.sprite.Sprite):
     def __init__(self, image, pos, width, height, *groups):
         super().__init__(*groups)
         self.image = image
-        self.rect = pygame.rect.Rect(pos[0], pos[1], width, height).inflate(-100, 100)
+        self.rect = pygame.rect.Rect(pos[0], pos[1], width, height).inflate(-80, -80)
         self.rect.center = (pos[0], pos[1])
 
 class Background:
@@ -38,18 +38,17 @@ class Background:
         self.tmx_data = load_pygame(self.map_path)
         
         # Load tile layers
-        for layer in self.tmx_data.visible_layers:
-            if hasattr(layer, 'data'):
-                for x, y, surf in layer.tiles():
-                    pos = (x * self.tile_size, y * self.tile_size)
-                    Tile(pos=pos, image=surf, groups=self.ground_group)
+        # for layer in self.tmx_data.visible_layers:
+        #     if hasattr(layer, 'data'):
+        #         for x, y, surf in layer.tiles():
+        #             pos = (x * self.tile_size, y * self.tile_size)
+        #             Tile(pos=pos, image=surf, groups=self.ground_group)
         
         #load objects
         for obj in self.tmx_data.objects:
             if obj.type == "plants":
-                print(obj.height, obj.width)
-                print(obj.x, obj.y)
                 self.collision_group.add(PlantSprite(obj.image, (obj.x, obj.y), obj.width, obj.height))
+
 
 
         
