@@ -115,10 +115,8 @@ class Enemy(pygame.sprite.Sprite):
         #animation logic
         self.animate()
 
-
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
-
         self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin_front_view.png"
         self.frames_x = 11
         self.frames_y = 1
@@ -128,18 +126,28 @@ class Goblin(Enemy):
         self.attack_delay = 50
         self.attack_range = 50
         self.experience_given = 30
-        super().__init__(pos, self.sprite_sheet, self.frames_x,self.frames_y, self.health,  self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        self.attack_counter = 0
 
     def behavior(self):
-        
         if self.player_distance() > self.attack_range:
-            self.track_player()
+            direction = pygame.math.Vector2(self.target.rect.center) - pygame.math.Vector2(self.rect.center)
+            if direction.length() > 0:
+                direction = direction.normalize()
+            
+            # Suaviza a variação aleatória na direção
+            randomness = pygame.math.Vector2(random.uniform(-0.2, 0.2), random.uniform(-0.2, 0.2))
+            direction += randomness
+            direction = direction.normalize()
+
+            # Ajusta a direção de forma mais gradual
+            self.position += direction * self.speed * 0.5
+            self.rect.center = self.position
         else:
             if self.attack_counter >= self.attack_delay:
                 self.attack(self.target)
                 self.attack_counter = 0
-        self.attack_counter += 1 
-
+        self.attack_counter += 1
 
 
 
@@ -150,11 +158,20 @@ def generate_goblins(num_goblins, top, bottom, left, right, player, bullets_grou
         random_x = random.randint(left, right)
         random_y = random.randint(top, bottom)
 
-        # Criar um novo goblin na posição aleatória
+        # Adicionar uma variação aleatória à posição inicial
+        random_x += random.randint(-50, 50)
+        random_y += random.randint(-50, 50)
+
+        # Definir uma velocidade aleatória para cada goblin
+        speed = random.uniform(5, 10)  # Intervalo de velocidade entre 5 e 10
+
+        # Criar um novo goblin na posição aleatória com a velocidade definida
         goblin = Goblin((random_x, random_y), player, bullets_group)
+        goblin.speed = speed
 
         # Adicionar o goblin ao grupo de inimigos existente
         goblins_group.add(goblin)
+
 
 
 class Andromaluis(Enemy):
@@ -172,8 +189,8 @@ class Andromaluis(Enemy):
         self.experience_given = 100
 
         #skill atributes
-        self.generation_interval = 100
-        self.generation_timer = 0
+        self.generation_interval = 500
+        self.generation_timer = 10
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
 
@@ -181,9 +198,9 @@ class Andromaluis(Enemy):
     def behavior(self):
         distance_to_enemy = self.target.position - self.position
 
-        if distance_to_enemy.length() < 100:
+        if distance_to_enemy.length() < 200:
             if self.generation_timer <= 0:
-                generate_goblins(3, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
+                generate_goblins(4, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
             else:
                 self.generation_timer -= 1
