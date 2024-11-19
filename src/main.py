@@ -29,11 +29,14 @@ class Game:
         self.play_button = Button(self.button_img, self.selected_button, [540,300], "PLAY", font, (255,255,255), (0,0,0), 0.7)
         self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
         self.options_button = Button(self.button_img, self.selected_button, [540,400], "OPTIONS", font, (255,255,255), (0,0,0), 0.7)
+        self.play_again_button = Button(self.button_img, self.selected_button, [300,350], "PLAY AGAIN", font, (255,255,255), (0,0,0), 1)
 
         self.back_button = Button(self.button_img, self.selected_button, [300,350], "BACK", font, (255,255,255), (0,0,0), 1)
-        self.paused_menu_button = Button(self.button_img, self.selected_button, [750,350], "MENU", font, (255,255,255), (0,0,0), 1)
+        self.menu_button = Button(self.button_img, self.selected_button, [750,350], "MENU", font, (255,255,255), (0,0,0), 1)
         self.paused_text = Text(540,150,"Game Paused", (255,255,255), 56)
         self.options_text = Text(540,250, "Press Esc to pause", (255,255,255), 50)
+        self.death_text = Text(540,150,"You Died!", (255,255,255), 56)
+        self.death = False
 
         # camera settings
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
@@ -86,7 +89,7 @@ class Game:
                                     self.paused = False
                                 if self.back_button.checkForInput():
                                     self.paused = False
-                                if self.paused_menu_button.checkForInput():
+                                if self.menu_button.checkForInput():
                                     self.playing = False
                                     self.paused = False
 
@@ -96,8 +99,8 @@ class Game:
                             self.back_button.changeColor()
 
 
-                            self.paused_menu_button.update(self.display_surface)
-                            self.paused_menu_button.changeColor()
+                            self.menu_button.update(self.display_surface)
+                            self.menu_button.changeColor()
                             self.paused_text.draw(self.display_surface)
                             pygame.display.update()
                 keys = pygame.key.get_pressed()
@@ -118,8 +121,9 @@ class Game:
                 self.player.health_bar(self.display_surface)
                 
                 if self.player.current_health == 0:
+                    self.death = True
                     self.playing = False
-
+                        
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -141,10 +145,7 @@ class Game:
                                     self.running = False
                                 if self.back_button.checkForInput():
                                     self.options = False
-
-
-
-
+                
                 self.display_surface.blit(self.menu_background, (0,0))
                 self.play_button.update(self.display_surface)
                 self.play_button.changeColor()
@@ -153,6 +154,29 @@ class Game:
                 self.menu_text.draw(self.display_surface)
                 
                 pygame.display.update()
+
+                while self.death:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            self.death = False
+                            self.running = False
+                        if self.play_again_button.checkForInput():
+                            self.player.current_health = self.player.max_health
+                            self.death = False
+                            self.playing = True
+                            pygame.display.update()
+                        if self.menu_button.checkForInput():
+                            self.player.current_health = self.player.max_health
+                            self.death = False                      
+                
+                    self.display_surface.blit(self.menu_background, (0,0))
+                    self.play_again_button.update(self.display_surface)
+                    self.play_again_button.changeColor()
+                    self.menu_button.update(self.display_surface)
+                    self.menu_button.changeColor()
+                    self.death_text.draw(self.display_surface)
+
+                    pygame.display.update()
 
 
             pygame.display.flip()
