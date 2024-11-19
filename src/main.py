@@ -45,9 +45,7 @@ class Game:
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
-        self.all_sprites.add(self.background_group, self.enemies_group, self.player,self.gun_group, self.bullet_group)
-
-        
+        self.all_sprites.add(self.background_group, self.enemies_group, self.player,self.gun_group, self.bullet_group) 
 
     def run(self):
 
