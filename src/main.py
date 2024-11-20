@@ -7,7 +7,7 @@ from player import Player
 from guns import Gun, Bullet, MachineGun
 from camera import Camera
 from background import Background
-from enemies import Goblin, generate_goblins, Andromaluis, Centipede
+from enemies import Goblin, generate_goblins, Andromaluis, Centipede, ZeppelinGoblin
 from groups import AllSpritesgroup
 
 # initial setup
@@ -24,7 +24,7 @@ class Game:
 
         # Initialize background
         self.background = pygame.sprite.Sprite()
-        self.background.image = pygame.image.load("assets\\background_files\\map00.png") 
+        self.background.image = pygame.image.load("assets\\background_files\\map007.png") 
         self.background.rect = self.background.image.get_rect(center=(1000, 1000))
         self.background_objects = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)
         self.background_group = pygame.sprite.Group(self.background) 
@@ -67,6 +67,12 @@ class Game:
             if len(self.enemies_group) <= 1:
                 miniboss = Andromaluis(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group, self.enemies_group)
                 self.enemies_group.add(miniboss)
+                self.all_sprites.add(self.enemies_group)
+
+            # Adding ZeppelinGoblin randomly
+            if len(self.enemies_group) <= 2:
+                zeppelin = ZeppelinGoblin(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group)
+                self.enemies_group.add(zeppelin)
                 self.all_sprites.add(self.enemies_group)
 
             # updates
