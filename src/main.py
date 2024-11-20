@@ -5,7 +5,6 @@ import cProfile
 
 from player import Player
 from guns import Gun, Bullet, MachineGun
-from camera import Camera
 from background import Background
 from enemies import Goblin, generate_goblins, Andromaluis, Centipede
 from groups import AllSpritesgroup
