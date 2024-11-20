@@ -8,7 +8,7 @@ from camera import Camera
 from background import Background, Tile, CollisionSprite
 from enemies import Enemy
 from groups import AllSpritesgroup
-from menu import Button, Text
+from menu import Menu
 
 # initial setup
 class Game:
@@ -17,23 +17,10 @@ class Game:
         pygame.init()
         self.display_surface = pygame.display.set_mode((1080, 640))
         pygame.display.set_caption("Cosmic Survivor")
-        self.playing = False
-        self.running = True
         self.clock = pygame.time.Clock()
 
         # Menu
-        self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
-        self.play_button = Button([540,300], "PLAY", (255,255,255), (0,0,0), 0.7)
-        self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
-        self.options_button = Button([540,400], "OPTIONS",(255,255,255), (0,0,0), 0.7)
-        self.play_again_button = Button([300,350], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
-
-        self.back_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1)
-        self.menu_button = Button([750,350], "MENU", (255,255,255), (0,0,0), 1)
-        self.paused_text = Text(540,150,"Game Paused", (255,255,255), 56)
-        self.options_text = Text(540,250, "Press Esc to pause", (255,255,255), 50)
-        self.death_text = Text(540,150,"Game Over!", (255,255,255), 56)
-        self.death = False
+        self.menu = Menu(self.display_surface)
 
         # camera settings
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
@@ -62,44 +49,27 @@ class Game:
     
     def run(self):
 
-        while self.running:
+        while True:
+
+            if pygame.event.get(pygame.QUIT):
+                pygame.quit()
+                quit()
+
             
-            if self.playing:
+            if self.menu.playing:
 
                 delta_time = self.clock.tick(60)
                 # event loop
                 for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        self.running = False
                     
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group)
                     
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                        self.paused = True
+                        self.menu.playing = False
+                        self.menu.initial_menu =  False
+                        self.menu.pause_menu = True
 
-                        while self.paused:
-
-                            for event in pygame.event.get():
-                                if event.type == pygame.QUIT:                                  
-                                    self.running = False
-                                    self.paused = False
-                                if self.back_button.checkForInput():
-                                    self.paused = False
-                                if self.menu_button.checkForInput():
-                                    self.playing = False
-                                    self.paused = False
-
-
-                            self.display_surface.blit(self.menu_background, (0,0))
-                            self.back_button.update(self.display_surface)
-                            self.back_button.changeColor()
-
-
-                            self.menu_button.update(self.display_surface)
-                            self.menu_button.changeColor()
-                            self.paused_text.draw(self.display_surface)
-                            pygame.display.update()
                 keys = pygame.key.get_pressed()
 
                 # updates
@@ -118,67 +88,13 @@ class Game:
                 self.player.health_bar(self.display_surface)
                 
                 if self.player.current_health == 0:
-                    self.death = True
-                    self.playing = False
-                        
+                    self.menu.death_menu = True
+                    self.menu.initial_menu = False
+                    self.menu.playing = False                     
             else:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        self.running = False
-                    if self.play_button.checkForInput():
-                        self.playing = True
-                    if self.options_button.checkForInput():
-                        self.options = True
-                        while self.options:
-                            self.display_surface.blit(self.menu_background, (0,0))
-                            self.back_button.update(self.display_surface)
-                            self.back_button.changeColor()
-                            self.options_text.draw(self.display_surface)
-
-                            pygame.display.update()
-                            for event in pygame.event.get():
-                                if event.type == pygame.QUIT: 
-                                    self.options = False
-                                    self.running = False
-                                if self.back_button.checkForInput():
-                                    self.options = False
-                
-                self.display_surface.blit(self.menu_background, (0,0))
-                self.play_button.update(self.display_surface)
-                self.play_button.changeColor()
-                self.options_button.update(self.display_surface)
-                self.options_button.changeColor()
-                self.menu_text.draw(self.display_surface)
-                
-                pygame.display.update()
-
-                while self.death:
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            self.death = False
-                            self.running = False
-                        if self.play_again_button.checkForInput():
-                            #To work you must return the game to the initial position, try to make it with a func in player and enemy class
-                            self.player.current_health = self.player.max_health
-                            self.death = False
-                            self.playing = True
-                        if self.menu_button.checkForInput():
-                            self.player.current_health = self.player.max_health
-                            self.death = False                      
-                
-                    self.display_surface.blit(self.menu_background, (0,0))
-                    self.play_again_button.update(self.display_surface)
-                    self.play_again_button.changeColor()
-                    self.menu_button.update(self.display_surface)
-                    self.menu_button.changeColor()
-                    self.death_text.draw(self.display_surface)
-
-                    pygame.display.update()
-
-
+                self.menu.update()
+            pygame.display.update()
             pygame.display.flip()
-
-
 
     pygame.quit()
 

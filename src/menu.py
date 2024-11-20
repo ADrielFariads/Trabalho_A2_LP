@@ -49,8 +49,9 @@ class Button():
 
         if self.rect.collidepoint(mouse_x, mouse_y):
             if pygame.mouse.get_pressed()[0]:
+
                 return True
-        return False
+        return False    
 
     def changeColor(self):
         mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -61,6 +62,68 @@ class Button():
         else:
             self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
+class Menu():
+
+    def __init__(self, screen):
+        self.screen = screen
+        self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
+        self.play_button = Button([540,300], "PLAY", (255,255,255), (0,0,0), 0.7)
+        self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
+        self.options_button = Button([540,400], "OPTIONS",(255,255,255), (0,0,0), 0.7)
+        self.play_again_button = Button([300,350], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
+
+        self.back_options_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1)
+        self.back_paused_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1)
+        
+        self.menu_button = Button([750,350], "MENU", (255,255,255), (0,0,0), 1)
+        self.paused_text = Text(540,150,"Game Paused", (255,255,255), 56)
+        self.options_text = Text(540,250, "Press Esc to pause", (255,255,255), 50)
+        self.death_text = Text(540,150,"Game Over!", (255,255,255), 56)
+        self.initial_menu = True
+        self.options_menu = False
+        self.death_menu = False
+        self.pause_menu = False
+        self.playing = False
+
+    def change_current_action(self, button):
+        if button == self.play_button:
+            self.playing = True
+        elif button == self.options_button:
+            self.initial_menu = False
+            self.options_menu = True
+        elif button == self.back_options_button:
+            self.options_menu = False
+            self.initial_menu = True
+        elif button == self.back_paused_button:
+            self.playing = True
+        elif button == self.menu_button:
+            self.pause_menu = False
+            self.death_menu = False
+            self.initial_menu = True
+        elif button == self.play_again_button:
+            self.playing = True
+
+
+    def draw(self,text, *button_args):
+        self.screen.blit(self.menu_background, (0,0))
+        for button in button_args:
+            button.update(self.screen)
+            button.changeColor()
+            if button.checkForInput():
+                self.change_current_action(button)
+
+        text.draw(self.screen)
+        pygame.display.update()
+
+    def update(self):
+        if self.initial_menu:
+            self.draw(self.menu_text, self.play_button, self.options_button)
+        elif self.options_menu:
+            self.draw(self.options_text,self.back_options_button)
+        elif self.pause_menu:
+            self.draw(self.paused_text, self.menu_button,self.back_paused_button)
+        elif self.death_menu:
+            self.draw(self.death_text,self.play_again_button,self.menu_button)
 
 class Text():
 
