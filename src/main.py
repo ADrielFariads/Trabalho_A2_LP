@@ -6,7 +6,7 @@ import cProfile
 from player import Player
 from guns import Gun, Bullet, MachineGun
 from camera import Camera
-from background import Background
+from background import Background, CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Centipede
 from groups import AllSpritesgroup
 
@@ -26,12 +26,17 @@ class Game:
         self.background = pygame.sprite.Sprite()
         self.background.image = pygame.image.load("assets\\background_files\\map007.png") 
         self.background.rect = self.background.image.get_rect(topleft=(0,0))
-        self.background_objects = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)
+        #self.background_objects = Background("assets\\background_files\\map007.tmx", 16, self.display_surface)
         self.background_group = pygame.sprite.Group(self.background) 
         self.map_bounds = pygame.Rect(1020, 710, 6460, 3480) #rect for keep the player in the map
 
+        #colliders
+        colliders = []
+        rect1 = CollisionSprite((1680, 1072), (250, 150))
+        colliders.append(rect1)
+
         # sprites
-        self.player = Player((1000, 1000), 1000, 15, self.map_bounds, self.background_objects.collision_group)
+        self.player = Player((1200, 1200), 1000, 8, self.map_bounds, colliders)
         self.gun = MachineGun(self.player, self.map_bounds)
 
         # groups
@@ -40,8 +45,7 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.centipede = Centipede((1000, 1000), self.player, self.bullet_group)
-        self.enemies_group = pygame.sprite.Group(self.centipede)
+        self.enemies_group = pygame.sprite.Group()
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()

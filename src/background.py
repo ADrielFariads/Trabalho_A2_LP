@@ -46,8 +46,9 @@ class Background:
         
         #load objects
         for obj in self.tmx_data.objects:
-            if obj.type == "plants":
-                self.collision_group.add(PlantSprite(obj.image, (obj.x, obj.y), obj.width, obj.height))
+            if obj.type == "limiters":
+                self.collision_group.add(CollisionSprite(obj.image, (obj.x, obj.y), obj.width, obj.height))
+
 
 
 

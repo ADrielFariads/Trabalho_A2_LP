@@ -8,7 +8,7 @@ import pygame
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group):
+    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, colliders=None):
         super().__init__()
 
         # Loading image
@@ -44,6 +44,7 @@ class Enemy(pygame.sprite.Sprite):
         self.target = player
         self.bullets = bullets_group
         self.experience_given = 10
+        self.colliders = colliders
 
     def load_frames(self):
         frame_width = self.sprite_sheet.get_width() // self.frames_x
@@ -97,6 +98,24 @@ class Enemy(pygame.sprite.Sprite):
 
     def behavior(self):
         pass
+    def collision(self, direction):
+        if self.colliders != None:
+            for sprite in self.colliders:
+                if sprite.rect.colliderect(self.rect):
+                    if direction == "horizontal":
+                        if self.direction.x > 0:
+                            self.rect.right = sprite.rect.left
+
+                        if self.direction.x < 0:
+                            self.rect.left = sprite.rect.right
+
+                    if direction == "vertical":
+                        if self.direction.y > 0:
+                            self.rect.bottom = sprite.rect.top
+
+                        if self.direction.y < 0:
+                            self.rect.top = sprite.rect.bottom
+
 
     def update(self):
         # Checks the mob's death

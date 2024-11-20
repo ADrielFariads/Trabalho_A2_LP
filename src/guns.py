@@ -69,6 +69,8 @@ class Bullet(pygame.sprite.Sprite):
         self.speed +=1
         self.rect.x += self.dx * self.speed
         self.rect.y += self.dy * self.speed
+        if self.speed >= 1000:
+            self.kill()
         
 
 class MachineGun(Gun):
