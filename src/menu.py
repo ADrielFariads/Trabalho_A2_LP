@@ -2,10 +2,11 @@ import pygame
 
 class Button():
 
-    def __init__(self, normal_button, selected_button, pos, text_input, font, base_color, hovering_color, scale):
-        #Check if the image is not None
-        if normal_button is None:
-            raise ValueError("Button image cannot be None.")
+    def __init__(self, pos, text_input, base_color, hovering_color, scale):
+        #Define commom atributes
+        font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
+        normal_button = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha()
+        selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
         
         # Get the width and height of the image
         width = normal_button.get_width()

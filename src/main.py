@@ -23,19 +23,16 @@ class Game:
 
         # Menu
         self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
-        self.button_img = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha() 
-        self.selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
-        font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
-        self.play_button = Button(self.button_img, self.selected_button, [540,300], "PLAY", font, (255,255,255), (0,0,0), 0.7)
+        self.play_button = Button([540,300], "PLAY", (255,255,255), (0,0,0), 0.7)
         self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
-        self.options_button = Button(self.button_img, self.selected_button, [540,400], "OPTIONS", font, (255,255,255), (0,0,0), 0.7)
-        self.play_again_button = Button(self.button_img, self.selected_button, [300,350], "PLAY AGAIN", font, (255,255,255), (0,0,0), 1)
+        self.options_button = Button([540,400], "OPTIONS",(255,255,255), (0,0,0), 0.7)
+        self.play_again_button = Button([300,350], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
 
-        self.back_button = Button(self.button_img, self.selected_button, [300,350], "BACK", font, (255,255,255), (0,0,0), 1)
-        self.menu_button = Button(self.button_img, self.selected_button, [750,350], "MENU", font, (255,255,255), (0,0,0), 1)
+        self.back_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1)
+        self.menu_button = Button([750,350], "MENU", (255,255,255), (0,0,0), 1)
         self.paused_text = Text(540,150,"Game Paused", (255,255,255), 56)
         self.options_text = Text(540,250, "Press Esc to pause", (255,255,255), 50)
-        self.death_text = Text(540,150,"You Died!", (255,255,255), 56)
+        self.death_text = Text(540,150,"Game Over!", (255,255,255), 56)
         self.death = False
 
         # camera settings
@@ -78,7 +75,7 @@ class Game:
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group)
                     
-                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.paused = True
 
                         while self.paused:
@@ -161,10 +158,10 @@ class Game:
                             self.death = False
                             self.running = False
                         if self.play_again_button.checkForInput():
+                            #To work you must return the game to the initial position, try to make it with a func in player and enemy class
                             self.player.current_health = self.player.max_health
                             self.death = False
                             self.playing = True
-                            pygame.display.update()
                         if self.menu_button.checkForInput():
                             self.player.current_health = self.player.max_health
                             self.death = False                      
