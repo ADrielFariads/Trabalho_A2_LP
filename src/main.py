@@ -70,7 +70,6 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                        print(self.player.position, self.all_sprites.offset)
                           
             self.all_sprites.add(self.enemies_group)
             if len(self.enemies_group) <= 10:
@@ -89,7 +88,7 @@ class Game:
             self.all_sprites.draw(self.player.rect.center)
         
             self.interface.health_bar()
-            self.player.experience_bar(self.display_surface)
+            self.interface.experience_bar()
 
             pygame.display.flip()
 

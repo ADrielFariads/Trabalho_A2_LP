@@ -39,7 +39,6 @@ class Player(pygame.sprite.Sprite):
         self.direction = pygame.math.Vector2(0,0)
 
         #experience logic
-        self.experience_bar_lenght = 500
         self.experience = 0
         self.current_level = 1
 
@@ -120,8 +119,7 @@ class Player(pygame.sprite.Sprite):
 
                         if self.direction.y < 0:
                             self.rect.top = sprite.rect.bottom
-
-                    
+    
 
 ################# UPDATE METHOD #################################################### 
     def update(self, keys):
@@ -226,9 +224,3 @@ class Player(pygame.sprite.Sprite):
         self.current_level += 1 
         print("level up", self.current_level)
         self.experience = 0
-
-    def experience_bar(self, surface):
-        experience_rect = pygame.Rect(10, 50, self.experience, 15)
-        pygame.draw.rect(surface, (0, 0, 255), experience_rect)
-        pygame.draw.rect(surface, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
-        
