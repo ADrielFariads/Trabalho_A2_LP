@@ -24,7 +24,7 @@ class Game:
 
         # Initialize background
         self.background = pygame.sprite.Sprite()
-        self.background.image = pygame.image.load("assets\\background_files\\map006.png") 
+        self.background.image = pygame.image.load("assets\\background_files\\map00.png") 
         self.background.rect = self.background.image.get_rect(center=(1000, 1000))
         self.background_objects = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)
         self.background_group = pygame.sprite.Group(self.background) 
@@ -63,7 +63,7 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                        print(self.all_sprites.offset)
+                        print(self.all_sprites)
                           
             self.all_sprites.add(self.enemies_group)
             if len(self.enemies_group) <= 1:
