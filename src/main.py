@@ -89,6 +89,7 @@ class Game:
         
             self.interface.health_bar()
             self.interface.experience_bar()
+            self.interface.skill_icon()
 
             pygame.display.flip()
 

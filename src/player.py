@@ -1,7 +1,8 @@
 import pygame
+import playerSkills
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, health, speed, map_bounds, colidders=None):
+    def __init__(self, pos, health, speed, map_bounds,skills, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
@@ -51,6 +52,10 @@ class Player(pygame.sprite.Sprite):
         self.max_health = health
         self.current_health = self.max_health
         
+
+        #skills logic
+        self.skills = skills
+
 ################# ANIMATING FRAMES ##########################################################
     def load_frames(self, sprite_sheet, frames_x):
         "Extract and scale frames from the given sprite sheet."
@@ -199,9 +204,16 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = current_image
 
-        if self.experience >= self.experience_bar_lenght:
+        if self.experience >= 500:
             self.level_up()
         
+        #skills
+
+        if keys[pygame.K_q]:
+            self.skill_1()
+
+        if self.skill_1_cooldown > 0:
+            self.skill_1_cooldown -= 1
 
 ################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
@@ -224,3 +236,10 @@ class Player(pygame.sprite.Sprite):
         self.current_level += 1 
         print("level up", self.current_level)
         self.experience = 0
+
+    def skill_1(self):
+        if self.current_health < self.max_health:
+            if self.skill_1_cooldown <= 0:
+                self.get_healed(200)
+                self.skill_1_cooldown = 500
+                self.sill1_last_used_time = pygame.time.get_ticks()
