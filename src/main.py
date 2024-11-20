@@ -9,6 +9,7 @@ from camera import Camera
 from background import Background, CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Centipede
 from groups import AllSpritesgroup
+from interface import GameInterface
 
 # initial setup
 class Game:
@@ -47,6 +48,10 @@ class Game:
         #enemies generation
         self.enemies_group = pygame.sprite.Group()
 
+        #interface
+
+        self.interface = GameInterface(self.display_surface, self.player)
+
         #camera interaction
         self.all_sprites = AllSpritesgroup()
         self.all_sprites.add(self.background_group, self.enemies_group, self.player,self.gun_group, self.bullet_group) 
@@ -68,7 +73,7 @@ class Game:
                         print(self.player.position, self.all_sprites.offset)
                           
             self.all_sprites.add(self.enemies_group)
-            if len(self.enemies_group) <= 1:
+            if len(self.enemies_group) <= 10:
                 miniboss = Andromaluis(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group, self.enemies_group)
                 self.enemies_group.add(miniboss)
                 self.all_sprites.add(self.enemies_group)
@@ -83,7 +88,7 @@ class Game:
             self.display_surface.fill((30, 30, 30))
             self.all_sprites.draw(self.player.rect.center)
         
-            self.player.health_bar(self.display_surface)
+            self.interface.health_bar()
             self.player.experience_bar(self.display_surface)
 
             pygame.display.flip()

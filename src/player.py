@@ -34,9 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (pos))
 
 
-        #health bar logic
-        self.health_bar_length = 500
-        self.health_change_speed = 2
+        #health logic
         self.target_health = health
         self.direction = pygame.math.Vector2(0,0)
 
@@ -53,7 +51,6 @@ class Player(pygame.sprite.Sprite):
         self.speed = speed
         self.max_health = health
         self.current_health = self.max_health
-        self.health_ratio = self.current_health/self.health_bar_length
         
 ################# ANIMATING FRAMES ##########################################################
     def load_frames(self, sprite_sheet, frames_x):
@@ -223,28 +220,6 @@ class Player(pygame.sprite.Sprite):
         if self.target_health >= self.max_health:
             self.target_health = self.max_health
 
-    def health_bar(self, surface): #health bar 
-        transition_width = 0
-        transition_color = (255, 255, 255)
-        health_bar_rect = pygame.Rect(10, 10, self.current_health/self.health_ratio, 15)
-        transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
-
-        if self.current_health < self.target_health:
-            self.current_health += self.health_change_speed
-            transition_width = int((self.target_health-self.current_health)/self.health_ratio)
-            transition_color = (0, 255, 0)
-            transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
-
-        if self.current_health > self.target_health:
-            self.current_health -= self.health_change_speed
-            transition_width = int(abs((self.target_health-self.current_health)/self.health_ratio))
-            transition_color = (255, 255, 0) 
-            transition_bar_rect = pygame.Rect(health_bar_rect.right - transition_width, 10, transition_width, 15)
-
-        
-        pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health
-        pygame.draw.rect(surface, transition_color, transition_bar_rect) #heal/damage animation
-        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_length, 15), 2) #white rect arround the health
 
 ######## level logic ######################################################################
     def level_up(self):
