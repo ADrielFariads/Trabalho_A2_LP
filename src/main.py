@@ -24,14 +24,14 @@ class Game:
 
         # Initialize background
         self.background = pygame.sprite.Sprite()
-        self.background.image = pygame.image.load("assets\\background_files\\map00.png") 
-        self.background.rect = self.background.image.get_rect(center=(1000, 1000))
+        self.background.image = pygame.image.load("assets\\background_files\\map007.png") 
+        self.background.rect = self.background.image.get_rect(topleft=(0,0))
         self.background_objects = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)
         self.background_group = pygame.sprite.Group(self.background) 
-        self.map_bounds = pygame.Rect(690, 420, 2650, 1500) #rect for keep the player in the map
+        self.map_bounds = pygame.Rect(1020, 710, 6460, 3480) #rect for keep the player in the map
 
         # sprites
-        self.player = Player((1000, 1000), 1000, 8, self.map_bounds, self.background_objects.collision_group)
+        self.player = Player((1000, 1000), 1000, 15, self.map_bounds, self.background_objects.collision_group)
         self.gun = MachineGun(self.player, self.map_bounds)
 
         # groups
@@ -61,7 +61,7 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                        print(self.all_sprites)
+                        print(self.player.position, self.all_sprites.offset)
                           
             self.all_sprites.add(self.enemies_group)
             if len(self.enemies_group) <= 1:
