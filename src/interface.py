@@ -43,20 +43,26 @@ class GameInterface:
         pygame.draw.rect(self.screen, (0, 0, 255), experience_rect)
         pygame.draw.rect(self.screen, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
         
-
-    def skill_icon(self):
+    def skills_interface(self):
         icon_size = 50
-        x_pos = 50
-        y_pos = self.screen.get_height() - 75
 
-        icon = pygame.transform.scale(self.player.skill_1_icon, (icon_size, icon_size))
-        self.screen.blit(self.back_icon, (x_pos, y_pos))
-        self.screen.blit(icon, (x_pos, y_pos))
+        for i, skill in enumerate(self.player.skills):
+            x_pos = 50 + (i * (icon_size + 10))
+            y_pos = self.screen.get_height() - icon_size - 50
 
-        if self.player.skill_1_cooldown > 0:
-            surface = pygame.Surface((icon_size, icon_size), pygame.SRCALPHA)
-            cooldown_rect = pygame.Rect(0,0, icon_size, icon_size)
-            pygame.draw.rect(surface, (30, 30, 30), cooldown_rect)
-            surface.set_alpha(200)
+            skill_icon = pygame.transform.scale(skill.image, (icon_size, icon_size))
+            self.screen.blit(self.back_icon, (x_pos, y_pos))
+            self.screen.blit(skill_icon, (x_pos, y_pos))
 
-            self.screen.blit(surface, (x_pos, y_pos))
+            if skill.is_on_cooldown: # cooldown animation
+                surface = pygame.Surface((50, 50))
+                surface.fill((30, 30, 30))
+                surface.set_alpha(200)
+                self.screen.blit(surface, (x_pos, y_pos))
+                
+
+
+    def draw(self):
+        self.experience_bar()
+        self.health_bar()
+        self.skills_interface()

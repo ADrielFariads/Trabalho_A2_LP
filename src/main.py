@@ -10,6 +10,7 @@ from background import Background, CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Centipede
 from groups import AllSpritesgroup
 from interface import GameInterface
+import skills
 
 # initial setup
 class Game:
@@ -36,8 +37,12 @@ class Game:
         rect1 = CollisionSprite((1680, 1072), (250, 150))
         colliders.append(rect1)
 
+        #skills
+        heal = skills.Heal()
+        skill_list = [heal]
+
         # sprites
-        self.player = Player((1200, 1200), 1000, 8, self.map_bounds, colliders)
+        self.player = Player((1200, 1200), 1000, 8, self.map_bounds,skill_list, colliders)
         self.gun = MachineGun(self.player, self.map_bounds)
 
         # groups
@@ -87,9 +92,7 @@ class Game:
             self.display_surface.fill((30, 30, 30))
             self.all_sprites.draw(self.player.rect.center)
         
-            self.interface.health_bar()
-            self.interface.experience_bar()
-            self.interface.skill_icon()
+            self.interface.draw()
 
             pygame.display.flip()
 
