@@ -209,10 +209,14 @@ class Player(pygame.sprite.Sprite):
         
         #skills
 
-        self.skills[0].update()
-        
+        for skill in self.skills:
+            skill.update(self)
+
         if keys[pygame.K_q]:
             self.skills[0].use(self)
+
+        if keys[pygame.K_e]:
+            self.skills[1].use(self)
             
 
 ################# HEALTH LOGIC ##############################################################

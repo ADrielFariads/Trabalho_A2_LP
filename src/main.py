@@ -39,7 +39,8 @@ class Game:
 
         #skills
         heal = skills.Heal()
-        skill_list = [heal]
+        dash = skills.Dash()
+        skill_list = [heal, dash]
 
         # sprites
         self.player = Player((1200, 1200), 1000, 8, self.map_bounds,skill_list, colliders)
@@ -75,6 +76,7 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                        print(self.player.speed)
                           
             self.all_sprites.add(self.enemies_group)
             if len(self.enemies_group) <= 10:
