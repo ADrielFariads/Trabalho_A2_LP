@@ -1,5 +1,4 @@
 import pygame
-import sys
 from pytmx.util_pygame import load_pygame
 
 pygame.init()

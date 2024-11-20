@@ -119,7 +119,7 @@ class Enemy(pygame.sprite.Sprite):
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
 
-        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin_front_view.png"
+        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin.png"
         self.frames_x = 11
         self.frames_y = 1
         self.health = 50
