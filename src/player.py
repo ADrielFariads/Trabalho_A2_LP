@@ -88,8 +88,18 @@ class Player(pygame.sprite.Sprite):
         
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets\\images\\Player\\Walk1.png").convert_alpha()
+            self.sprite_sheet = pygame.image.load("assets/images/Player/Walk1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 6)
+
+        if action == "walkup":
+            self.current_action = "walkup"
+            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkUp.png").convert_alpha() 
+            self.frames = self.load_frames(self.sprite_sheet, 8)
+
+        if action == "walkdown":
+            self.current_action = "walkdown"
+            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkDown.png").convert_alpha() 
+            self.frames = self.load_frames(self.sprite_sheet, 8)
 
 ################# GETTER METHODS ###################################################
     def get_position(self):
@@ -134,6 +144,7 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_a]:
             self.direction.x = -1
             self.facing_right = False
+            self.set_action("walk")
 
         if keys[pygame.K_d]:
             self.direction.x = 1
@@ -148,7 +159,16 @@ class Player(pygame.sprite.Sprite):
             self.direction = self.direction.normalize()
             self.set_action("walk")
 
-        else:   #idle animation setter
+        elif keys[pygame.K_w] and not keys[pygame.K_s]:  # up only
+            self.direction.y = -1
+            self.set_action("walkup")
+
+        elif keys[pygame.K_s] and not keys[pygame.K_w]:  # down only
+            self.direction.y = 1
+            self.set_action("walkdown")
+
+         
+        if self.direction.length() == 0: #verify is player is idle
             self.set_action("idle")
 
 
