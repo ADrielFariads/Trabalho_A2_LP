@@ -45,6 +45,7 @@ class Dash(Skill):
         self.duration = 3000
         self.dash_end_time = 0
         self.image = "assets\\images\\icons\\dash_icon.png"
+        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\dash_sound.wav")
         self.original_speed = 0
         super().__init__(self.name, self.cooldown, self.image)
 
@@ -55,6 +56,8 @@ class Dash(Skill):
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
             self.dash_end_time = pygame.time.get_ticks() + self.duration
+            self.sound.play()
+            self.sound.set_volume(0.5)
 
     def update(self, player):
         if self.is_on_cooldown and pygame.time.get_ticks() >= self.dash_end_time:

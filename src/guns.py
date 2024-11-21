@@ -80,7 +80,7 @@ class MachineGun(Gun):
         speed = 500 
          
         bullet_class = Bullet  
-        self.sound = pygame.mixer.Sound("assets\\audio\\machine_gun.wav")
+        self.sound = pygame.mixer.Sound("assets\\audio\\gun\\machine_gun.wav")
         self.sound.set_volume(0.5)
         super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
         self.shot_delay = 500
