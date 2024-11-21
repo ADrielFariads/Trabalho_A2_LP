@@ -1,3 +1,10 @@
+"""
+This module implements the Player class, managing the player's attributes, animations, movement, 
+collision detection, health, experience, and skill usage. The player interacts with the game world through sprite-based 
+actions and can level up, heal, and use special abilities while navigating within map boundaries.
+"""
+
+
 import pygame
 
 
@@ -213,10 +220,10 @@ class Player(pygame.sprite.Sprite):
             skill.update(self)
 
         if keys[pygame.K_q]:
-            self.skills[0].use(self)
+            self.skills[1].use(self)
 
         if keys[pygame.K_e]:
-            self.skills[1].use(self)
+            self.skills[2].use(self)
             
 
 ################# HEALTH LOGIC ##############################################################

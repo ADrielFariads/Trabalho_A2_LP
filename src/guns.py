@@ -1,3 +1,7 @@
+"""
+This module defines classes for implementing firearms and bullets in the game. It includes a base Gun class and a specialized MachineGun class, as well as a Bullet class for handling projectile behaviors. Guns can track player movements, shoot bullets towards the mouse cursor, and include cooldown mechanics. Each gun has unique features, such as different bullet bursts and sound effects.
+"""
+
 import pygame
 import math
 
@@ -73,6 +77,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
         
 
+############ cyborg's machine gun ########################
 class MachineGun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\2_1.png"
@@ -84,7 +89,8 @@ class MachineGun(Gun):
         self.sound = pygame.mixer.Sound("assets\\audio\\gun\\machine_gun.wav")
         self.sound.set_volume(0.5)
         super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
-        self.shot_delay = 500
+        
+        self.cool_down = 500
 
     def shoot_single_bullet(self, bullet_group, camera_offset):
         """

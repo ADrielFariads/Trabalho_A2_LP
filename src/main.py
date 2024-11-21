@@ -7,7 +7,7 @@ from player import Player
 from guns import Gun, Bullet, MachineGun
 from camera import Camera
 from background import Background, CollisionSprite
-from enemies import Goblin, generate_goblins, Andromaluis, Centipede
+from enemies import Goblin, generate_goblins, Andromaluis, Slime
 from groups import AllSpritesgroup
 from interface import GameInterface
 import skills
@@ -38,12 +38,13 @@ class Game:
         colliders.append(rect1)
 
         #skills
+        machinegun_render = skills.MachineGunRender()
         heal = skills.Heal()
         dash = skills.Dash()
-        skill_list = [heal, dash]
+        skill_list = [machinegun_render, heal, dash]
 
         # sprites
-        self.player = Player((1200, 1200), 1000, 8, self.map_bounds,skill_list, colliders)
+        self.player = Player((1200, 1200), 1000, 7, self.map_bounds,skill_list, colliders)
         self.gun = MachineGun(self.player, self.map_bounds)
 
         # groups
@@ -78,9 +79,9 @@ class Game:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                           
             self.all_sprites.add(self.enemies_group)
-            if len(self.enemies_group) <= 10:
-                miniboss = Andromaluis(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group, self.enemies_group)
-                self.enemies_group.add(miniboss)
+            if len(self.enemies_group) <= 1:
+                slime = Slime((1500, 1500), self.player, self.bullet_group)
+                self.enemies_group.add(slime)
                 self.all_sprites.add(self.enemies_group)
 
             # updates

@@ -1,3 +1,9 @@
+"""
+This module defines skills including their properties, behaviors, and interactions with the player. 
+Implemented skills include healing, dashing, and attacks (e.g., Machine Gun), each with unique mechanics such as cooldowns 
+and visual/sound effects.
+"""
+
 import pygame
 
 class Skill:
@@ -69,3 +75,15 @@ class Dash(Skill):
             player.speed = self.original_speed
         return super().update(player)
         
+
+class MachineGunRender(Skill):
+    def __init__(self):
+        self.key = "Botão Esquerdo"
+        self.name = "Metralhadora"
+        self.cooldown = 500
+        self.image = "assets\\images\\icons\\machinegun_icon.png"
+        self.description = f"Dispara uma saraivada de balas no local alvo."
+        super().__init__(self.name, self.cooldown, self.image)
+
+
+

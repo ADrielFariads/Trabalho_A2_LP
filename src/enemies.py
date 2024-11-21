@@ -1,5 +1,5 @@
 """
-Module for enemies creation and enemies generation
+This module handles the creation and management of enemies. It provides classes for various enemy types, each with unique behaviors and attributes, as well as functions for dynamically spawning enemies on the map.
 
 """
 
@@ -285,3 +285,17 @@ class Centipede(Enemy):
                 self.attack(self.target)
                 self.attack_counter = 0
         self.attack_counter += 1
+
+class Slime(Enemy):
+    def __init__(self, pos, player, bullets_group):
+        self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
+        self.frames_x = 4
+        self.frames_y = 2
+        self.health = 100
+        self.speed = 3
+        self.damage = 40
+        self.attack_delay = 50
+        self.attack_range = 50
+
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+

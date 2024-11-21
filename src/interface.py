@@ -1,3 +1,10 @@
+"""
+This module provides the GameInterface class, responsible for rendering the player's health and experience bars, 
+skill icons, and related interface elements. It includes logic for displaying health transitions, 
+skill cooldowns, and tooltips with skill descriptions.
+"""
+
+
 import pygame
 
 class GameInterface:
@@ -40,12 +47,13 @@ class GameInterface:
         pygame.draw.rect(self.screen, (255, 255, 255), (10, 10, self.health_bar_length, 15), 2) #white rect arround the health
 
 
-    def experience_bar(self):
+    def experience_bar(self): #experience bar 
         experience_rect = pygame.Rect(10, 50, self.player.experience, 15)
         pygame.draw.rect(self.screen, (0, 0, 255), experience_rect)
         pygame.draw.rect(self.screen, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
         
-    def skills_interface(self):
+    def skills_interface(self): #skills interface
+
         icon_size = 50
 
         for i, skill in enumerate(self.player.skills):
@@ -69,7 +77,7 @@ class GameInterface:
 
 
     def render_tooltip(self, skill, mouse_pos):
-        text = f"[{skill.key}]:{skill.name} tempo de recarga: {skill.cooldown/1000} segundos. \n {skill.description}"
+        text = f"[{skill.key}]:{skill.name} - tempo de recarga: {skill.cooldown/1000} segundos. \n {skill.description}"
         text_surface = self.font.render(text, True, (255, 255, 255))
         width, height = text_surface.get_size()
         height += 10
@@ -84,7 +92,12 @@ class GameInterface:
         self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
 
 
+    def status_render(self):
+        pass
+    
+
     def draw(self):
         self.experience_bar()
         self.health_bar()
         self.skills_interface()
+        self.status_render()
