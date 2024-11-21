@@ -238,6 +238,5 @@ class Player(pygame.sprite.Sprite):
 ######## level logic ######################################################################
     def level_up(self):
         self.current_level += 1 
-        print("level up", self.current_level)
         self.experience = 0
 

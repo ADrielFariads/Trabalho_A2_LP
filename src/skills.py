@@ -25,21 +25,25 @@ class Skill:
 
 class Heal(Skill):
     def __init__(self):
+        self.key = "Q"
         self.name = "Heal"
         self.cooldown = 5000
+        self.heal_value = 200
         self.image = "assets\\images\\icons\\heal_icon.png"
+        self.description = f"Se cura em {self.heal_value} pontos de vida."
         super().__init__(self.name, self.cooldown, self.image)
 
     def use(self, player):
         if player.current_health < player.max_health:
             if not self.is_on_cooldown:
-                player.get_healed(200)
+                player.get_healed(self.heal_value)
                 self.last_used_time = pygame.time.get_ticks()
                 self.is_on_cooldown = True
 
 
 class Dash(Skill):
     def __init__(self):
+        self.key = "E"
         self.name = "Dash"
         self.cooldown = 5000
         self.duration = 3000
@@ -47,6 +51,7 @@ class Dash(Skill):
         self.image = "assets\\images\\icons\\dash_icon.png"
         self.sound = pygame.mixer.Sound("assets\\audio\\skills\\dash_sound.wav")
         self.original_speed = 0
+        self.description = f"Aumenta a velocidade de movimento durante {self.duration/1000} segundos."
         super().__init__(self.name, self.cooldown, self.image)
 
     def use(self, player):

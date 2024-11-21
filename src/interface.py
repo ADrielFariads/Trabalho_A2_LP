@@ -11,6 +11,8 @@ class GameInterface:
 
         self.back_icon = pygame.image.load("assets\\images\\icons\\back_icon.png")
         self.back_icon = pygame.transform.scale(self.back_icon, (50, 50))
+        self.font = pygame.font.Font(None, 24)
+
 
         self.current_time = pygame.time.get_ticks()
 
@@ -53,13 +55,33 @@ class GameInterface:
             skill_icon = pygame.transform.scale(skill.image, (icon_size, icon_size))
             self.screen.blit(self.back_icon, (x_pos, y_pos))
             self.screen.blit(skill_icon, (x_pos, y_pos))
+            skill_icon_rect = pygame.Rect(x_pos, y_pos, icon_size, icon_size)
 
             if skill.is_on_cooldown: # cooldown animation
                 surface = pygame.Surface((50, 50))
                 surface.fill((30, 30, 30))
                 surface.set_alpha(200)
                 self.screen.blit(surface, (x_pos, y_pos))
-                
+
+            mouse_pos = pygame.mouse.get_pos()
+            if skill_icon_rect.collidepoint(mouse_pos):
+                self.render_tooltip(skill, mouse_pos)
+
+
+    def render_tooltip(self, skill, mouse_pos):
+        text = f"[{skill.key}]:{skill.name} tempo de recarga: {skill.cooldown/1000} segundos. \n {skill.description}"
+        text_surface = self.font.render(text, True, (255, 255, 255))
+        width, height = text_surface.get_size()
+        height += 10
+
+        tooltip_x = mouse_pos[0] + 10
+        tooltip_y = mouse_pos[1] - height - 100
+
+        
+        pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))
+        pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)
+
+        self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
 
 
     def draw(self):

@@ -78,6 +78,7 @@ class MachineGun(Gun):
         texture = "assets\\images\\Guns\\2_1.png"
         damage = 50
         speed = 500 
+        self.bullets = 5
          
         bullet_class = Bullet  
         self.sound = pygame.mixer.Sound("assets\\audio\\gun\\machine_gun.wav")
@@ -104,7 +105,7 @@ class MachineGun(Gun):
         
         if current_time - self.last_shot_time >= self.cool_down:
             self.last_shot_time = current_time
-            num_bullets = 5
+            num_bullets = self.bullets
             self.sound.play()
 
             for i in range(num_bullets):
