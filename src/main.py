@@ -1,13 +1,16 @@
 import pygame
 from pytmx.util_pygame import load_pygame
 import random
-import cProfile
+import sys
+import os
 
 from player import Player
-from guns import Gun, Bullet, MachineGun
+from guns import MachineGun
 from background import Background
-from enemies import Goblin, generate_goblins, Andromaluis, Centipede
+from enemies import Andromaluis, Centipede
 from groups import AllSpritesgroup
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..' , 'assets', "audio")))
 
 # initial setup
 class Game:
@@ -20,10 +23,9 @@ class Game:
         self.running = True
         self.clock = pygame.time.Clock()
 
-
         # Initialize background
         self.background = pygame.sprite.Sprite()
-        self.background.image = pygame.image.load("assets\\background_files\\map00.png") 
+        self.background.image = pygame.image.load("assets\\background_files\\map007.png") 
         self.background.rect = self.background.image.get_rect(center=(1000, 1000))
         self.background_objects = Background("assets\\background_files\\map006.tmx", 16, self.display_surface)
         self.background_group = pygame.sprite.Group(self.background) 
