@@ -52,6 +52,9 @@ class Player(pygame.sprite.Sprite):
         
 ################# ANIMATING FRAMES ##########################################################
     def reset_player(self, player):
+        '''
+        Reset player attribues to initial setting
+        '''
         player.current_frame_index = 0
         player.frame_counter = 0 
         player.image = player.frames[player.current_frame_index] 
