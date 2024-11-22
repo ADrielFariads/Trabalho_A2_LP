@@ -26,9 +26,11 @@ class Enemy(pygame.sprite.Sprite):
         self.animation_speed = 10 #bigger values for a smothier animation
         self.frame_counter = 0 #counter of animation
 
-        self.position = pygame.math.Vector2(pos_x, pos_y)
+        self.initial_pos = pygame.math.Vector2(pos_x,pos_y)
+        self.position = self.initial_pos
         self.image = self.frames[self.current_frame_index]
-        self.rect = self.image.get_rect(center=(pos_x, pos_y))
+        self.initial_center = (pos_x,pos_y)
+        self.rect = self.image.get_rect(center=self.initial_center)
 
 
         
@@ -44,6 +46,14 @@ class Enemy(pygame.sprite.Sprite):
         #player interaction
         self.target = player
         self.bullets = bullets_group
+    
+    def reset_enemy(self, enemy):
+        enemy.current_frame_index = 0
+        enemy.frame_counter = 0
+        enemy.health = enemy.max_health
+        enemy.attack_counter = 0
+        enemy.position =  enemy.initial_pos
+        enemy.rect = enemy.image.get_rect(center=enemy.initial_center)
 
     def animate(self):
         # Increment frame counter and update frame index

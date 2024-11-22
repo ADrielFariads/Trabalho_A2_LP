@@ -30,12 +30,14 @@ class Player(pygame.sprite.Sprite):
         self.facing_right = True #side facing animation
 
         #position logic
-        self.position = pygame.math.Vector2(pos)
-        self.rect = self.image.get_rect(center = (pos))
+        self.initial_pos = pos
+        self.position = pygame.math.Vector2(self.initial_pos)
+        self.rect = self.image.get_rect(center = (self.initial_pos))
 
 
         self.health_bar_lenght = 500
         self.health_change_speed = 25
+        self.health = health
         self.target_health = health
         self.direction = pygame.math.Vector2(0,0)
 
@@ -49,6 +51,18 @@ class Player(pygame.sprite.Sprite):
         self.health_ratio = self.current_health/self.health_bar_lenght
         
 ################# ANIMATING FRAMES ##########################################################
+    def reset_player(self, player):
+        player.current_frame_index = 0
+        player.frame_counter = 0 
+        player.image = player.frames[player.current_frame_index] 
+        player.facing_right = True 
+        player.current_health = player.max_health
+        player.health_ratio = player.current_health/player.health_bar_lenght
+        player.position = pygame.math.Vector2(player.initial_pos)
+        player.rect = player.image.get_rect(center = (player.initial_pos))
+        player.current_action = "idle"
+        player.target_health = player.health
+
     def load_frames(self, sprite_sheet, frames_x):
         "Extract and scale frames from the given sprite sheet."
         frames = []
