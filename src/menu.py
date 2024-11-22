@@ -64,9 +64,16 @@ class Button():
         else:
             self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
+
 class Menu():
 
+
     def __init__(self, screen, player, enemy):
+        '''
+        Creates all button and text objects,
+        and creates boolean variables to switch between the game and menus
+
+        '''
         self.player = player
         self.enemy = enemy
         self.screen = screen
@@ -89,7 +96,16 @@ class Menu():
         self.pause_menu = False
         self.playing = False
 
-    def change_current_action(self, button):
+    def change_current_menu(self, button):
+        '''
+        Verify the button and change the current menu or start the game
+        through user interaction with the buttons.
+
+        Parameters:
+        ------------
+        Button that was pressed
+        '''
+
         if button == self.play_button:
             self.initial_menu = False
             self.playing = True
@@ -102,29 +118,46 @@ class Menu():
         elif button == self.back_paused_button:
             self.playing = True
         elif button == self.menu_button:
+            #Reset the game when return to initial menu
             Enemy.reset_enemy(self, self.enemy)
             Player.reset_player(self, self.player)
             self.pause_menu = False
             self.death_menu = False
             self.initial_menu = True
         elif button == self.play_again_button:
+            #Reset the game to play again
             Enemy.reset_enemy(self, self.enemy)
             Player.reset_player(self, self.player)
             self.playing = True
 
 
     def draw(self,text, *button_args):
+        '''
+        Draw the screen
+
+        Parameters:
+        -----------
+        Text and buttons that will be shown on the screen
+
+        '''
         self.screen.blit(self.menu_background, (0,0))
+        #Draw all the desired buttons with their events
         for button in button_args:
             button.update(self.screen)
             button.changeColor()
+            #Verify if the button was pressed
             if button.checkForInput():
-                self.change_current_action(button)
+                #Calls the function to perform the action assigned to that button
+                
+                self.change_current_menu(button)
 
         text.draw(self.screen)
         pygame.display.update()
 
     def update(self):
+        '''
+        Calls the draw function to the current menu
+        '''
         if self.initial_menu:
             self.draw(self.menu_text, self.play_button, self.options_button)
         elif self.options_menu:
