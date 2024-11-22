@@ -38,9 +38,10 @@ class Game:
 
         #skills
         machinegun_render = skills.MachineGunRender()
+        knife_render = skills.KnifeThrowerRender()
         heal = skills.Heal()
         dash = skills.Dash()
-        skill_list = [machinegun_render, heal, dash]
+        skill_list = [knife_render, heal, dash]
 
         # sprites
         self.player = Player((1200, 1200), 1000, 7, self.map_bounds,skill_list, colliders)

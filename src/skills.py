@@ -85,5 +85,12 @@ class MachineGunRender(Skill):
         self.description = f"Dispara uma saraivada de balas no local alvo."
         super().__init__(self.name, self.cooldown, self.image)
 
-
+class KnifeThrowerRender(Skill):
+    def __init__(self):
+        self.key = "Botão Esquerdo"
+        self.name = "Arremesso de facas"
+        self.cooldown = 1000
+        self.image = "assets\\images\\Guns\\Knifeicon.png"
+        self.description = f"Arremessa uma faca no alvo, causando grande quantidade de dano."
+        super().__init__(self.name, self.cooldown, self.image)
 

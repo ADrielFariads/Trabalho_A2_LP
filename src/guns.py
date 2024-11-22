@@ -52,7 +52,6 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__(group)
         self.pos = position
         self.image = pygame.Surface((10, 10))  # Create a bullet with a 10x10 surface
-        self.image.fill((255, 0, 0))  # Set bullet color to red
         self.rect = self.image.get_rect(center=position)  # Set bullet's initial position
 
         self.speed = 20 # Set the bullet's speed
@@ -75,22 +74,22 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y += self.dy * self.speed
         if self.speed >= 1000:
             self.kill()
-        
+
 
 ############ cyborg's machine gun ########################
 class MachineGun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\machinegun.png"
         damage = 50
-        speed = 500 
+        self.cool_down = 500
         self.bullets = 5
          
         bullet_class = Bullet  
         self.sound = pygame.mixer.Sound("assets\\audio\\gun\\machine_gun.wav")
         self.sound.set_volume(0.5)
-        super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
+        super().__init__(player, texture, damage, self.cool_down, bullet_class, map_bounds)
         
-        self.cool_down = 500
+        
 
     def shoot_single_bullet(self, bullet_group, camera_offset):
         """
@@ -125,6 +124,20 @@ class MachineGun(Gun):
                 bullet.speed -= i
                 all_sprites_group.add(bullet)
 
+
+class Knife(Bullet):
+    def __init__(self, position, target_x, target_y, damage, group):
+        super().__init__(position, target_x, target_y, damage, group)
+
+        self.angle = math.degrees(math.atan2(-self.dy, self.dx)) ##calculates the angle for knife shooting
+        self.speed = 5
+        self.initial_position = position
+
+    
+
+        
+
+
 class KnifeThrower(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\Knifeicon.png"
@@ -132,22 +145,24 @@ class KnifeThrower(Gun):
         speed = 1000
         self.bullets = 2
          
-        bullet_class = Bullet  
+        bullet_class = Knife  
         super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
         
         self.cool_down = 500
+        self.original_image = pygame.transform.scale(self.image, (30,30))
+        self.original_image = pygame.transform.rotate(self.original_image, -45)
+        self.image = self.original_image
 
-    def shoot_single_bullet(self, bullet_group, camera_offset):
-        """
-        creates a single shoot
-        """
+
+    def shoot_a_knife(self, bullet_group, camera_offset):
+
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         # Ajusts the mouse position considering the camera offset
         mouse_x -= camera_offset.x
         mouse_y -= camera_offset.y
 
-        # Creates a single bullet 
+        # Creates a single knife 
         bullet = self.bullet_class(self.position, mouse_x, mouse_y, self.base_damage, bullet_group)
         return bullet  
     
@@ -156,13 +171,22 @@ class KnifeThrower(Gun):
         
         if current_time - self.last_shot_time >= self.cool_down:
             self.last_shot_time = current_time
-            bullet = self.shoot_single_bullet(bullet_group, offset)
+            bullet = self.shoot_a_knife(bullet_group, offset)
             image = pygame.image.load("assets\\images\\Guns\\Knifeicon.png")
-            image = pygame.transform.scale(image, (0.5, 0.5))
-            width = image.get_width()
-            height = image.get_height()
+            image = pygame.transform.scale(image, (20, 20))
 
-            bullet.image = pygame.transform.scale(image, ((int(width*2)), (int(height*2))))
+            bullet.image = pygame.transform.scale(image, (30, 30))
+            bullet.image = pygame.transform.rotate(bullet.image, bullet.angle - 45)
+            bullet.rect = bullet.image.get_rect(center=bullet.initial_position)
             all_sprites_group.add(bullet)
 
-            
+    def update(self):
+        # Update gun's position based on player movement
+        self.position = self.player.rect.center
+        self.rect.center = (self.position[0]-10, self.position[1]+25)
+        if self.player.facing_right:
+            self.image = self.original_image
+            self.rect.center = (self.position[0]-10, self.position[1]+25)
+        else:
+            self.image = pygame.transform.flip(self.original_image, True, False)  # Flip image if player is facing left
+            self.rect.center = (self.position[0]+15, self.position[1]+25)
