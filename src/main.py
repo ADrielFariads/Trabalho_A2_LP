@@ -1,10 +1,9 @@
 import pygame
 from pytmx.util_pygame import load_pygame
 import random
-import cProfile
 
 from player import Player
-from guns import Gun, Bullet, MachineGun
+from guns import Gun, Bullet, MachineGun, KnifeThrower
 from camera import Camera
 from background import Background, CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Slime
@@ -45,7 +44,7 @@ class Game:
 
         # sprites
         self.player = Player((1200, 1200), 1000, 7, self.map_bounds,skill_list, colliders)
-        self.gun = MachineGun(self.player, self.map_bounds)
+        self.gun = KnifeThrower(self.player, self.map_bounds)
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)

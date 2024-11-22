@@ -50,7 +50,7 @@ class Heal(Skill):
 class Dash(Skill):
     def __init__(self):
         self.key = "E"
-        self.name = "Dash"
+        self.name = "Adrenalina"
         self.cooldown = 5000
         self.duration = 3000
         self.dash_end_time = 0
