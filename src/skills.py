@@ -5,6 +5,7 @@ and visual/sound effects.
 """
 
 import pygame
+import explosions
 
 class Skill:
     def __init__(self, name, cooldown, image):

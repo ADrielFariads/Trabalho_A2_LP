@@ -1,4 +1,5 @@
 import pygame
+import math
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, pos, radius, damage, target_group,sprite_sheet, *groups):
@@ -18,6 +19,8 @@ class Explosion(pygame.sprite.Sprite):
         self.image = self.sprite_sheet[self.current_frame]
         self.rect = self.image.get_rect(center=self.pos)
 
+        self.hit_targets = set()  #to not cause damage in the same enemy multiple times
+
     def animate(self):
         current_time = pygame.time.get_ticks()
 
@@ -31,8 +34,16 @@ class Explosion(pygame.sprite.Sprite):
             else:
                 self.kill()
             
+    def check_collisions(self):
+        for target in self.target_group:
+            distance = math.hypot(target.rect.centerx - self.pos[0], target.rect.centery - self.pos[1])
+            if distance <= self.radius and target not in self.hit_targets:
+                target.get_damaged(self.damage)
+                self.hit_targets.add(target)
+    
     def update(self):
         self.animate()
+        self.check_collisions()
                 
 
         

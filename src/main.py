@@ -93,9 +93,9 @@ class Game:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                    #self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                     mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
-                    explosion = explosions.Explosion(mouse_pos, 100, 100, self.enemies_group, self.explosion_images)
+                    explosion = explosions.Explosion(mouse_pos, 300, 1000, self.enemies_group, self.explosion_images)
                     self.explosion_group.add(explosion)
                     self.all_sprites.add(explosion)
                           

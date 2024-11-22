@@ -98,6 +98,8 @@ class Enemy(pygame.sprite.Sprite):
 
     def behavior(self):
         pass
+
+
     def collision(self, direction):
         if self.colliders != None:
             for sprite in self.colliders:
