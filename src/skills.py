@@ -13,6 +13,7 @@ class Skill:
         self.image = pygame.image.load(image)
         self.last_used_time = 0
         self.is_on_cooldown = False
+        
 
     def use(self, player):
         pass
@@ -103,7 +104,35 @@ class LethalTempo(Skill): ## cyborg's skill
         return super().update(player)
 
 
-class MachineGunRender(Skill):
+class Berserker(Skill):
+    def __init__(self):
+        self.key = "Q"
+        self.name = "Modo Berserker"
+        self.description = "[personagem] entra em um estado de fúria. Reduzindo drasticamente o dano recebido de todas as fontes."
+        self.cooldown = 15000
+        self.image = "assets\\images\\icons\\berserker_icon.png"
+        self.duration = 5000
+        self.end_time = 0
+        super().__init__(self.name, self.cooldown, self.image)  
+
+    def use(self, player):
+        if not self.is_on_cooldown:
+            player.armor = 0.9
+            self.last_used_time = pygame.time.get_ticks()
+            self.is_on_cooldown = True
+            self.end_time = pygame.time.get_ticks() + self.duration
+        
+    def update(self, player):
+        if self.is_on_cooldown and pygame.time.get_ticks() >= self.end_time:
+            player.armor = 0
+        return super().update(player)
+    
+
+
+
+########################## Guns' renders #####################################################################################################################################
+
+class MachineGunRender(Skill):##cyborg's gun render
     def __init__(self):
         self.key = "Botão Esquerdo"
         self.name = "Metralhadora"
@@ -121,3 +150,12 @@ class KnifeThrowerRender(Skill):
         self.description = f"Arremessa uma faca no alvo, causando grande quantidade de dano."
         super().__init__(self.name, self.cooldown, self.image)
 
+class ShotgunRender(Skill):
+    def __init__(self):
+        self.key = "Botão Esquerdo"
+        self.name = "Espingarda"
+        self.cooldown = 1500
+        self.image = "assets\\images\\Guns\\Shotgun.png"
+        self.description = f"Dispara uma rajada de balas em cone. Causa MUITO mais dano em alvos próximos."
+        super().__init__(self.name, self.cooldown, self.image)
+        self.image = pygame.transform.scale(self.image, (50, 25))

@@ -39,13 +39,15 @@ class Game:
         #skills
         #machinegun_render = skills.MachineGunRender()
         #knife_render = skills.KnifeThrowerRender()
-        heal = skills.Heal()
+        #shotgun_render = skills.ShotgunRender()
+        #heal = skills.Heal()
+        berserker = skills.Berserker()
         lethal_tempo = skills.LethalTempo()
-        skill_list = [heal, lethal_tempo]
+        skill_list = [berserker, lethal_tempo]
 
         # sprites
         self.player = Player((1200, 1200), 1000, 7, self.map_bounds,skill_list, colliders)
-        self.gun = guns.KnifeThrower(self.player, self.map_bounds)
+        self.gun = guns.Shotgun(self.player, self.map_bounds)
 
         self.player.gun = self.gun
         

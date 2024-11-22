@@ -58,6 +58,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = speed
         self.max_health = health
         self.current_health = self.max_health
+        self.armor = 0
         
 
         #skills logic
@@ -228,7 +229,7 @@ class Player(pygame.sprite.Sprite):
 ################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
         if self.target_health > 0:
-            self.target_health -= damage
+            self.target_health -= int(damage*(1-self.armor))
 
         if self.target_health <= 0:
             self.target_health = 0
