@@ -193,12 +193,14 @@ class KnifeThrower(Gun):
 class Shotgun_bullets(Bullet):
     def __init__(self, position, target_x, target_y, damage, group):
         super().__init__(position, target_x, target_y, damage, group)
+        self.speed = 50
         
     def update(self):
         # Move the bullet towards the target based on its speed
         self.rect.x += self.dx * self.speed
         self.rect.y += self.dy * self.speed
-        if self.speed >= 1000:
+        self.speed -=3
+        if self.speed <= 5:
             self.kill()
 
 
@@ -206,10 +208,10 @@ class Shotgun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\Shotgun.png"
         damage = 10
-        speed = 1000
+        speed = 2000
         self.bullets = 10
         self.sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_sound.wav")
-        bullet_class = Bullet  
+        bullet_class = Shotgun_bullets  
         super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
 
     def shoot_single_bullet(self, bullet_group, camera_offset):
@@ -234,28 +236,27 @@ class Shotgun(Gun):
             num_bullets = self.bullets
             self.sound.play()
 
-            mouse_x, mouse_y = pygame.mouse.get_pos()-offset
+            mouse_x, mouse_y = pygame.mouse.get_pos() - offset
             dx = mouse_x - self.position[0]
             dy = mouse_y - self.position[1]
             angle = math.degrees(math.atan2(dy, dx))
 
             for i in range(num_bullets):
 
-                angle_variation = random.randint(-15, 15)
+                angle_variation = random.randint(-10, 10)
                 new_angle = angle + angle_variation
 
                 new_dx = math.cos(math.radians(new_angle))
-                new_dy = -math.sin(math.radians(new_angle))
+                new_dy = math.sin(math.radians(new_angle))
 
 
                 bullet = self.shoot_single_bullet(bullet_group, offset)
-                bullet.dx = new_dx 
-                bullet.y = new_dy
+                bullet.dx = new_dx
+                bullet.dy = new_dy
                 image = pygame.image.load("assets\\images\\Bullets\\7.png")
 
                 width = image.get_width()
                 height = image.get_height()
-
                 bullet.image = pygame.transform.scale(image, ((int(width*2)), (int(height*2))))
                 all_sprites_group.add(bullet)
                 bullet.speed += random.randint(1, 3)
