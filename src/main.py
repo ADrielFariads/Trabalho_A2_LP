@@ -19,9 +19,6 @@ class Game:
         pygame.display.set_caption("Cosmic Survivor")
         self.clock = pygame.time.Clock()
 
-        # Menu
-        self.menu = Menu(self.display_surface)
-
         # camera settings
         self.camera = Camera(self.display_surface.get_width(), self.display_surface.get_height())
 
@@ -38,8 +35,11 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.enemy1 = Enemy(800, 800, "assets\\images\\enemies\\goblins\\goblin.png", 50, 2, 10000, 10, 100, self.player, self.bullet_group)
+        self.enemy1 = Enemy(800, 800, "assets\\images\\enemies\\goblins\\goblin.png", 50, 2, 400, 10, 100, self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.enemy1)
+
+         # Menu
+        self.menu = Menu(self.display_surface, self.player, self.enemy1)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
@@ -67,7 +67,6 @@ class Game:
                     
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.menu.playing = False
-                        self.menu.initial_menu =  False
                         self.menu.pause_menu = True
 
                 keys = pygame.key.get_pressed()
@@ -86,13 +85,12 @@ class Game:
                 self.bullet_group.draw(self.display_surface)
             
                 self.player.health_bar(self.display_surface)
-                
                 if self.player.current_health == 0:
                     self.menu.death_menu = True
-                    self.menu.initial_menu = False
                     self.menu.playing = False                     
             else:
                 self.menu.update()
+
             pygame.display.update()
             pygame.display.flip()
 

@@ -1,4 +1,6 @@
 import pygame
+from enemies import Enemy
+from player import Player
 
 class Button():
 
@@ -64,7 +66,9 @@ class Button():
             self.text = self.font.render(self.text_input, True, self.base_color)
 class Menu():
 
-    def __init__(self, screen):
+    def __init__(self, screen, player, enemy):
+        self.player = player
+        self.enemy = enemy
         self.screen = screen
         self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
         self.play_button = Button([540,300], "PLAY", (255,255,255), (0,0,0), 0.7)
@@ -87,6 +91,7 @@ class Menu():
 
     def change_current_action(self, button):
         if button == self.play_button:
+            self.initial_menu = False
             self.playing = True
         elif button == self.options_button:
             self.initial_menu = False
@@ -97,10 +102,14 @@ class Menu():
         elif button == self.back_paused_button:
             self.playing = True
         elif button == self.menu_button:
+            Enemy.reset_enemy(self, self.enemy)
+            Player.reset_player(self, self.player)
             self.pause_menu = False
             self.death_menu = False
             self.initial_menu = True
         elif button == self.play_again_button:
+            Enemy.reset_enemy(self, self.enemy)
+            Player.reset_player(self, self.player)
             self.playing = True
 
 
