@@ -134,8 +134,8 @@ class Player(pygame.sprite.Sprite):
     
 
 ################# UPDATE METHOD #################################################### 
-    def update(self, keys):
-
+    def update(self, keys, gun):
+        self.gun = gun
         #animation logic
         self.frame_counter += 1
         if self.frame_counter >= self.animation_speed:
@@ -220,10 +220,10 @@ class Player(pygame.sprite.Sprite):
             skill.update(self)
 
         if keys[pygame.K_q]:
-            self.skills[1].use(self)
+            self.skills[-2].use(self)
 
         if keys[pygame.K_e]:
-            self.skills[2].use(self)
+            self.skills[-1].use(self)
             
 
 ################# HEALTH LOGIC ##############################################################

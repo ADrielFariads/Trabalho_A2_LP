@@ -3,7 +3,7 @@ from pytmx.util_pygame import load_pygame
 import random
 
 from player import Player
-from guns import Gun, Bullet, MachineGun, KnifeThrower
+import guns
 from camera import Camera
 from background import Background, CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Slime
@@ -37,15 +37,15 @@ class Game:
         colliders.append(rect1)
 
         #skills
-        machinegun_render = skills.MachineGunRender()
-        knife_render = skills.KnifeThrowerRender()
+        #machinegun_render = skills.MachineGunRender()
+        #knife_render = skills.KnifeThrowerRender()
         heal = skills.Heal()
-        dash = skills.Dash()
-        skill_list = [knife_render, heal, dash]
+        lethal_tempo = skills.LethalTempo()
+        skill_list = [heal, lethal_tempo]
 
         # sprites
         self.player = Player((1200, 1200), 1000, 7, self.map_bounds,skill_list, colliders)
-        self.gun = KnifeThrower(self.player, self.map_bounds)
+        self.gun = guns.Shotgun(self.player, self.map_bounds)
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -85,7 +85,7 @@ class Game:
                 self.all_sprites.add(self.enemies_group)
 
             # updates
-            self.player.update(keys)
+            self.player.update(keys, self.gun)
             self.enemies_group.update()
             self.gun.update()
             self.bullet_group.update()

@@ -58,6 +58,8 @@ class Dash(Skill):
         self.sound = pygame.mixer.Sound("assets\\audio\\skills\\dash_sound.wav")
         self.original_speed = 0
         self.description = f"Aumenta a velocidade de movimento durante {self.duration/1000} segundos."
+        self.sound.set_volume(0.5)
+
         super().__init__(self.name, self.cooldown, self.image)
 
     def use(self, player):
@@ -68,13 +70,38 @@ class Dash(Skill):
             self.is_on_cooldown = True
             self.dash_end_time = pygame.time.get_ticks() + self.duration
             self.sound.play()
-            self.sound.set_volume(0.5)
-
+            
     def update(self, player):
         if self.is_on_cooldown and pygame.time.get_ticks() >= self.dash_end_time:
             player.speed = self.original_speed
         return super().update(player)
-        
+    
+
+class LethalTempo(Skill):
+    def __init__(self):
+        self.key = "Q"
+        self.name = "Ritmo letal"
+        self.description = "[personagem] energiza sua metralhadora, aumentando a quantidade de disparos."
+        self.cooldown = 8000
+        self.image = "assets\\images\\icons\\lethaltempo_icon.png"
+        self.duration = 3500
+        self.end_time = 0
+        self.original_bullets = 0
+        super().__init__(self.name, self.cooldown, self.image)        
+
+    def use(self, player):
+        if not self.is_on_cooldown:
+            self.original_speed = player.gun.bullets
+            player.gun.bullets = self.original_bullets + 10
+            self.last_used_time = pygame.time.get_ticks()
+            self.is_on_cooldown = True
+            self.end_time = pygame.time.get_ticks() + self.duration
+
+    def update(self, player):
+        if self.is_on_cooldown and pygame.time.get_ticks() >= self.end_time:
+            player.gun.bullets = self.original_speed
+        return super().update(player)
+
 
 class MachineGunRender(Skill):
     def __init__(self):
