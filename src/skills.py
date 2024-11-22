@@ -160,6 +160,10 @@ class Bloodlust(Skill):
         return super().update(player)
 
 
+class Explosion(Skill):
+    def __init__(self, name, cooldown, image):
+        super().__init__(name, cooldown, image)
+
 ########################## Guns' renders #####################################################################################################################################
 
 class MachineGunRender(Skill):##cyborg's gun render

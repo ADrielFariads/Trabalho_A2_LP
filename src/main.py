@@ -10,6 +10,7 @@ from enemies import Goblin, generate_goblins, Andromaluis, Slime
 from groups import AllSpritesgroup
 from interface import GameInterface
 import skills
+import explosions
 
 # initial setup
 class Game:
@@ -22,6 +23,7 @@ class Game:
         self.running = True
         self.clock = pygame.time.Clock()
 
+        
 
         # Initialize background
         self.background = pygame.sprite.Sprite()
@@ -35,6 +37,7 @@ class Game:
         colliders = []
         rect1 = CollisionSprite((1680, 1072), (250, 150))
         colliders.append(rect1)
+        self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
 
         #skills
         #machinegun_render = skills.MachineGunRender()
@@ -47,7 +50,7 @@ class Game:
         skill_list = [knife_render, blood_lust, lethal_tempo]
 
         # sprites
-        self.player = Player((1200, 1200), 1000, 7, self.map_bounds,skill_list, colliders)
+        self.player = Player((1200, 1200), 1000, 12, self.map_bounds,skill_list, colliders)
         self.gun = guns.KnifeThrower(self.player, self.map_bounds)
 
         self.player.gun = self.gun
@@ -56,6 +59,7 @@ class Game:
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
         self.bullet_group = pygame.sprite.Group()
+        self.explosion_group = pygame.sprite.Group()
 
         #enemies generation
         self.enemies_group = pygame.sprite.Group()
@@ -89,7 +93,11 @@ class Game:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                    self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                    mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
+                    explosion = explosions.Explosion(mouse_pos, 100, 100, self.enemies_group, self.explosion_images)
+                    self.explosion_group.add(explosion)
+                    self.all_sprites.add(explosion)
                           
             self.all_sprites.add(self.enemies_group)
             
@@ -98,6 +106,7 @@ class Game:
             self.enemies_group.update()
             self.gun.update()
             self.bullet_group.update()
+            self.explosion_group.update()
 
             # drawings
             self.display_surface.fill((30, 30, 30))
