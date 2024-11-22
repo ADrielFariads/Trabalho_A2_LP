@@ -63,6 +63,14 @@ class Game:
         self.all_sprites = AllSpritesgroup()
         self.all_sprites.add(self.background_group, self.enemies_group, self.player,self.gun_group, self.bullet_group) 
 
+
+        ####testing enemies#####
+
+        miniboss = Andromaluis((1000, 1000), self.player, self.bullet_group, self.enemies_group)
+        self.enemies_group.add(miniboss)
+        self.all_sprites.add(self.enemies_group)
+
+
     def run(self):
 
         while self.running:
@@ -79,11 +87,7 @@ class Game:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                           
             self.all_sprites.add(self.enemies_group)
-            if len(self.enemies_group) <= 1:
-                slime = Slime((1500, 1500), self.player, self.bullet_group)
-                self.enemies_group.add(slime)
-                self.all_sprites.add(self.enemies_group)
-
+            
             # updates
             self.player.update(keys, self.gun)
             self.enemies_group.update()

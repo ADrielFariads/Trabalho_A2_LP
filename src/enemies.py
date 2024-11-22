@@ -225,7 +225,7 @@ class Andromaluis(Enemy):
         self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
         self.frames_x = 8
         self.frames_y = 3
-        self.health = 500
+        self.health = 5000
         self.speed = 1
         self.damage = 100
         self.attack_delay = 1000
@@ -247,8 +247,8 @@ class Andromaluis(Enemy):
             if self.generation_timer <= 0:
                 generate_goblins(4, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
-            else:
-                self.generation_timer -= 1
+        else:
+            self.generation_timer -= 1
 
 
 class Centipede(Enemy):

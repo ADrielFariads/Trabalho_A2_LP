@@ -48,7 +48,7 @@ class Gun(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.original_image, True, False)  # Flip image if player is facing left
             self.rect.center = (self.position[0], self.position[1]+15)
 
-class Bullet(pygame.sprite.Sprite):
+class Bullet(pygame.sprite.Sprite): #standart bullet class
     def __init__(self, position, target_x, target_y,damage, group):
         super().__init__(group)
         self.pos = position
@@ -199,7 +199,8 @@ class Shotgun_bullets(Bullet):
         # Move the bullet towards the target based on its speed
         self.rect.x += self.dx * self.speed
         self.rect.y += self.dy * self.speed
-        self.speed -=3
+        self.damage -= self.speed
+        self.speed -= 3
         if self.speed <= 5:
             self.kill()
 
@@ -207,12 +208,12 @@ class Shotgun_bullets(Bullet):
 class Shotgun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\Shotgun.png"
-        damage = 10
-        speed = 2000
+        damage = 350
+        self.cool_down = 1000
         self.bullets = 10
         self.sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_sound.wav")
         bullet_class = Shotgun_bullets  
-        super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
+        super().__init__(player, texture, damage, self.cool_down, bullet_class, map_bounds)
 
     def shoot_single_bullet(self, bullet_group, camera_offset):
         """
