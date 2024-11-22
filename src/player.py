@@ -134,8 +134,7 @@ class Player(pygame.sprite.Sprite):
     
 
 ################# UPDATE METHOD #################################################### 
-    def update(self, keys, gun):
-        self.gun = gun
+    def update(self, keys):
         #animation logic
         self.frame_counter += 1
         if self.frame_counter >= self.animation_speed:

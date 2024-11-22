@@ -47,7 +47,7 @@ class Heal(Skill):
                 self.is_on_cooldown = True
 
 
-class Dash(Skill):
+class Dash(Skill): 
     def __init__(self):
         self.key = "E"
         self.name = "Adrenalina"
@@ -77,7 +77,7 @@ class Dash(Skill):
         return super().update(player)
     
 
-class LethalTempo(Skill):
+class LethalTempo(Skill): ## cyborg's skill
     def __init__(self):
         self.key = "Q"
         self.name = "Ritmo letal"

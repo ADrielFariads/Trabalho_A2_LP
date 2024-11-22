@@ -137,7 +137,7 @@ class KnifeThrower(Gun):
 
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\Knifeicon.png"
-        damage = 100
+        damage = 200
         speed = 1000
         self.bullets = 1
          

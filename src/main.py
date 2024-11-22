@@ -45,8 +45,10 @@ class Game:
 
         # sprites
         self.player = Player((1200, 1200), 1000, 7, self.map_bounds,skill_list, colliders)
-        self.gun = guns.Shotgun(self.player, self.map_bounds)
+        self.gun = guns.KnifeThrower(self.player, self.map_bounds)
 
+        self.player.gun = self.gun
+        
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
@@ -89,7 +91,7 @@ class Game:
             self.all_sprites.add(self.enemies_group)
             
             # updates
-            self.player.update(keys, self.gun)
+            self.player.update(keys)
             self.enemies_group.update()
             self.gun.update()
             self.bullet_group.update()

@@ -234,7 +234,7 @@ class Andromaluis(Enemy):
         self.experience_given = 100
 
         #skill atributes
-        self.generation_interval = 500
+        self.generation_interval = 100
         self.generation_timer = 10
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
@@ -247,8 +247,8 @@ class Andromaluis(Enemy):
             if self.generation_timer <= 0:
                 generate_goblins(4, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
-        else:
-            self.generation_timer -= 1
+
+        self.generation_timer -= 1
 
 
 class Centipede(Enemy):
