@@ -59,6 +59,7 @@ class Player(pygame.sprite.Sprite):
         self.max_health = health
         self.current_health = self.max_health
         self.armor = 0
+        self.life_steal = 0
         
 
         #skills logic
@@ -247,3 +248,5 @@ class Player(pygame.sprite.Sprite):
         self.current_level += 1 
         self.experience = 0
 
+    def enemy_killed(self):
+        self.get_healed(self.life_steal)

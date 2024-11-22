@@ -121,6 +121,7 @@ class Enemy(pygame.sprite.Sprite):
         # Checks the mob's death
         if self.health <= 0:
             self.target.experience += self.damage
+            self.target.enemy_killed()
             self.kill()
             return None
         

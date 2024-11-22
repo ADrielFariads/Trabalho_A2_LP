@@ -128,6 +128,36 @@ class Berserker(Skill):
         return super().update(player)
     
 
+class Bloodlust(Skill): 
+    def __init__(self):
+        self.key = "Q"
+        self.name = "Sede de Sangue"
+        self.description = "Por um breve período, [nome do personagem] recebe mais dano abater inimigos restaura vida."
+        self.cooldown = 30000
+        self.image = "assets\\images\\icons\\bloodlust_icon.png"
+        self.duration = 5000
+        self.end_time = 0
+        self.original_damage = 0
+        self.original_gun_cooldown = 0
+        super().__init__(self.name, self.cooldown, self.image)  
+
+    def use(self, player):
+        if not self.is_on_cooldown:
+            self.original_damage = player.gun.damage
+            self.original_gun_cooldown = player.gun.cool_down
+            player.life_steal = 25
+            player.gun.damage *= 2
+            player.gun.cool_down = 50
+            self.last_used_time = pygame.time.get_ticks()
+            self.is_on_cooldown = True
+            self.end_time = pygame.time.get_ticks() + self.duration
+        
+    def update(self, player):
+        if self.is_on_cooldown and pygame.time.get_ticks() >= self.end_time:
+            player.life_steal = 0
+            player.damage = self.original_damage
+            player.gun.cool_down = self.original_gun_cooldown
+        return super().update(player)
 
 
 ########################## Guns' renders #####################################################################################################################################

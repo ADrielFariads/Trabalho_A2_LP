@@ -22,7 +22,7 @@ class Gun(pygame.sprite.Sprite):
         self.image = self.original_image
         self.rect = self.image.get_rect(center=self.player.rect.center)  # Get rect for the gun's position
 
-        self.base_damage = damage  # Store gun damage value
+        self.damage = damage  # Store gun damage value
         self.bullet_class = bullet  # Bullet class to use when shooting
         self.cool_down = cool_down  # Shooting cooldown in milliseconds
         self.last_shot_time = 0  # Time of the last shot
@@ -101,7 +101,7 @@ class MachineGun(Gun):
         mouse_y -= camera_offset.y
 
         # Creates a single bullet 
-        bullet = self.bullet_class(self.position, mouse_x, mouse_y, self.base_damage, bullet_group)
+        bullet = self.bullet_class(self.position, mouse_x, mouse_y, self.damage, bullet_group)
         return bullet  
     
     def shoot(self, bullet_group, offset, all_sprites_group):
@@ -138,16 +138,17 @@ class KnifeThrower(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\Knifeicon.png"
         damage = 200
-        speed = 1000
+        speed = 750
         self.bullets = 1
          
         bullet_class = Knife  
         super().__init__(player, texture, damage, speed, bullet_class, map_bounds)
         
-        self.cool_down = 500
+        self.cool_down = 750
         self.original_image = pygame.transform.scale(self.image, (30,30))
         self.original_image = pygame.transform.rotate(self.original_image, -60)
         self.image = self.original_image
+        self.sound = pygame.mixer.Sound("assets\\audio\\gun\\knife_sound.wav")
 
 
     def shoot_a_knife(self, bullet_group, camera_offset):
@@ -159,7 +160,7 @@ class KnifeThrower(Gun):
         mouse_y -= camera_offset.y
 
         # Creates a single knife 
-        bullet = self.bullet_class(self.position, mouse_x, mouse_y, self.base_damage, bullet_group)
+        bullet = self.bullet_class(self.position, mouse_x, mouse_y, self.damage, bullet_group)
         return bullet  
     
     def shoot(self, bullet_group, offset, all_sprites_group):
@@ -175,6 +176,7 @@ class KnifeThrower(Gun):
             bullet.image = pygame.transform.rotate(bullet.image, bullet.angle - 45)
             bullet.rect = bullet.image.get_rect(center=bullet.initial_position)
             all_sprites_group.add(bullet)
+            self.sound.play()
 
     def update(self):
         # Update gun's position based on player movement
@@ -226,7 +228,7 @@ class Shotgun(Gun):
         mouse_y -= camera_offset.y
 
         # Creates a single bullet 
-        bullet = self.bullet_class(self.position, mouse_x, mouse_y, self.base_damage, bullet_group)
+        bullet = self.bullet_class(self.position, mouse_x, mouse_y, self.damage, bullet_group)
         return bullet 
 
     def shoot(self, bullet_group, offset, all_sprites_group):
