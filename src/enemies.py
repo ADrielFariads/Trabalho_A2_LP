@@ -46,14 +46,6 @@ class Enemy(pygame.sprite.Sprite):
         #player interaction
         self.target = player
         self.bullets = bullets_group
-    
-    def reset_enemy(self, enemy):
-        enemy.current_frame_index = 0
-        enemy.frame_counter = 0
-        enemy.health = enemy.max_health
-        enemy.attack_counter = 0
-        enemy.position =  enemy.initial_pos
-        enemy.rect = enemy.image.get_rect(center=enemy.initial_center)
 
     def animate(self):
         # Increment frame counter and update frame index

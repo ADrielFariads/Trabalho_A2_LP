@@ -42,11 +42,27 @@ class Button():
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
 
     def update(self, screen):
+        '''
+        Draw button on the screen
+
+        Parameters:
+        -----------
+        screen where the button will be shown
+        '''
         if self.button is not None:
             screen.blit(self.button, self.rect)
+        #If the button image doesn't exist draw only the text
         screen.blit(self.text, self.text_rect)
 
-    def checkForInput(self):
+    def checkForClick(self):
+        '''
+        Check if the mouse was pressed
+
+        Return:
+        --------
+        True: if the mouse was pressed
+        False: if it not was pressed
+        '''
         mouse_x, mouse_y = pygame.mouse.get_pos()
 
         if self.rect.collidepoint(mouse_x, mouse_y):
@@ -56,12 +72,18 @@ class Button():
         return False    
 
     def changeColor(self):
+        '''
+        Change the text color and the button animation if you overlay them with the mouse
+        '''
         mouse_x, mouse_y = pygame.mouse.get_pos()
-
+        
+        #check if they are overlapped by the mouse
         if self.rect.collidepoint(mouse_x, mouse_y):
+            #Change the text color and the button animation
             self.text = self.font.render(self.text_input, True, self.hovering_color)
             self.button = self.selected_button
         else:
+            #Back to normal
             self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
 
@@ -73,32 +95,44 @@ class Menu():
         Creates all button and text objects,
         and creates boolean variables to switch between the game and menus
 
+        Parameters:
+        -----------
+        players and enemies who will have their attributes reset
+
         '''
+
+        #Will be reseted
         self.player = player
         self.enemy = enemy
+
+        #Screen/ Background
         self.screen = screen
         self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
+        
+        #Buttons
         self.play_button = Button([540,300], "PLAY", (255,255,255), (0,0,0), 0.7)
-        self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
         self.options_button = Button([540,400], "OPTIONS",(255,255,255), (0,0,0), 0.7)
         self.play_again_button = Button([300,350], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
-
         self.back_options_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1)
-        self.back_paused_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1)
-        
+        self.back_paused_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1) 
         self.menu_button = Button([750,350], "MENU", (255,255,255), (0,0,0), 1)
+
+        #Texts
+        self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
         self.paused_text = Text(540,150,"Game Paused", (255,255,255), 56)
         self.options_text = Text(540,250, "Press Esc to pause", (255,255,255), 50)
         self.death_text = Text(540,150,"Game Over!", (255,255,255), 56)
+
+        #Game states
         self.initial_menu = True
         self.options_menu = False
         self.death_menu = False
         self.pause_menu = False
         self.playing = False
 
-    def change_current_menu(self, button):
+    def change_current_game_state(self, button):
         '''
-        Verify the button and change the current menu or start the game
+        Verify the button and change the current game state or start the game
         through user interaction with the buttons.
 
         Parameters:
@@ -118,6 +152,7 @@ class Menu():
         elif button == self.back_paused_button:
             self.playing = True
         elif button == self.menu_button:
+
             #Reset the game when return to initial menu
             Enemy.reset_enemy(self, self.enemy)
             Player.reset_player(self, self.player)
@@ -146,10 +181,9 @@ class Menu():
             button.update(self.screen)
             button.changeColor()
             #Verify if the button was pressed
-            if button.checkForInput():
+            if button.checkForClick():
                 #Calls the function to perform the action assigned to that button
-                
-                self.change_current_menu(button)
+                self.change_current_game_state(button)
 
         text.draw(self.screen)
         pygame.display.update()
@@ -170,14 +204,29 @@ class Menu():
 class Text():
 
     def __init__(self, pos_x, pos_y, text, color, font_size):
+        '''
+        Defines the font design, what and where will be written
+
+        Parameters:
+        ------------
+        pos_x and pos_y: position on the x and y axis
+        text: what will be written
+        color and font_size
+        '''
+        #Select the font
         font = pygame.font.Font("assets/images/Menu/font.ttf", font_size)
         self.font = font
+        self.color = color
+        self.text = text
+        
+        #Text position
         self.pos_x = pos_x
         self.pos_y = pos_y
-        self.text = text
-        self.color = color
 
     def draw(self, screen):
+        '''
+        Draw text on the screen
+        '''
         text_surface = self.font.render(self.text, True, self.color)
         text_rect = text_surface.get_rect(center=(self.pos_x, self.pos_y))
         screen.blit(text_surface, text_rect)
