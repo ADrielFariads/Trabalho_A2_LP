@@ -8,6 +8,8 @@ import pygame
 import random
 
 import explosions
+import config
+
 
 class Skill:
     def __init__(self, name, cooldown, image):
@@ -162,6 +164,7 @@ class Bloodlust(Skill):
             player.gun.cool_down = self.original_gun_cooldown
         return super().update(player)
 
+explosion_spritesheet = config.load_explosion_images()
 
 class HugeMissil(Skill):
     def __init__(self):
@@ -172,9 +175,8 @@ class HugeMissil(Skill):
         self.image = "assets\\images\\icons\\missiles_icon.png"
         super().__init__(self.name, self.cooldown, self.image) 
         #explosion configuration
-        self.missile_number = 3
-        self.explosion_spritesheet = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
-        self.explosion_damage = 5000
+        self.missile_number = 15
+        self.explosion_damage = 500
 
 
         self.missile = explosions.Missile
@@ -182,11 +184,14 @@ class HugeMissil(Skill):
     def use(self, player):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_used_time >= self.cooldown: 
-            pos = player.position
-            missile = explosions.Missile((pos.x, pos.y - 1000), (pos), 1, player.enemies, 500, self.explosion_damage, self.explosion_spritesheet, player.explosion_group)
-            player.explosion_group.add(missile)
+            for i in range(self.missile_number):
+                spread_value_x = random.randint(-1000, 1000) 
+                spread_value_y = random.randint(0, 1000)  
+                pos = player.position
+                missile = explosions.Missile((pos.x + spread_value_x, pos.y - spread_value_y), (pos.x + spread_value_x, pos.y + spread_value_y), 1, player.enemies, 100, self.explosion_damage, explosion_spritesheet, player.explosion_group)
+                player.explosion_group.add(missile)
             
-            self.last_used_time = current_time
+        self.last_used_time = current_time
 
     def update(self, player):
         return super().update(player)

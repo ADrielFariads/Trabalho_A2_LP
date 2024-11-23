@@ -1,6 +1,7 @@
 import pygame
 import random
 
+import config
 from player import Player
 import guns
 from background import CollisionSprite
@@ -16,18 +17,20 @@ class Game:
         # initial setup
         pygame.init()
         pygame.mixer.init()
-        self.display_surface = pygame.display.set_mode((1080, 640))
+        self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
         pygame.display.set_caption("Cosmic Survivor")
         self.running = True
         self.clock = pygame.time.Clock()
+        info = pygame.display.get_window_size()
+        ScreenWidth = info[0]
+        ScreenHeight = info[1]
 
         
 
         # Initialize background
         self.background = pygame.sprite.Sprite()
-        self.background.image = pygame.image.load("assets\\background_files\\map007.png") 
+        self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
         self.background.rect = self.background.image.get_rect(topleft=(0,0))
-        #self.background_objects = Background("assets\\background_files\\map007.tmx", 16, self.display_surface)
         self.background_group = pygame.sprite.Group(self.background) 
         self.map_bounds = pygame.Rect(1020, 710, 6460, 3480) #rect for keep the player in the map
 
@@ -112,7 +115,7 @@ class Game:
             self.explosion_group.update()
 
             # drawings
-            self.display_surface.fill((30, 30, 30))
+            self.display_surface.fill(("#4D64AA"))
             self.all_sprites.draw(self.player.rect.center)
         
             self.interface.draw()

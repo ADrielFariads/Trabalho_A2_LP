@@ -9,7 +9,7 @@ class Explosion(pygame.sprite.Sprite):
         self.radius = radius
         self.damage = damage
         self.target_group = target_group
-        self.sprite_sheet = [pygame.image.load(image).convert_alpha() for image in sprite_sheet]
+        self.sprite_sheet = sprite_sheet
         self.frames = len(self.sprite_sheet)
         self.current_frame = 0
         self.animation_delay = 50
