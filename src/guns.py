@@ -218,8 +218,11 @@ class Shotgun(Gun):
         damage = 500
         self.cool_down = 1500
         self.bullets = 10
-        self.sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_sound.wav")
+        self.shoot_sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_sound.wav")
+        self.reload_sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_reload.wav")
+        self.reload_muted = True
         bullet_class = Shotgun_bullets  
+        self.sound_delay = (self.shoot_sound.get_length() * 1000)/2
         super().__init__(player, texture, damage, self.cool_down, bullet_class, map_bounds)
 
     def shoot_single_bullet(self, bullet_group, camera_offset):
@@ -239,10 +242,14 @@ class Shotgun(Gun):
     def shoot(self, bullet_group, offset, all_sprites_group):
         current_time = pygame.time.get_ticks()
         
+        if current_time - self.last_shot_time >= self.sound_delay and not self.reload_muted:
+            self.reload_sound.play()
+            self.reload_muted = True
+            
         if current_time - self.last_shot_time >= self.cool_down:
             self.last_shot_time = current_time
             num_bullets = self.bullets
-            self.sound.play()
+            self.shoot_sound.play()
 
             mouse_x, mouse_y = pygame.mouse.get_pos() - offset
             dx = mouse_x - self.position[0]
@@ -268,5 +275,5 @@ class Shotgun(Gun):
                 bullet.image = pygame.transform.scale(image, ((int(width*2)), (int(height*2))))
                 all_sprites_group.add(bullet)
                 bullet.speed += random.randint(1, 3)
-
+            self.reload_muted = False
     

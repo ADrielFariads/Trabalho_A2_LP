@@ -71,7 +71,7 @@ class Game:
 
 
         #player selecter
-        self.player = self.blade_master
+        self.player = self.berserker
         self.gun = self.player.gun
         
         # groups
@@ -124,7 +124,7 @@ class Game:
                           
             self.all_sprites.add(self.enemies_group, self.explosion_group)
             
-            #self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+            self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
             # updates
             self.player.update(keys)
             self.enemies_group.update()

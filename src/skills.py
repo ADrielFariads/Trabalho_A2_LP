@@ -112,7 +112,7 @@ class LethalTempo(Skill): ## cyborg's skill
 class BerserkerWrath(Skill):
     def __init__(self):
         self.key = "Q"
-        self.name = "Modo Berserker"
+        self.name = "Fúria do Berserker"
         self.description = "[personagem] entra em um estado de fúria. Reduzindo drasticamente o dano recebido de todas as fontes."
         self.cooldown = 15000
         self.image = "assets\\images\\icons\\berserker_icon.png"
@@ -122,7 +122,7 @@ class BerserkerWrath(Skill):
 
     def use(self, player):
         if not self.is_on_cooldown:
-            player.armor = 0.9
+            player.armor = 0.95
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
             self.end_time = pygame.time.get_ticks() + self.duration
