@@ -19,7 +19,6 @@ class Game:
         pygame.mixer.init()
         self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
         pygame.display.set_caption("Cosmic Survivor")
-        self.running = True
         self.clock = pygame.time.Clock()
 
 
@@ -148,8 +147,7 @@ class Game:
 
             pygame.display.flip()
 
-
-        pygame.quit()
+    pygame.quit()
 
 
 
