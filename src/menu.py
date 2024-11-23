@@ -154,14 +154,12 @@ class Menu():
         elif button == self.menu_button:
 
             #Reset the game when return to initial menu
-            Enemy.reset_enemy(self, self.enemy)
             Player.reset_player(self, self.player)
             self.pause_menu = False
             self.death_menu = False
             self.initial_menu = True
         elif button == self.play_again_button:
             #Reset the game to play again
-            Enemy.reset_enemy(self, self.enemy)
             Player.reset_player(self, self.player)
             self.playing = True
 
