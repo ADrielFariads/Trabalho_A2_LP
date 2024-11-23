@@ -1,7 +1,15 @@
+"""
+This module implements the Player class, managing the player's attributes, animations, movement, 
+collision detection, health, experience, and skill usage. The player interacts with the game world through sprite-based 
+actions and can level up, heal, and use special abilities while navigating within map boundaries.
+"""
+
+
 import pygame
 
+
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, health, speed, map_bounds, colidders=None):
+    def __init__(self, pos, health, speed, map_bounds, skills, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
@@ -35,14 +43,11 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (self.initial_pos))
 
 
-        #health bar logic
-        self.health_bar_length = 500
-        self.health_change_speed = 2
+        #health logic
         self.target_health = health
         self.direction = pygame.math.Vector2(0,0)
 
         #experience logic
-        self.experience_bar_lenght = 500
         self.experience = 0
         self.current_level = 1
 
@@ -54,8 +59,13 @@ class Player(pygame.sprite.Sprite):
         self.speed = speed
         self.max_health = health
         self.current_health = self.max_health
-        self.health_ratio = self.current_health/self.health_bar_length
+        self.armor = 0
+        self.life_steal = 0
         
+
+        #skills logic
+        self.skills = skills
+
 ################# ANIMATING FRAMES ##########################################################
     def reset_player(self, player):
         '''
@@ -139,18 +149,18 @@ class Player(pygame.sprite.Sprite):
 
                         if self.direction.y < 0:
                             self.rect.top = sprite.rect.bottom
-
-                    
+    
 
 ################# UPDATE METHOD #################################################### 
     def update(self, keys):
-
         #animation logic
         self.frame_counter += 1
         if self.frame_counter >= self.animation_speed:
             self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
             self.image = self.frames[self.current_frame_index]
             self.frame_counter = 0
+
+        
 
 
         #movement logic
@@ -215,19 +225,32 @@ class Player(pygame.sprite.Sprite):
 
 
         current_image = self.frames[self.current_frame_index]
+
+
         if not self.facing_right:
-            self.image = pygame.transform.flip(current_image, True, False)
+                self.image = pygame.transform.flip(current_image, True, False)
         else:
             self.image = current_image
 
-        if self.experience >= self.experience_bar_lenght:
+        if self.experience >= 500:
             self.level_up()
         
+        #skills
+
+        for skill in self.skills:
+            skill.update(self)
+
+        if keys[pygame.K_q]:
+            self.skills[-2].use(self)
+
+        if keys[pygame.K_e]:
+            self.skills[-1].use(self)
+            
 
 ################# HEALTH LOGIC ##############################################################
     def get_damaged(self, damage):
         if self.target_health > 0:
-            self.target_health -= damage
+            self.target_health -= int(damage*(1-self.armor))
 
         if self.target_health <= 0:
             self.target_health = 0
@@ -239,37 +262,11 @@ class Player(pygame.sprite.Sprite):
         if self.target_health >= self.max_health:
             self.target_health = self.max_health
 
-    def health_bar(self, surface): #health bar 
-        transition_width = 0
-        transition_color = (255, 255, 255)
-        health_bar_rect = pygame.Rect(10, 10, self.current_health/self.health_ratio, 15)
-        transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
-
-        if self.current_health < self.target_health:
-            self.current_health += self.health_change_speed
-            transition_width = int((self.target_health-self.current_health)/self.health_ratio)
-            transition_color = (0, 255, 0)
-            transition_bar_rect = pygame.Rect(health_bar_rect.right, 10, transition_width, 15)
-
-        if self.current_health > self.target_health:
-            self.current_health -= self.health_change_speed
-            transition_width = int(abs((self.target_health-self.current_health)/self.health_ratio))
-            transition_color = (255, 255, 0) 
-            transition_bar_rect = pygame.Rect(health_bar_rect.right - transition_width, 10, transition_width, 15)
-
-        
-        pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health
-        pygame.draw.rect(surface, transition_color, transition_bar_rect) #heal/damage animation
-        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_length, 15), 2) #white rect arround the health
 
 ######## level logic ######################################################################
     def level_up(self):
         self.current_level += 1 
-        print("level up", self.current_level)
         self.experience = 0
 
-    def experience_bar(self, surface):
-        experience_rect = pygame.Rect(10, 50, self.experience, 15)
-        pygame.draw.rect(surface, (0, 0, 255), experience_rect)
-        pygame.draw.rect(surface, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
-        
+    def enemy_killed(self):
+        self.get_healed(self.life_steal)
