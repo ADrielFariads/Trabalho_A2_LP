@@ -1,7 +1,7 @@
 import pygame
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, health, speed, colidders=None):
+    def __init__(self, pos, health, speed, map_bounds, colidders=None):
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
 
         #initial frame setting
         self.current_frame_index = 0
-        self.animation_speed = 8 #bigger values for a smothier animation
+        self.animation_speed = 5 #bigger values for a smothier animation
         self.frame_counter = 0 #counter of animation
         self.image = self.frames[self.current_frame_index] #current image 
         self.facing_right = True #side facing animation
@@ -35,20 +35,26 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (self.initial_pos))
 
 
-        self.health_bar_lenght = 500
-        self.health_change_speed = 25
-        self.health = health
+        #health bar logic
+        self.health_bar_length = 500
+        self.health_change_speed = 2
         self.target_health = health
         self.direction = pygame.math.Vector2(0,0)
 
+        #experience logic
+        self.experience_bar_lenght = 500
+        self.experience = 0
+        self.current_level = 1
+
         #colidders
         self.colliders = colidders
+        self.map_bounds = map_bounds
 
         #player atributes 
         self.speed = speed
         self.max_health = health
         self.current_health = self.max_health
-        self.health_ratio = self.current_health/self.health_bar_lenght
+        self.health_ratio = self.current_health/self.health_bar_length
         
 ################# ANIMATING FRAMES ##########################################################
     def reset_player(self, player):
@@ -117,24 +123,27 @@ class Player(pygame.sprite.Sprite):
 
 ################# COLLISION METHOD ####################################################     
     def collision(self, direction):
-        for sprite in self.colliders:
-            if sprite.rect.colliderect(self.rect):
-                if direction == "horizontal":
-                    if self.direction.x > 0:
-                        self.rect.right = sprite.rect.left
+        if self.colliders != None:
+            for sprite in self.colliders:
+                if sprite.rect.colliderect(self.rect):
+                    if direction == "horizontal":
+                        if self.direction.x > 0:
+                            self.rect.right = sprite.rect.left
 
-                    if self.direction.x < 0:
-                        self.rect.left = sprite.rect.right
+                        if self.direction.x < 0:
+                            self.rect.left = sprite.rect.right
 
-                if direction == "vertical":
-                    if self.direction.y > 0:
-                        self.rect.bottom = sprite.rect.top
+                    if direction == "vertical":
+                        if self.direction.y > 0:
+                            self.rect.bottom = sprite.rect.top
 
-                    if self.direction.y < 0:
-                        self.rect.top = sprite.rect.bottom
+                        if self.direction.y < 0:
+                            self.rect.top = sprite.rect.bottom
+
+                    
 
 ################# UPDATE METHOD #################################################### 
-    def update(self, keys, screen_rect):
+    def update(self, keys):
 
         #animation logic
         self.frame_counter += 1
@@ -145,16 +154,25 @@ class Player(pygame.sprite.Sprite):
 
 
         #movement logic
+        
         self.direction.x = 0
         self.direction.y = 0
-        if keys[pygame.K_a] and not keys[pygame.K_d]:  # left only
+        if keys[pygame.K_a]:
             self.direction.x = -1
             self.facing_right = False
             self.set_action("walk")
 
-        elif keys[pygame.K_d] and not keys[pygame.K_a]:  # right only
+        if keys[pygame.K_d]:
             self.direction.x = 1
             self.facing_right = True
+
+        if keys[pygame.K_w]:
+            self.direction.y = -1
+        if keys[pygame.K_s]:
+            self.direction.y = 1
+
+        if self.direction.length() > 0: #walk detection for animation
+            self.direction = self.direction.normalize()
             self.set_action("walk")
 
         elif keys[pygame.K_w] and not keys[pygame.K_s]:  # up only
@@ -169,14 +187,8 @@ class Player(pygame.sprite.Sprite):
         if self.direction.length() == 0: #verify is player is idle
             self.set_action("idle")
 
-        
-        if self.direction.length() > 0:  #updates the direction of the player
-            self.direction = self.direction.normalize()
 
-        # Atualiza a posição do jogador
-        if self.direction.length() > 0:
-            self.direction = self.direction.normalize()
-
+        ##collisions
         self.position.x += self.direction.x * self.speed
         self.rect.centerx = self.position.x
         self.collision("horizontal")
@@ -185,17 +197,31 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = self.position.y
         self.collision("vertical")
 
-        # Impede que o personagem saia dos limites da tela
-        self.rect.clamp_ip(screen_rect)
+
+
         self.position = pygame.math.Vector2(self.rect.center)
 
-        # Atualiza o quadro de animação
-        self.frame_counter += 1
+        
+        if self.position.x < self.map_bounds.left: 
+            self.position.x = self.map_bounds.left
+        elif self.position.x > self.map_bounds.right:
+            self.position.x = self.map_bounds.right
+
+        if self.position.y < self.map_bounds.top: 
+            self.position.y = self.map_bounds.top
+        elif self.position.y > self.map_bounds.bottom:
+            self.position.y = self.map_bounds.bottom
+
+
+
         current_image = self.frames[self.current_frame_index]
         if not self.facing_right:
             self.image = pygame.transform.flip(current_image, True, False)
         else:
             self.image = current_image
+
+        if self.experience >= self.experience_bar_lenght:
+            self.level_up()
         
 
 ################# HEALTH LOGIC ##############################################################
@@ -234,8 +260,16 @@ class Player(pygame.sprite.Sprite):
         
         pygame.draw.rect(surface, (255, 0, 0), health_bar_rect)#health
         pygame.draw.rect(surface, transition_color, transition_bar_rect) #heal/damage animation
-        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_lenght, 15), 2) #white rect arround the health
+        pygame.draw.rect(surface, (255, 255, 255), (10, 10, self.health_bar_length, 15), 2) #white rect arround the health
 
+######## level logic ######################################################################
+    def level_up(self):
+        self.current_level += 1 
+        print("level up", self.current_level)
+        self.experience = 0
 
-
-          
+    def experience_bar(self, surface):
+        experience_rect = pygame.Rect(10, 50, self.experience, 15)
+        pygame.draw.rect(surface, (0, 0, 255), experience_rect)
+        pygame.draw.rect(surface, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
+        
