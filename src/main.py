@@ -9,6 +9,7 @@ from guns import MachineGun
 from background import Background
 from enemies import Andromaluis, Centipede
 from groups import AllSpritesgroup
+from menu import Menu
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..' , 'assets', "audio")))
 
@@ -18,9 +19,9 @@ class Game:
         # initial setup
         pygame.init()
         pygame.mixer.init()
+        self.running = True
         self.display_surface = pygame.display.set_mode((1080, 640))
         pygame.display.set_caption("Cosmic Survivor")
-        self.running = True
         self.clock = pygame.time.Clock()
 
         # Initialize background
@@ -41,8 +42,11 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
 
         #enemies generation
-        self.centipede = Centipede((1000, 1000), self.player, self.bullet_group)
+        self.centipede = Centipede((4000, 1000), self.player, self.bullet_group)
         self.enemies_group = pygame.sprite.Group(self.centipede)
+
+         # Menu
+        self.menu = Menu(self.display_surface, self.player, self.centipede)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
@@ -70,11 +74,33 @@ class Game:
                 self.enemies_group.add(miniboss)
                 self.all_sprites.add(self.enemies_group)
 
-            # updates
-            self.player.update(keys)
-            self.enemies_group.update()
-            self.gun.update()
-            self.bullet_group.update()
+        while True:
+
+            if pygame.event.get(pygame.QUIT):
+                pygame.quit()
+                quit()
+
+            
+            if self.menu.playing:
+
+                delta_time = self.clock.tick(60)
+                # event loop
+                for event in pygame.event.get():
+                    
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                        self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                    
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                        self.menu.playing = False
+                        self.menu.pause_menu = True
+
+                keys = pygame.key.get_pressed()
+
+                # updates
+                self.player.update(keys)
+                self.enemies_group.update()
+                self.gun.update()
+                self.bullet_group.update()
 
             # drawings
             self.display_surface.fill((30, 30, 30))
@@ -82,11 +108,24 @@ class Game:
         
             self.player.health_bar(self.display_surface)
             self.player.experience_bar(self.display_surface)
+                #self.camera.update(self.player_group) #not working yet
+            self.display_surface.fill((30, 30, 30))
 
+                # drawings
+            self.all_sprites.draw(self.player.rect.center)
+            self.bullet_group.draw(self.display_surface)
+            
+            self.player.health_bar(self.display_surface)
+            if self.player.current_health == 0:
+                    self.menu.death_menu = True
+                    self.menu.playing = False                     
+            else:
+                self.menu.update()
+
+            pygame.display.update()
             pygame.display.flip()
 
-
-        pygame.quit()
+    pygame.quit()
 
 
 
