@@ -71,7 +71,7 @@ class Game:
 
 
         #player selecter
-        self.player = self.berserker
+        self.player = self.cyborg
         self.gun = self.player.gun
         
         # groups
