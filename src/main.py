@@ -54,26 +54,6 @@ class Game:
 
     def run(self):
 
-        while self.running:
-            self.clock.tick(60)
-            keys = pygame.key.get_pressed()
-            
-
-            # event loop
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                        print(self.all_sprites)
-                          
-            self.all_sprites.add(self.enemies_group)
-            if len(self.enemies_group) <= 1:
-                miniboss = Andromaluis(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group, self.enemies_group)
-                self.enemies_group.add(miniboss)
-                self.all_sprites.add(self.enemies_group)
-
         while True:
 
             if pygame.event.get(pygame.QUIT):
@@ -83,42 +63,30 @@ class Game:
             
             if self.menu.playing:
 
-                delta_time = self.clock.tick(60)
+    
+                self.clock.tick(60)
+                keys = pygame.key.get_pressed()
+                
+
                 # event loop
                 for event in pygame.event.get():
                     
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                    
+                            self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                            print(self.all_sprites)
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.menu.playing = False
                         self.menu.pause_menu = True
+                            
+                self.all_sprites.add(self.enemies_group)
+                if len(self.enemies_group) <= 1:
+                    miniboss = Andromaluis(((random.randint(620, 2780), random.randint(380, 1600))), self.player, self.bullet_group, self.enemies_group)
+                    self.enemies_group.add(miniboss)
+                    self.all_sprites.add(self.enemies_group)
 
-                keys = pygame.key.get_pressed()
-
-                # updates
-                self.player.update(keys)
-                self.enemies_group.update()
-                self.gun.update()
-                self.bullet_group.update()
-
-            # drawings
-            self.display_surface.fill((30, 30, 30))
-            self.all_sprites.draw(self.player.rect.center)
-        
-            self.player.health_bar(self.display_surface)
-            self.player.experience_bar(self.display_surface)
-                #self.camera.update(self.player_group) #not working yet
-            self.display_surface.fill((30, 30, 30))
-
-                # drawings
-            self.all_sprites.draw(self.player.rect.center)
-            self.bullet_group.draw(self.display_surface)
-            
-            self.player.health_bar(self.display_surface)
-            if self.player.current_health == 0:
-                    self.menu.death_menu = True
-                    self.menu.playing = False                     
+                if self.player.current_health == 0:
+                        self.menu.death_menu = True
+                        self.menu.playing = False                     
             else:
                 self.menu.update()
 
