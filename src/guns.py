@@ -106,7 +106,13 @@ class MachineGun(Gun):
     
     def shoot(self, bullet_group, offset, all_sprites_group):
         current_time = pygame.time.get_ticks()
-        
+        mouse_x, mouse_y = pygame.mouse.get_pos() - offset
+        dx = mouse_x - self.position[0]
+        dy = mouse_y - self.position[1]
+        if dx > 0: 
+                self.player.facing_right = True
+        elif dx < 0: 
+            self.player.facing_right = False
         if current_time - self.last_shot_time >= self.cool_down:
             self.last_shot_time = current_time
             num_bullets = self.bullets
@@ -170,6 +176,13 @@ class KnifeThrower(Gun):
     
     def shoot(self, bullet_group, offset, all_sprites_group):
         current_time = pygame.time.get_ticks()
+        mouse_x, mouse_y = pygame.mouse.get_pos() - offset
+        dx = mouse_x - self.position[0]
+        dy = mouse_y - self.position[1]
+        if dx > 0: 
+                self.player.facing_right = True
+        elif dx < 0: 
+            self.player.facing_right = False
         
         if current_time - self.last_shot_time >= self.cool_down:
             self.last_shot_time = current_time

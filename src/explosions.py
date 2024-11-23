@@ -12,7 +12,7 @@ class Explosion(pygame.sprite.Sprite):
         self.sprite_sheet = sprite_sheet
         self.frames = len(self.sprite_sheet)
         self.current_frame = 0
-        self.animation_delay = 50
+        self.animation_delay = 35
         self.last_frame_time = pygame.time.get_ticks()
 
         if self.radius != 100:

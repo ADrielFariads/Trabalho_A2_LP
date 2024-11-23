@@ -142,7 +142,7 @@ class Goblin(Enemy):
         self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin.png"
         self.frames_x = 11  # colums
         self.frames_y = 4  # lines
-        self.health = 50
+        self.health = 500
         self.speed = random.uniform(2, 6)  # Random speed for each goblin
         self.damage = 100
         self.attack_delay = 50
@@ -228,7 +228,7 @@ class Andromaluis(Enemy):
         self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
         self.frames_x = 8
         self.frames_y = 3
-        self.health = 5000
+        self.health = 1500
         self.speed = 1
         self.damage = 100
         self.attack_delay = 1000

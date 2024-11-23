@@ -45,7 +45,7 @@ class Game:
         berserker_wrath = skills.BerserkerWrath()
         blood_lust = skills.Bloodlust()
         lethal_tempo = skills.LethalTempo()
-        missile_rain = skills.HugeMissil()
+        missile_rain = skills.MissilRain()
         
         cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
         blade_master_skillset = [knife_render, dash, blood_lust]
@@ -96,13 +96,14 @@ class Game:
 
 
         ####testing enemies#####
-        # for i in range(10):
-        #     miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
-        #     self.enemies_group.add(miniboss)
-        # self.all_sprites.add(self.enemies_group)
-        # self.player.offset = self.all_sprites.offset
+        for i in range(10):
+            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
+            self.enemies_group.add(miniboss)
+        self.all_sprites.add(self.enemies_group)
+        self.player.offset = self.all_sprites.offset
 
     def run(self):
+        self.auto_shoot = False
 
         while self.running:
             self.clock.tick(60)
@@ -116,15 +117,22 @@ class Game:
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:                  
                     mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
+                    self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
 
                     #explosion = explosions.Explosion(mouse_pos, 150, 1000, self.enemies_group, self.explosion_images)
                     #self.explosion_group.add(explosion)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_b:
+                        if not self.auto_shoot:
+                            self.auto_shoot = True
 
+                        else: self.auto_shoot = False
                 
                           
             self.all_sprites.add(self.enemies_group, self.explosion_group)
-            
-            self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+
+            if self.auto_shoot:
+                self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
             # updates
             self.player.update(keys)
             self.enemies_group.update()

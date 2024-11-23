@@ -166,17 +166,19 @@ class Bloodlust(Skill):
 
 explosion_spritesheet = config.load_explosion_images()
 
-class HugeMissil(Skill): ##cyborg skills
+class MissilRain(Skill): ##cyborg skills
     def __init__(self):
         self.key = "E"
         self.name = "Chuva de Mísseis"
-        self.description = "[nome do personagem] comanda sinaliza para emitir um míssil gigantesco, exterminando os inimigos atingidos."
-        self.cooldown = 3000
+        self.description = "[nome do personagem] comanda que limpem a área, lançando muitos \n mísseis que exterminam os inimigos atingidos."
+        self.cooldown = 15000
         self.image = "assets\\images\\icons\\missiles_icon.png"
         super().__init__(self.name, self.cooldown, self.image) 
         #explosion configuration
-        self.missile_number = 15
-        self.explosion_damage = 500
+        self.missile_number = 9
+        self.explosion_damage = 5000
+        self.last_used_time -= self.cooldown
+        
 
 
         self.missile = explosions.Missile
@@ -185,8 +187,8 @@ class HugeMissil(Skill): ##cyborg skills
         current_time = pygame.time.get_ticks()
         if current_time - self.last_used_time >= self.cooldown: 
             for i in range(self.missile_number):
-                spread_value_x = random.randint(-1000, 1000) 
-                spread_value_y = random.randint(0, 1000)  
+                spread_value_x = random.randint(-500, 500) 
+                spread_value_y = random.randint(100, 500)  
                 pos = player.position
                 missile = explosions.Missile((pos.x + spread_value_x, pos.y - spread_value_y), (pos.x + spread_value_x, pos.y + spread_value_y), 1, player.enemies, 100, self.explosion_damage, explosion_spritesheet, player.explosion_group)
                 if i//5 == 0:   
@@ -194,7 +196,8 @@ class HugeMissil(Skill): ##cyborg skills
                     
                 player.explosion_group.add(missile)
             
-        self.last_used_time = current_time
+            self.last_used_time = current_time
+            self.is_on_cooldown = True
 
     def update(self, player):
         return super().update(player)
