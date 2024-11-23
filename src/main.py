@@ -20,7 +20,7 @@ class Game:
         self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
         pygame.display.set_caption("Cosmic Survivor")
         self.clock = pygame.time.Clock()
-
+        self.running = True
 
         
 
