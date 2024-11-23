@@ -215,7 +215,7 @@ class Shotgun_bullets(Bullet):
 class Shotgun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\Shotgun.png"
-        damage = 350
+        damage = 500
         self.cool_down = 1500
         self.bullets = 10
         self.sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_sound.wav")

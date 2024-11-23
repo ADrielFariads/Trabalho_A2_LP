@@ -30,12 +30,10 @@ class Game:
         self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
         self.background.rect = self.background.image.get_rect(topleft=(0,0))
         self.background_group = pygame.sprite.Group(self.background) 
-        self.map_bounds = pygame.Rect(1020, 710, 6460, 3480) #rect for keep the player in the map
+        self.map_bounds = config.RectColiddersMap.MAPBOUNDS.value #rect for keep the player in the map
 
         #colliders
-        colliders = []
-        rect1 = CollisionSprite((1680, 1072), (250, 150))
-        colliders.append(rect1)
+        colliders = config.collisionSpritesGenerator()
         self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
 
         #skills
@@ -62,7 +60,7 @@ class Game:
         self.cyborg.gun = self.machinegun
 
         #blade_master config
-        self.blade_master = Player((1200, 1200), 1000, 10, self.map_bounds, blade_master_skillset, colliders)
+        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, colliders)
         self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
         self.blade_master.gun = self.knifeThrower
 
@@ -73,7 +71,7 @@ class Game:
 
 
         #player selecter
-        self.player = self.cyborg
+        self.player = self.blade_master
         self.gun = self.player.gun
         
         # groups
@@ -98,12 +96,11 @@ class Game:
 
 
         ####testing enemies#####
-        for i in range(10):
-            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
-            self.enemies_group.add(miniboss)
-        self.all_sprites.add(self.enemies_group)
-        self.player.offset = self.all_sprites.offset
-
+        # for i in range(10):
+        #     miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
+        #     self.enemies_group.add(miniboss)
+        # self.all_sprites.add(self.enemies_group)
+        # self.player.offset = self.all_sprites.offset
 
     def run(self):
 
@@ -117,16 +114,17 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
                 
-                # if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    
-                #     mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
-                #     #explosion = explosions.Explosion(mouse_pos, 150, 1000, self.enemies_group, self.explosion_images)
-                #     #self.explosion_group.add(explosion)
-                    
+                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:                  
+                    mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
+
+                    #explosion = explosions.Explosion(mouse_pos, 150, 1000, self.enemies_group, self.explosion_images)
+                    #self.explosion_group.add(explosion)
+
+                
                           
             self.all_sprites.add(self.enemies_group, self.explosion_group)
             
-            self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+            #self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
             # updates
             self.player.update(keys)
             self.enemies_group.update()
