@@ -38,7 +38,8 @@ class Player(pygame.sprite.Sprite):
         #health bar logic
         self.health_bar_length = 500
         self.health_change_speed = 2
-        self.target_health = health
+        self.health = health
+        self.target_health = self.health
         self.direction = pygame.math.Vector2(0,0)
 
         #experience logic
@@ -66,7 +67,7 @@ class Player(pygame.sprite.Sprite):
         player.image = player.frames[player.current_frame_index] 
         player.facing_right = True 
         player.current_health = player.max_health
-        player.health_ratio = player.current_health/player.health_bar_lenght
+        player.health_ratio = player.current_health/player.health_bar_length
         player.position = pygame.math.Vector2(player.initial_pos)
         player.rect = player.image.get_rect(center = (player.initial_pos))
         player.current_action = "idle"
