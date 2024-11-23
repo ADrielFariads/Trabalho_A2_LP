@@ -1,10 +1,8 @@
 import pygame
-from pytmx.util_pygame import load_pygame
 import random
 
 from player import Player
 import guns
-from camera import Camera
 from background import CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Slime
 from groups import AllSpritesgroup
