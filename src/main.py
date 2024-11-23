@@ -5,7 +5,7 @@ import random
 from player import Player
 import guns
 from camera import Camera
-from background import Background, CollisionSprite
+from background import CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Slime
 from groups import AllSpritesgroup
 from interface import GameInterface

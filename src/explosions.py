@@ -72,7 +72,7 @@ class Missile(pygame.sprite.Sprite):
 
     def update(self):
         vector = self.direction * self.speed
-
+        self.speed += 1
         self.rect.x += vector.x
         self.rect.y += vector.y
 

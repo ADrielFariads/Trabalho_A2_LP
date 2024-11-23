@@ -174,7 +174,7 @@ class HugeMissil(Skill):
         #explosion configuration
         self.missile_number = 3
         self.explosion_spritesheet = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
-        self.explosion_damage = 500
+        self.explosion_damage = 5000
 
 
         self.missile = explosions.Missile
@@ -183,7 +183,7 @@ class HugeMissil(Skill):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_used_time >= self.cooldown: 
             pos = player.position
-            missile = explosions.Missile((pos.x, pos.y - 1000), (pos), 15, player.enemies, 500, self.explosion_damage, self.explosion_spritesheet, player.explosion_group)
+            missile = explosions.Missile((pos.x, pos.y - 1000), (pos), 1, player.enemies, 500, self.explosion_damage, self.explosion_spritesheet, player.explosion_group)
             player.explosion_group.add(missile)
             
             self.last_used_time = current_time
