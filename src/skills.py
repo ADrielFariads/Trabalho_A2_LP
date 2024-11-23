@@ -5,6 +5,8 @@ and visual/sound effects.
 """
 
 import pygame
+import random
+
 import explosions
 
 class Skill:
@@ -133,7 +135,7 @@ class Bloodlust(Skill):
     def __init__(self):
         self.key = "Q"
         self.name = "Sede de Sangue"
-        self.description = "Por um breve período, [nome do personagem] recebe mais dano abater inimigos restaura vida."
+        self.description = "Por um breve período, [nome do personagem] recebe mais dano e abater inimigos restaura vida."
         self.cooldown = 30000
         self.image = "assets\\images\\icons\\bloodlust_icon.png"
         self.duration = 5000
@@ -161,9 +163,33 @@ class Bloodlust(Skill):
         return super().update(player)
 
 
-class Explosion(Skill):
-    def __init__(self, name, cooldown, image):
-        super().__init__(name, cooldown, image)
+class HugeMissil(Skill):
+    def __init__(self):
+        self.key = "E"
+        self.name = "Chuva de Mísseis"
+        self.description = "[nome do personagem] comanda sinaliza para emitir um míssil gigantesco, exterminando os inimigos atingidos."
+        self.cooldown = 3000
+        self.image = "assets\\images\\icons\\missiles_icon.png"
+        super().__init__(self.name, self.cooldown, self.image) 
+        #explosion configuration
+        self.missile_number = 3
+        self.explosion_spritesheet = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
+        self.explosion_damage = 500
+
+
+        self.missile = explosions.Missile
+
+    def use(self, player):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_used_time >= self.cooldown: 
+            pos = player.position
+            missile = explosions.Missile((pos.x, pos.y - 1000), (pos), 15, player.enemies, 500, self.explosion_damage, self.explosion_spritesheet, player.explosion_group)
+            player.explosion_group.add(missile)
+            
+            self.last_used_time = current_time
+
+    def update(self, player):
+        return super().update(player)
 
 ########################## Guns' renders #####################################################################################################################################
 

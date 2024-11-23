@@ -130,8 +130,13 @@ class Knife(Bullet):
         super().__init__(position, target_x, target_y, damage, group)
 
         self.angle = math.degrees(math.atan2(-self.dy, self.dx)) ##calculates the angle for knife shooting
-        self.speed = 5
+        self.speed = 25
         self.initial_position = position
+    def update(self):
+        self.speed -= 1
+        if self.speed <=10:
+            self.kill()
+        return super().update()
         
 class KnifeThrower(Gun):
 

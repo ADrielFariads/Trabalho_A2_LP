@@ -41,19 +41,20 @@ class Game:
 
         #skills
         #machinegun_render = skills.MachineGunRender()
-        knife_render = skills.KnifeThrowerRender()
+        #knife_render = skills.KnifeThrowerRender()
         #shotgun_render = skills.ShotgunRender()
         #heal = skills.Heal()
         #berserker = skills.Berserker()
         blood_lust = skills.Bloodlust()
         lethal_tempo = skills.LethalTempo()
-        skill_list = [knife_render, blood_lust, lethal_tempo]
+        missile_rain = skills.HugeMissil()
+        skill_list = [blood_lust, missile_rain]
 
         # sprites
         self.player = Player((1200, 1200), 1000, 12, self.map_bounds,skill_list, colliders)
         self.gun = guns.KnifeThrower(self.player, self.map_bounds)
-
         self.player.gun = self.gun
+        
         
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -61,8 +62,11 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
 
-        #enemies generation
+        #enemies generation and interation
         self.enemies_group = pygame.sprite.Group()
+
+        self.player.enemies = self.enemies_group
+        self.player.explosion_group = self.enemies_group
 
         #interface
 
@@ -74,10 +78,11 @@ class Game:
 
 
         ####testing enemies#####
-
-        miniboss = Andromaluis((1000, 1000), self.player, self.bullet_group, self.enemies_group)
-        self.enemies_group.add(miniboss)
+        for i in range(10):
+            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
+            self.enemies_group.add(miniboss)
         self.all_sprites.add(self.enemies_group)
+        self.player.offset = self.all_sprites.offset
 
 
     def run(self):
@@ -93,13 +98,13 @@ class Game:
                     self.running = False
                 
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    #self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                    self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                     mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
-                    explosion = explosions.Explosion(mouse_pos, 300, 1000, self.enemies_group, self.explosion_images)
-                    self.explosion_group.add(explosion)
-                    self.all_sprites.add(explosion)
+                    #explosion = explosions.Explosion(mouse_pos, 150, 1000, self.enemies_group, self.explosion_images)
+                    #self.explosion_group.add(explosion)
+                    
                           
-            self.all_sprites.add(self.enemies_group)
+            self.all_sprites.add(self.enemies_group, self.explosion_group)
             
             # updates
             self.player.update(keys)
