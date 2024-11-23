@@ -82,7 +82,7 @@ class MachineGun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\machinegun.png"
         damage = 50
-        self.cool_down = 500
+        self.cool_down = 1000
         self.bullets = 5
          
         bullet_class = Bullet  
@@ -120,7 +120,7 @@ class MachineGun(Gun):
                 height = image.get_height()
 
                 bullet.image = pygame.transform.scale(image, ((int(width*2)), (int(height*2))))
-                bullet.speed -= i*2
+                bullet.speed -= i
                 all_sprites_group.add(bullet)
 
 

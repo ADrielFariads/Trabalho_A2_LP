@@ -109,7 +109,7 @@ class LethalTempo(Skill): ## cyborg's skill
         return super().update(player)
 
 
-class Berserker(Skill):
+class BerserkerWrath(Skill):
     def __init__(self):
         self.key = "Q"
         self.name = "Modo Berserker"
@@ -152,7 +152,7 @@ class Bloodlust(Skill):
             self.original_gun_cooldown = player.gun.cool_down
             player.life_steal = 25
             player.gun.damage *= 2
-            player.gun.cool_down = 50
+            player.gun.cool_down = 200
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
             self.end_time = pygame.time.get_ticks() + self.duration
@@ -166,7 +166,7 @@ class Bloodlust(Skill):
 
 explosion_spritesheet = config.load_explosion_images()
 
-class HugeMissil(Skill):
+class HugeMissil(Skill): ##cyborg skills
     def __init__(self):
         self.key = "E"
         self.name = "Chuva de Mísseis"
@@ -189,6 +189,9 @@ class HugeMissil(Skill):
                 spread_value_y = random.randint(0, 1000)  
                 pos = player.position
                 missile = explosions.Missile((pos.x + spread_value_x, pos.y - spread_value_y), (pos.x + spread_value_x, pos.y + spread_value_y), 1, player.enemies, 100, self.explosion_damage, explosion_spritesheet, player.explosion_group)
+                if i//5 == 0:   
+                    missile.muted = False
+                    
                 player.explosion_group.add(missile)
             
         self.last_used_time = current_time

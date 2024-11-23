@@ -3,7 +3,7 @@ import math
 
 
 class Explosion(pygame.sprite.Sprite):
-    def __init__(self, pos, radius, damage, target_group, sprite_sheet):
+    def __init__(self, pos, damage, target_group, sprite_sheet, radius=100, muted=True):
         super().__init__()
         self.pos = pos
         self.radius = radius
@@ -15,13 +15,15 @@ class Explosion(pygame.sprite.Sprite):
         self.animation_delay = 50
         self.last_frame_time = pygame.time.get_ticks()
 
-        self.sprite_sheet = [pygame.transform.scale(img, (int(radius*2), int(radius*2))) for img in self.sprite_sheet]
+        if self.radius != 100:
+            self.sprite_sheet = [pygame.transform.scale(img, (int(radius*2), int(radius*2))) for img in self.sprite_sheet]
 
         self.image = self.sprite_sheet[self.current_frame]
         self.rect = self.image.get_rect(center=self.pos)
-        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\explosion_sound_1.wav")
-        self.sound.set_volume(0.5)
-        self.sound.play()
+        if not muted:
+            self.sound = pygame.mixer.Sound("assets\\audio\\skills\\explosion_sound_1.wav")
+            self.sound.set_volume(0.5)
+            self.sound.play()
 
         self.hit_targets = set()  #to not cause damage in the same enemy multiple times
 
@@ -52,8 +54,8 @@ class Explosion(pygame.sprite.Sprite):
                 
 
 class Missile(pygame.sprite.Sprite):
-    def __init__(self, start_pos, target_pos, speed, target_group, radius, damage, explosion_spritesheet, explosion_group, *groups):
-        super().__init__(*groups)
+    def __init__(self, start_pos, target_pos, speed, target_group, radius, damage, explosion_spritesheet, explosion_group, muted=True):
+        super().__init__()
         self.start_pos = start_pos
         self.target_pos = target_pos
         self.speed = speed
@@ -61,6 +63,7 @@ class Missile(pygame.sprite.Sprite):
         self.target_group = target_group
         self.radius = radius
         self.damage = damage
+        self.muted = muted
 
         self.image = pygame.image.load("assets\\images\\Bullets\\missile1.png")
         self.image = pygame.transform.rotate(self.image, 90)
@@ -78,7 +81,7 @@ class Missile(pygame.sprite.Sprite):
 
         #checks if its on the destination
         if pygame.math.Vector2(self.rect.center).distance_to(self.target_pos) <= self.speed:
-            bomb = Explosion(self.rect.center, self.radius, self.damage, self.target_group, self.explosion_sprite_sheet)
+            bomb = Explosion(self.rect.center, self.damage, self.target_group, self.explosion_sprite_sheet, self.radius, self.muted)
             self.explosion_group.add(bomb)
             self.kill()
 

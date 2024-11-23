@@ -21,9 +21,7 @@ class Game:
         pygame.display.set_caption("Cosmic Survivor")
         self.running = True
         self.clock = pygame.time.Clock()
-        info = pygame.display.get_window_size()
-        ScreenWidth = info[0]
-        ScreenHeight = info[1]
+
 
         
 
@@ -41,21 +39,42 @@ class Game:
         self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
 
         #skills
-        #machinegun_render = skills.MachineGunRender()
-        #knife_render = skills.KnifeThrowerRender()
-        #shotgun_render = skills.ShotgunRender()
-        #heal = skills.Heal()
-        #berserker = skills.Berserker()
+        machinegun_render = skills.MachineGunRender()
+        knife_render = skills.KnifeThrowerRender()
+        shotgun_render = skills.ShotgunRender()
+        heal = skills.Heal()
+        dash = skills.Dash()
+        berserker_wrath = skills.BerserkerWrath()
         blood_lust = skills.Bloodlust()
         lethal_tempo = skills.LethalTempo()
         missile_rain = skills.HugeMissil()
-        skill_list = [blood_lust, missile_rain]
-
-        # sprites
-        self.player = Player((1200, 1200), 1000, 12, self.map_bounds,skill_list, colliders)
-        self.gun = guns.KnifeThrower(self.player, self.map_bounds)
-        self.player.gun = self.gun
         
+        cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
+        blade_master_skillset = [knife_render, dash, blood_lust]
+        berserker_skillset = [shotgun_render, heal, berserker_wrath]
+
+
+        #players heroes
+
+        #cyborg config
+        self.cyborg = Player((1200, 1200), 1000, 8, self.map_bounds,cyborg_skillset, colliders)
+        self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
+        self.cyborg.gun = self.machinegun
+
+        #blade_master config
+        self.blade_master = Player((1200, 1200), 1000, 10, self.map_bounds, blade_master_skillset, colliders)
+        self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
+        self.blade_master.gun = self.knifeThrower
+
+        #berserker
+        self.berserker = Player((1200, 1200), 1500, 7, self.map_bounds, berserker_skillset, colliders)
+        self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
+        self.berserker.gun = self.shotgun
+
+
+        #player selecter
+        self.player = self.cyborg
+        self.gun = self.player.gun
         
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -98,15 +117,16 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
                 
-                if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                    self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                    mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
-                    #explosion = explosions.Explosion(mouse_pos, 150, 1000, self.enemies_group, self.explosion_images)
-                    #self.explosion_group.add(explosion)
+                # if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    
+                #     mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
+                #     #explosion = explosions.Explosion(mouse_pos, 150, 1000, self.enemies_group, self.explosion_images)
+                #     #self.explosion_group.add(explosion)
                     
                           
             self.all_sprites.add(self.enemies_group, self.explosion_group)
             
+            self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
             # updates
             self.player.update(keys)
             self.enemies_group.update()
