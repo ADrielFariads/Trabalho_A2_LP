@@ -40,6 +40,7 @@ class Player(pygame.sprite.Sprite):
         #position logic
         self.position = pygame.math.Vector2(pos)
         self.rect = self.image.get_rect(center = (pos))
+        self.flip_counter = 0 #for flip
 
 
         #health logic
@@ -144,6 +145,8 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames[self.current_frame_index]
             self.frame_counter = 0
 
+        
+
 
         #movement logic
         
@@ -207,8 +210,10 @@ class Player(pygame.sprite.Sprite):
 
 
         current_image = self.frames[self.current_frame_index]
+
+
         if not self.facing_right:
-            self.image = pygame.transform.flip(current_image, True, False)
+                self.image = pygame.transform.flip(current_image, True, False)
         else:
             self.image = current_image
 
