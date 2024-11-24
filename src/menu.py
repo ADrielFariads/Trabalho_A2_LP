@@ -90,7 +90,7 @@ class Button():
 class Menu():
 
 
-    def __init__(self, screen, player, enemy):
+    def __init__(self, screen, player):
         '''
         Creates all button and text objects,
         and creates boolean variables to switch between the game and menus
@@ -103,7 +103,7 @@ class Menu():
 
         #Will be reseted
         self.player = player
-        self.enemy = enemy
+        #self.enemy = enemy
 
         #Screen/ Background
         self.screen = screen
