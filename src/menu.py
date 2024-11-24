@@ -107,7 +107,7 @@ class Menu():
 
         #Screen/ Background
         self.screen = screen
-        self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
+        self.menu_background = pygame.image.load("assets\\images\\Menu\\marte_background.jpg").convert_alpha()
         
         #Buttons
         self.play_button = Button([540,300], "PLAY", (255,255,255), (0,0,0), 0.7)
