@@ -74,18 +74,8 @@ class Game:
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
-        #character default selected
-        self.char_selection = 1
-
-        #menu player selection
-        self.character_dictionary = {
-            1: self.cyborg,
-            2: self.blade_master,
-            3: self.berserker
-        }
-
-        #player selecter
-        self.player = self.character_dictionary[self.char_selection]
+        #default character
+        self.player = self.cyborg
         self.gun = self.player.gun
         
         #colliders
@@ -102,34 +92,10 @@ class Game:
         blood_lust = skills.Bloodlust()
         lethal_tempo = skills.LethalTempo()
         missile_rain = skills.MissilRain()
-        
         cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
         blade_master_skillset = [knife_render, dash, blood_lust]
         berserker_skillset = [shotgun_render, heal, berserker_wrath]
 
-
-        #players heroes
-
-        #cyborg config
-        self.cyborg = Player((1200, 1200), 1000, 8, self.map_bounds,cyborg_skillset, colliders)
-        self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
-        self.cyborg.gun = self.machinegun
-
-        #blade_master config
-        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, colliders)
-        self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
-        self.blade_master.gun = self.knifeThrower
-
-        #berserker
-        self.berserker = Player((1200, 1200), 1500, 7, self.map_bounds, berserker_skillset, colliders)
-        self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
-        self.berserker.gun = self.shotgun
-
-
-        #player selecter
-        self.player = self.cyborg
-        self.gun = self.player.gun
-        
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
@@ -179,6 +145,15 @@ class Game:
 
         #Menu
         self.menu = Menu(self.display_surface, self.player, self.enemies_group)
+
+                #menu player selection
+        self.character_dictionary = {
+            1: self.cyborg,
+            2: self.blade_master,
+            3: self.berserker
+        }
+        #select the character based on screen main characters
+        self.player = self.character_dictionary[self.menu.char_selection]
 
     def run(self):
         self.auto_shoot = False

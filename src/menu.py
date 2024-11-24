@@ -125,6 +125,8 @@ class Menu():
         self.char2_selection_button = Button([600, 600], "Blade Master", (255, 255, 255), (0, 0, 0), 1)
         self.char3_selection_button = Button([900, 600], "Berserk", (255, 255, 255), (0, 0, 0), 1)
         self.back_char_back_button = Button([600, 700], "Menu", (255, 255, 255), (0, 0, 0), 1)
+        #character default selected
+        self.char_selection = 1
 
 
         #Texts
@@ -140,7 +142,7 @@ class Menu():
         self.death_menu = False
         self.pause_menu = False
         self.playing = False
-        self.char_selection = False
+        self.char_selection_state = False
 
     def change_current_game_state(self, button):
         '''
@@ -154,9 +156,18 @@ class Menu():
 
         if button == self.play_button:
             self.initial_menu = False
-            self.char_selection = True
-        elif button == self.char1_selection_button or button == self.char2_selection_button or button == self.char3_selection_button:
-            self.initial_menu = False
+            self.char_selection_state = True
+        elif button == self.char1_selection_button:
+            self.char_selection = 1
+            self.char_selection_state = False
+            self.playing = True
+        elif button == self.char2_selection_button:
+            self.char_selection = 2
+            self.char_selection_state = False
+            self.playing = True
+        elif button == self.char3_selection_button:
+            self.char_selection = 3
+            self.char_selection_state = False
             self.playing = True
         elif button == self.options_button:
             self.initial_menu = False
@@ -192,7 +203,7 @@ class Menu():
         '''
         
         # If in character selection state, draw the character selection background on top of the existing background
-        if self.char_selection:
+        if self.char_selection_state:
             self.screen.blit(self.menu_background, (0, 0))  # Draw the menu background first
             self.screen.blit(self.char_selection_background, (0, 0))  # Draw the character selection background on top
         # Render the default background
