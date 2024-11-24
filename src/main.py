@@ -74,9 +74,18 @@ class Game:
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
+        #character default selected
+        self.char_selection = 1
+
+        #menu player selection
+        self.character_dictionary = {
+            1: self.cyborg,
+            2: self.blade_master,
+            3: self.berserker
+        }
 
         #player selecter
-        self.player = self.cyborg
+        self.player = self.character_dictionary[self.char_selection]
         self.gun = self.player.gun
         
         #colliders

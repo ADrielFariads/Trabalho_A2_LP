@@ -54,22 +54,25 @@ class Button():
         #If the button image doesn't exist draw only the text
         screen.blit(self.text, self.text_rect)
 
-    def checkForClick(self):
+    def checkForClick(self, event):
         '''
-        Check if the mouse was pressed
+        Check if the mouse was pressed once (using pygame event)
+
+        Parameters:
+        ------------
+        event: pygame event (to detect MOUSEBUTTONDOWN)
 
         Return:
         --------
         True: if the mouse was pressed
-        False: if it not was pressed
+        False: otherwise
         '''
-        mouse_x, mouse_y = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # 1 corresponds to the left mouse button
+                if self.rect.collidepoint(event.pos):
+                    return True
+        return False
 
-        if self.rect.collidepoint(mouse_x, mouse_y):
-            if pygame.mouse.get_pressed()[0]:
-
-                return True
-        return False    
 
     def changeColor(self):
         '''
@@ -88,8 +91,6 @@ class Button():
             self.text = self.font.render(self.text_input, True, self.base_color)
 
 class Menu():
-
-
     def __init__(self, screen, player, enemy):
         '''
         Creates all button and text objects,
@@ -114,14 +115,22 @@ class Menu():
         self.options_button = Button([600,550], "OPTIONS",(255,255,255), (0,0,0), 1)
         self.play_again_button = Button([400,450], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
         self.back_options_button = Button([500,450], "BACK",(255,255,255), (0,0,0), 1)
-        self.back_paused_button = Button([400,450], "BACK",(255,255,255), (0,0,0), 1) 
+        self.back_paused_button = Button([400,450], "BACK",(255,255,255), (0,0,0), 1)
         self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1)
+        #Selection Characters
+        self.char1_selection_button = Button([300, 600], "Cyborg", (255, 255, 255), (0, 0, 0), 1)
+        self.char2_selection_button = Button([600, 600], "Blade Master", (255, 255, 255), (0, 0, 0), 1)
+        self.char3_selection_button = Button([900, 600], "Berserk", (255, 255, 255), (0, 0, 0), 1)
+        self.back_char_back_button = Button([600, 700], "Main Menu", (255, 255, 255), (0, 0, 0), 1)
+
+
 
         #Texts
         self.menu_text = Text(600,150,"Cosmic Survivor", (255,255,255), 56)
         self.paused_text = Text(600,150,"Game Paused", (255,255,255), 56)
         self.options_text = Text(600,250, "Press Esc to pause", (255,255,255), 50)
         self.death_text = Text(600,150,"Game Over!", (255,255,255), 56)
+        self.char_selection_text = Text(600,150,"Choose your character", (255,255,255), 56)
 
         #Game states
         self.initial_menu = True
@@ -129,6 +138,7 @@ class Menu():
         self.death_menu = False
         self.pause_menu = False
         self.playing = False
+        self.char_selection = False
 
     def change_current_game_state(self, button):
         '''
@@ -142,11 +152,14 @@ class Menu():
 
         if button == self.play_button:
             self.initial_menu = False
+            self.char_selection = True
+        elif button == self.char1_selection_button or button == self.char2_selection_button or button == self.char3_selection_button:
+            self.initial_menu = False
             self.playing = True
         elif button == self.options_button:
             self.initial_menu = False
             self.options_menu = True
-        elif button == self.back_options_button:
+        elif button == self.back_options_button or button == self.back_char_back_button:
             self.options_menu = False
             self.playing = False
             self.initial_menu = True
@@ -166,27 +179,39 @@ class Menu():
             self.playing = True
 
 
-    def draw(self,text, *button_args):
+    def draw(self, text, *button_args):
         '''
-        Draw the screen
+        Draws the screen and handles button events.
 
         Parameters:
         -----------
-        Text and buttons that will be shown on the screen
-
+        text: The text object to display on the screen.
+        *button_args: Button objects that will be displayed and interacted with.
         '''
-        self.screen.blit(self.menu_background, (0,0))
-        #Draw all the desired buttons with their events
+        # Render the background
+        self.screen.blit(self.menu_background, (0, 0))
+        
+        # Capture all input events
+        events = pygame.event.get()
+        
+        # Process each button
         for button in button_args:
+            # Draw the button and update its hover state
             button.update(self.screen)
             button.changeColor()
-            #Verify if the button was pressed
-            if button.checkForClick():
-                #Calls the function to perform the action assigned to that button
-                self.change_current_game_state(button)
+            
+            # Check for mouse click events on the button
+            for event in events:
+                if button.checkForClick(event):
+                    # Perform the action assigned to the clicked button
+                    self.change_current_game_state(button)
 
+        # Draw the text on the screen
         text.draw(self.screen)
+        
+        # Update the display
         pygame.display.update()
+
 
     def update(self):
         '''
@@ -200,6 +225,8 @@ class Menu():
             self.draw(self.paused_text, self.menu_button,self.back_paused_button)
         elif self.death_menu:
             self.draw(self.death_text,self.play_again_button,self.menu_button)
+        elif self.char_selection:
+            self.draw(self.char_selection_text,self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
 
 class Text():
 
