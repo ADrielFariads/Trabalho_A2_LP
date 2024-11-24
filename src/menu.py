@@ -107,21 +107,21 @@ class Menu():
 
         #Screen/ Background
         self.screen = screen
-        self.menu_background = pygame.image.load("assets\\images\\Menu\\test_background.jpg").convert_alpha()
+        self.menu_background = pygame.image.load("assets\\images\\Menu\\marte_background.jpg").convert_alpha()
         
         #Buttons
-        self.play_button = Button([540,300], "PLAY", (255,255,255), (0,0,0), 0.7)
-        self.options_button = Button([540,400], "OPTIONS",(255,255,255), (0,0,0), 0.7)
-        self.play_again_button = Button([300,350], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
-        self.back_options_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1)
-        self.back_paused_button = Button([300,350], "BACK",(255,255,255), (0,0,0), 1) 
-        self.menu_button = Button([750,350], "MENU", (255,255,255), (0,0,0), 1)
+        self.play_button = Button([600,400], "PLAY", (255,255,255), (0,0,0), 1)
+        self.options_button = Button([600,550], "OPTIONS",(255,255,255), (0,0,0), 1)
+        self.play_again_button = Button([400,450], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
+        self.back_options_button = Button([500,450], "BACK",(255,255,255), (0,0,0), 1)
+        self.back_paused_button = Button([400,450], "BACK",(255,255,255), (0,0,0), 1) 
+        self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1)
 
         #Texts
-        self.menu_text = Text(540,150,"Cosmic Survivor", (255,255,255), 56)
-        self.paused_text = Text(540,150,"Game Paused", (255,255,255), 56)
-        self.options_text = Text(540,250, "Press Esc to pause", (255,255,255), 50)
-        self.death_text = Text(540,150,"Game Over!", (255,255,255), 56)
+        self.menu_text = Text(600,150,"Cosmic Survivor", (255,255,255), 56)
+        self.paused_text = Text(600,150,"Game Paused", (255,255,255), 56)
+        self.options_text = Text(600,250, "Press Esc to pause", (255,255,255), 50)
+        self.death_text = Text(600,150,"Game Over!", (255,255,255), 56)
 
         #Game states
         self.initial_menu = True
@@ -148,21 +148,21 @@ class Menu():
             self.options_menu = True
         elif button == self.back_options_button:
             self.options_menu = False
+            self.playing = False
             self.initial_menu = True
         elif button == self.back_paused_button:
             self.playing = True
         elif button == self.menu_button:
-
             #Reset the game when return to initial menu
-            Enemy.reset_enemy(self, self.enemy)
-            Player.reset_player(self, self.player)
+            Enemy.reset_enemies(self,self.enemy)
+            self.player.reset_player()
             self.pause_menu = False
             self.death_menu = False
             self.initial_menu = True
         elif button == self.play_again_button:
             #Reset the game to play again
-            Enemy.reset_enemy(self, self.enemy)
-            Player.reset_player(self, self.player)
+            Enemy.reset_enemies(self,self.enemy)
+            self.player.reset_player()
             self.playing = True
 
 

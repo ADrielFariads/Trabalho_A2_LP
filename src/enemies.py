@@ -46,6 +46,16 @@ class Enemy(pygame.sprite.Sprite):
         self.experience_given = 10
         self.colliders = colliders
 
+    def reset_enemies(self, enemies):
+        for enemy in enemies:
+            enemy.health = enemy.max_health
+            enemy.position = pygame.math.Vector2(enemy.x, enemy.y)
+            enemy.image = enemy.frames[enemy.current_frame_index]
+            enemy.rect = enemy.image.get_rect(center=(enemy.x, enemy.y))
+            enemy.current_frame_index = 0
+            enemy.animation_speed = 10  
+            enemy.frame_counter = 0
+
     def load_frames(self):
         frame_width = self.sprite_sheet.get_width() // self.frames_x
         frame_height = self.sprite_sheet.get_height() // self.frames_y
@@ -139,9 +149,9 @@ class Enemy(pygame.sprite.Sprite):
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
         # Initialize the sprite sheet and animation parameters
-        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin.png"
+        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblinsword.png"
         self.frames_x = 11  # colums
-        self.frames_y = 4  # lines
+        self.frames_y = 5  # lines
         self.health = 500
         self.speed = random.uniform(2, 6)  # Random speed for each goblin
         self.damage = 100
