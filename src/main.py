@@ -205,6 +205,7 @@ class Game:
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.menu.playing = False
                         self.menu.pause_menu = True
+                        self.menu.options_menu = False
                     
                             
                 self.all_sprites.add(self.enemies_group, self.explosion_group)
