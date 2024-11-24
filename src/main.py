@@ -169,7 +169,7 @@ class Game:
         self.player.offset = self.all_sprites.offset
 
         #Menu
-        self.menu = Menu(self.display_surface, self.player)
+        self.menu = Menu(self.display_surface, self.player, self.enemies_group)
 
     def run(self):
         self.auto_shoot = False
@@ -226,6 +226,7 @@ class Game:
                 self.interface.draw()
 
                 if self.player.current_health == 0:
+                    self.menu.options_menu = False
                     self.menu.pause_menu = False
                     self.menu.death_menu = True
                     self.menu.playing = False

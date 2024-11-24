@@ -68,19 +68,19 @@ class Player(pygame.sprite.Sprite):
         self.skills = skills
 
 ################# ANIMATING FRAMES ##########################################################
-    def reset_player(self, player):
+    def reset_player(self):
         '''
         Reset player attribues to initial setting
         '''
-        player.current_frame_index = 0
-        player.frame_counter = 0 
-        player.image = player.frames[player.current_frame_index] 
-        player.facing_right = True 
-        player.current_health = player.max_health
-        player.position = pygame.math.Vector2(player.initial_pos)
-        player.rect = player.image.get_rect(center = (player.initial_pos))
-        player.current_action = "idle"
-        player.target_health = player.health
+        self.current_frame_index = 0
+        self.frame_counter = 0 
+        self.image = self.frames[self.current_frame_index] 
+        self.facing_right = True 
+        self.current_health = self.max_health
+        self.position = pygame.math.Vector2(self.initial_pos)
+        self.rect = self.image.get_rect(center = (self.initial_pos))
+        self.current_action = "idle"
+        self.target_health = self.health
 
     def load_frames(self, sprite_sheet, frames_x):
         "Extract and scale frames from the given sprite sheet."
