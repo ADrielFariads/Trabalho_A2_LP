@@ -27,9 +27,6 @@ class Game:
         pygame.display.set_caption("Cosmic Survivor")
         self.clock = pygame.time.Clock()
 
-        #Menu
-        self.menu = Menu(self.display_surface, self.player)
-
         # Initialize background
         self.background = pygame.sprite.Sprite()
         self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
@@ -171,6 +168,9 @@ class Game:
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
+        #Menu
+        self.menu = Menu(self.display_surface, self.player)
+
     def run(self):
         self.auto_shoot = False
 
@@ -228,8 +228,12 @@ class Game:
                     self.menu.pause_menu = False
                     self.menu.death_menu = True
                     self.menu.playing = False
-
-                pygame.display.flip()
+                
+            else:
+                self.menu.update()
+                
+            pygame.display.update()
+            pygame.display.flip()
 
     pygame.quit()
 
