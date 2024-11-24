@@ -109,6 +109,9 @@ class Menu():
         #Screen/ Background
         self.screen = screen
         self.menu_background = pygame.image.load("assets\\images\\Menu\\marte_background.jpg").convert_alpha()
+
+        # Load selectcharacters image 
+        self.char_selection_background = pygame.image.load("assets\\images\\Menu\\selectcharacters.png").convert_alpha()
         
         #Buttons
         self.play_button = Button([600,400], "PLAY", (255,255,255), (0,0,0), 1)
@@ -121,8 +124,7 @@ class Menu():
         self.char1_selection_button = Button([300, 600], "Cyborg", (255, 255, 255), (0, 0, 0), 1)
         self.char2_selection_button = Button([600, 600], "Blade Master", (255, 255, 255), (0, 0, 0), 1)
         self.char3_selection_button = Button([900, 600], "Berserk", (255, 255, 255), (0, 0, 0), 1)
-        self.back_char_back_button = Button([600, 700], "Main Menu", (255, 255, 255), (0, 0, 0), 1)
-
+        self.back_char_back_button = Button([600, 700], "Menu", (255, 255, 255), (0, 0, 0), 1)
 
 
         #Texts
@@ -130,7 +132,7 @@ class Menu():
         self.paused_text = Text(600,150,"Game Paused", (255,255,255), 56)
         self.options_text = Text(600,250, "Press Esc to pause", (255,255,255), 50)
         self.death_text = Text(600,150,"Game Over!", (255,255,255), 56)
-        self.char_selection_text = Text(600,150,"Choose your character", (255,255,255), 56)
+        self.char_selection_text = Text(600,150,"Main Characters", (255,255,255), 56)
 
         #Game states
         self.initial_menu = True
@@ -188,8 +190,15 @@ class Menu():
         text: The text object to display on the screen.
         *button_args: Button objects that will be displayed and interacted with.
         '''
-        # Render the background
-        self.screen.blit(self.menu_background, (0, 0))
+        
+        # If in character selection state, draw the character selection background on top of the existing background
+        if self.char_selection:
+            self.screen.blit(self.menu_background, (0, 0))  # Draw the menu background first
+            self.screen.blit(self.char_selection_background, (0, 0))  # Draw the character selection background on top
+        # Render the default background
+        else:
+            self.screen.blit(self.menu_background, (0, 0))
+
         
         # Capture all input events
         events = pygame.event.get()
