@@ -2,7 +2,11 @@ import pygame
 import random
 
 import config
+import config
 from player import Player
+import guns
+from background import CollisionSprite
+from enemies import Goblin, generate_goblins, Andromaluis, Slime
 import guns
 from background import CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Slime
@@ -19,6 +23,7 @@ class Game:
         pygame.init()
         pygame.mixer.init()
         self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
+        self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
         pygame.display.set_caption("Cosmic Survivor")
         self.clock = pygame.time.Clock()
 
@@ -29,9 +34,54 @@ class Game:
         self.background = pygame.sprite.Sprite()
         self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
         self.background.rect = self.background.image.get_rect(topleft=(0,0))
+        self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
+        self.background.rect = self.background.image.get_rect(topleft=(0,0))
         self.background_group = pygame.sprite.Group(self.background) 
         self.map_bounds = config.RectColiddersMap.MAPBOUNDS.value #rect for keep the player in the map
+        self.map_bounds = config.RectColiddersMap.MAPBOUNDS.value #rect for keep the player in the map
 
+        #colliders
+        colliders = config.collisionSpritesGenerator()
+        self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
+
+        #skills
+        machinegun_render = skills.MachineGunRender()
+        knife_render = skills.KnifeThrowerRender()
+        shotgun_render = skills.ShotgunRender()
+        heal = skills.Heal()
+        dash = skills.Dash()
+        berserker_wrath = skills.BerserkerWrath()
+        blood_lust = skills.Bloodlust()
+        lethal_tempo = skills.LethalTempo()
+        missile_rain = skills.MissilRain()
+        
+        cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
+        blade_master_skillset = [knife_render, dash, blood_lust]
+        berserker_skillset = [shotgun_render, heal, berserker_wrath]
+
+
+        #players heroes
+
+        #cyborg config
+        self.cyborg = Player((1200, 1200), 1000, 8, self.map_bounds,cyborg_skillset, colliders)
+        self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
+        self.cyborg.gun = self.machinegun
+
+        #blade_master config
+        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, colliders)
+        self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
+        self.blade_master.gun = self.knifeThrower
+
+        #berserker
+        self.berserker = Player((1200, 1200), 1500, 7, self.map_bounds, berserker_skillset, colliders)
+        self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
+        self.berserker.gun = self.shotgun
+
+
+        #player selecter
+        self.player = self.cyborg
+        self.gun = self.player.gun
+        
         #colliders
         colliders = config.collisionSpritesGenerator()
         self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
@@ -89,10 +139,29 @@ class Game:
         #interface
 
         self.interface = GameInterface(self.display_surface, self.player)
+        self.explosion_group = pygame.sprite.Group()
+
+        #enemies generation and interation
+        self.enemies_group = pygame.sprite.Group()
+
+        self.player.enemies = self.enemies_group
+        self.player.explosion_group = self.enemies_group
+
+        #interface
+
+        self.interface = GameInterface(self.display_surface, self.player)
 
         #camera interaction
         self.all_sprites = AllSpritesgroup()
         self.all_sprites.add(self.background_group, self.enemies_group, self.player,self.gun_group, self.bullet_group) 
+
+
+        ####testing enemies#####
+        for i in range(10):
+            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
+            self.enemies_group.add(miniboss)
+        self.all_sprites.add(self.enemies_group)
+        self.player.offset = self.all_sprites.offset
 
 
         ####testing enemies#####
