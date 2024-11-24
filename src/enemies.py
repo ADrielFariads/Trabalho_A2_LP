@@ -139,9 +139,9 @@ class Enemy(pygame.sprite.Sprite):
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
         # Initialize the sprite sheet and animation parameters
-        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin.png"
+        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblinsword.png"
         self.frames_x = 11  # colums
-        self.frames_y = 4  # lines
+        self.frames_y = 5  # lines
         self.health = 500
         self.speed = random.uniform(2, 6)  # Random speed for each goblin
         self.damage = 100
