@@ -1,5 +1,5 @@
 """
-Module for enemies creation and enemies generation
+This module handles the creation and management of enemies. It provides classes for various enemy types, each with unique behaviors and attributes, as well as functions for dynamically spawning enemies on the map.
 
 """
 
@@ -8,7 +8,7 @@ import pygame
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group):
+    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, colliders=None):
         super().__init__()
 
         # Loading image
@@ -44,6 +44,7 @@ class Enemy(pygame.sprite.Sprite):
         self.target = player
         self.bullets = bullets_group
         self.experience_given = 10
+        self.colliders = colliders
 
     def load_frames(self):
         frame_width = self.sprite_sheet.get_width() // self.frames_x
@@ -98,10 +99,31 @@ class Enemy(pygame.sprite.Sprite):
     def behavior(self):
         pass
 
+
+    def collision(self, direction):
+        if self.colliders != None:
+            for sprite in self.colliders:
+                if sprite.rect.colliderect(self.rect):
+                    if direction == "horizontal":
+                        if self.direction.x > 0:
+                            self.rect.right = sprite.rect.left
+
+                        if self.direction.x < 0:
+                            self.rect.left = sprite.rect.right
+
+                    if direction == "vertical":
+                        if self.direction.y > 0:
+                            self.rect.bottom = sprite.rect.top
+
+                        if self.direction.y < 0:
+                            self.rect.top = sprite.rect.bottom
+
+
     def update(self):
         # Checks the mob's death
         if self.health <= 0:
             self.target.experience += self.damage
+            self.target.enemy_killed()
             self.kill()
             return None
         
@@ -120,7 +142,7 @@ class Goblin(Enemy):
         self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblin.png"
         self.frames_x = 11  # colums
         self.frames_y = 4  # lines
-        self.health = 50
+        self.health = 500
         self.speed = random.uniform(2, 6)  # Random speed for each goblin
         self.damage = 100
         self.attack_delay = 50
@@ -206,7 +228,7 @@ class Andromaluis(Enemy):
         self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
         self.frames_x = 8
         self.frames_y = 3
-        self.health = 500
+        self.health = 1500
         self.speed = 1
         self.damage = 100
         self.attack_delay = 1000
@@ -215,7 +237,7 @@ class Andromaluis(Enemy):
         self.experience_given = 100
 
         #skill atributes
-        self.generation_interval = 500
+        self.generation_interval = 100
         self.generation_timer = 10
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
@@ -228,8 +250,8 @@ class Andromaluis(Enemy):
             if self.generation_timer <= 0:
                 generate_goblins(4, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
-            else:
-                self.generation_timer -= 1
+
+        self.generation_timer -= 1
 
 
 class Centipede(Enemy):
@@ -267,65 +289,16 @@ class Centipede(Enemy):
                 self.attack_counter = 0
         self.attack_counter += 1
 
-class ZeppelinGoblin(Enemy):
+class Slime(Enemy):
     def __init__(self, pos, player, bullets_group):
-        # Initialize the sprite sheet and animation parameters
-        self.sprite_sheet = "assets\\images\\enemies\\goblins\\zepelingoblin.png"
-        self.frames_x = 5  # Number of frames per direction
-        self.frames_y = 1  # Number of directions
-        self.health = 300
-        self.speed = random.uniform(3, 6)  # Random speed for each zeppelin
-        self.damage = 50
-        self.attack_delay = 100
-        self.attack_range = 100
-        self.experience_given = 50
+        self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
+        self.frames_x = 4
+        self.frames_y = 2
+        self.health = 100
+        self.speed = 3
+        self.damage = 40
+        self.attack_delay = 50
+        self.attack_range = 50
+
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
-        self.attack_counter = 0
-        self.direction = pygame.math.Vector2(0, 0)  # Initialize direction
 
-    def load_frames(self):
-        frame_width = self.sprite_sheet.get_width() // self.frames_x
-        frame_height = self.sprite_sheet.get_height() // self.frames_y
-
-        self.frames = []
-        for y in range(self.frames_y):
-            for x in range(self.frames_x):
-                # Extract each frame from the sprite sheet
-                frame = self.sprite_sheet.subsurface((x * frame_width, y * frame_height, frame_width, frame_height))
-                self.frames.append(frame)
-
-        # Divide frames into directions
-        self.up_frames = [self.frames[0]]
-        self.right_frames = [self.frames[2]]
-        self.down_frames = [self.frames[4]]
-        self.left_frames = [pygame.transform.flip(self.frames[2], True, False)]
-
-    def behavior(self):
-        if self.player_distance() > self.attack_range:
-            # Calculate direction towards the player
-            direction = pygame.math.Vector2(self.target.rect.center) - pygame.math.Vector2(self.rect.center)
-            if direction.length() > 0:
-                direction = direction.normalize()
-            
-            # Move the zeppelin in the calculated direction
-            self.position += direction * self.speed * 0.5
-            self.rect.center = self.position
-
-            # Update frames based on movement direction
-            if direction.x > 0 and abs(direction.x) >= abs(direction.y):
-                self.frames = self.right_frames  # Moving right
-            elif direction.x < 0 and abs(direction.x) >= abs(direction.y):
-                self.frames = self.left_frames  # Moving left
-            elif direction.y < 0 and abs(direction.y) > abs(direction.x):
-                self.frames = self.up_frames  # Moving up
-            elif direction.y > 0 and abs(direction.y) > abs(direction.x):
-                self.frames = self.down_frames  # Moving down
-
-            # Update the direction attribute
-            self.direction = direction
-        else:
-            if self.attack_counter >= self.attack_delay:
-                # Attack the player if within range
-                self.attack(self.target)
-                self.attack_counter = 0
-        self.attack_counter += 1
