@@ -74,102 +74,58 @@ class Game:
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
-        #default character
-        self.player = self.cyborg
-        self.gun = self.player.gun
-        
-        #colliders
-        colliders = config.collisionSpritesGenerator()
-        self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
-
-        #skills
-        machinegun_render = skills.MachineGunRender()
-        knife_render = skills.KnifeThrowerRender()
-        shotgun_render = skills.ShotgunRender()
-        heal = skills.Heal()
-        dash = skills.Dash()
-        berserker_wrath = skills.BerserkerWrath()
-        blood_lust = skills.Bloodlust()
-        lethal_tempo = skills.LethalTempo()
-        missile_rain = skills.MissilRain()
-        cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
-        blade_master_skillset = [knife_render, dash, blood_lust]
-        berserker_skillset = [shotgun_render, heal, berserker_wrath]
-
-        # groups
-        self.player_group = pygame.sprite.GroupSingle(self.player)
-        self.gun_group = pygame.sprite.GroupSingle(self.gun)
-        self.bullet_group = pygame.sprite.Group()
-        self.explosion_group = pygame.sprite.Group()
-
-        #enemies generation and interation
-        self.enemies_group = pygame.sprite.Group()
-
-        self.player.enemies = self.enemies_group
-        self.player.explosion_group = self.enemies_group
-
-        #interface
-
-        self.interface = GameInterface(self.display_surface, self.player)
-        self.explosion_group = pygame.sprite.Group()
-
-        #enemies generation and interation
-        self.enemies_group = pygame.sprite.Group()
-
-        self.player.enemies = self.enemies_group
-        self.player.explosion_group = self.enemies_group
-
-        #interface
-
-        self.interface = GameInterface(self.display_surface, self.player)
-
-        #camera interaction
-        self.all_sprites = AllSpritesgroup()
-        self.all_sprites.add(self.background_group, self.enemies_group, self.player,self.gun_group, self.bullet_group) 
-
-
-        ####testing enemies#####
-        for i in range(10):
-            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
-            self.enemies_group.add(miniboss)
-        self.all_sprites.add(self.enemies_group)
-        self.player.offset = self.all_sprites.offset
-
-
-        ####testing enemies#####
-        for i in range(10):
-            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
-            self.enemies_group.add(miniboss)
-        self.all_sprites.add(self.enemies_group)
-        self.player.offset = self.all_sprites.offset
-
-        #Menu
-        self.menu = Menu(self.display_surface, self.player, self.enemies_group)
-
-                #menu player selection
+        # Menu player selection
         self.character_dictionary = {
             1: self.cyborg,
             2: self.blade_master,
             3: self.berserker
         }
-        #select the character based on screen main characters
-        self.player = self.character_dictionary[self.menu.char_selection]
+
+        # default player
+        self.player = self.cyborg
+        self.gun = self.player.gun
+
+        #temp init
+        self.menu = Menu(self.display_surface, self.player, pygame.sprite.Group())
+
+        # Groups
+        self.player_group = pygame.sprite.GroupSingle(self.player)
+        self.gun_group = pygame.sprite.GroupSingle(self.gun)
+        self.bullet_group = pygame.sprite.Group()
+        self.explosion_group = pygame.sprite.Group()
+        self.enemies_group = pygame.sprite.Group()
+
+        self.player.enemies = self.enemies_group
+        self.player.explosion_group = self.enemies_group
+
+        # Interface
+        self.interface = GameInterface(self.display_surface, self.player)
+
+        # Camera interaction
+        self.all_sprites = AllSpritesgroup()
+        self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
+
+        # Testing enemies
+        for i in range(10):
+            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
+            self.enemies_group.add(miniboss)
+        self.all_sprites.add(self.enemies_group)
+        self.player.offset = self.all_sprites.offset
 
     def run(self):
         self.auto_shoot = False
-
         while True:
-
             if pygame.event.get(pygame.QUIT):
                 pygame.quit()
                 quit()
-        
+
+            # Update the character
+            self.player = self.character_dictionary[self.menu.char_selection]
+            self.gun = self.player.gun
+
             if self.menu.playing:
-        
                 self.clock.tick(60)
                 keys = pygame.key.get_pressed()
-                
-
                 # event loop
                 for event in pygame.event.get():
                     
