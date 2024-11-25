@@ -6,7 +6,7 @@ import config
 from player import Player
 import guns
 from background import CollisionSprite
-from enemies import Goblin, generate_goblins, Andromaluis, Slime
+from enemies import Goblin, generate_goblins, Andromaluis, Slime, Enemy
 import guns
 from background import CollisionSprite
 from enemies import Goblin, generate_goblins, Andromaluis, Slime
@@ -125,6 +125,12 @@ class Game:
         self.all_sprites.empty()
         self.all_sprites.add(self.background_group, self.player, self.gun_group, self.enemies_group)
         self.player.offset = self.all_sprites.offset
+
+        # Update all enemies to track the new player
+        for enemy in self.enemies_group:
+            if isinstance(enemy, Enemy):  # Check to ensure it's an enemy object
+                enemy.update_target(self.player)
+
 
 
     def run(self):

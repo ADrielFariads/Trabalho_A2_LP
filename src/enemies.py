@@ -146,6 +146,10 @@ class Enemy(pygame.sprite.Sprite):
         # Animation logic
         self.animate()
 
+    def update_target(self, new_target):
+        """Update the target player dynamically."""
+        self.target = new_target
+
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
         # Initialize the sprite sheet and animation parameters
