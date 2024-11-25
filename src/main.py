@@ -2,7 +2,6 @@ import pygame
 import random
 
 import config
-import config
 from player import Player
 import guns
 from background import CollisionSprite
@@ -26,6 +25,9 @@ class Game:
         self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
         pygame.display.set_caption("Cosmic Survivor")
         self.clock = pygame.time.Clock()
+
+        # Define running attribute
+        self.running = False  # Set default value
 
         # Initialize background
         self.background = pygame.sprite.Sprite()
@@ -135,11 +137,8 @@ class Game:
 
     def run(self):
         self.auto_shoot = False
-        while True:
-            if pygame.event.get(pygame.QUIT):
-                pygame.quit()
-                quit()
-
+        self.running = True  # Start the game loop
+        while self.running:
             # Update the player dynamically if menu selection changes
             if self.player != self.character_dictionary[self.menu.char_selection]:
                 self.player = self.character_dictionary[self.menu.char_selection]
@@ -150,7 +149,10 @@ class Game:
                 keys = pygame.key.get_pressed()
                 # event loop
                 for event in pygame.event.get():
-                    
+                    if event.type == pygame.QUIT:  # Handle window close
+                        print("Closing game")
+                        self.running = False
+
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:                  
                         mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
@@ -193,14 +195,14 @@ class Game:
                     self.menu.death_menu = True
                     self.menu.playing = False
                 
+
             else:
                 self.menu.update()
-                
+
             pygame.display.update()
-            pygame.display.flip()
 
-    pygame.quit()
-
+        pygame.quit()  # Ensure pygame resources are cleaned up after the loop end
+        exit()  # Ensure the program terminates
 
 
 if __name__ == "__main__":

@@ -213,7 +213,6 @@ class Menu():
         text: The text object to display on the screen.
         *button_args: Button objects that will be displayed and interacted with.
         '''
-        
         # If in character selection state, draw the character selection background on top of the existing background
         if self.char_selection_state:
             self.screen.blit(self.menu_background, (0, 0))  # Draw the menu background first
@@ -222,16 +221,21 @@ class Menu():
         else:
             self.screen.blit(self.menu_background, (0, 0))
 
-        
         # Capture all input events
         events = pygame.event.get()
-        
+
+        # Handle global quit event
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()  # Ensure the program terminates
+
         # Process each button
         for button in button_args:
             # Draw the button and update its hover state
             button.update(self.screen)
             button.changeColor()
-            
+
             # Check for mouse click events on the button
             for event in events:
                 if button.checkForClick(event):
@@ -240,9 +244,10 @@ class Menu():
 
         # Draw the text on the screen
         text.draw(self.screen)
-        
+
         # Update the display
         pygame.display.update()
+
 
 
     def update(self):
