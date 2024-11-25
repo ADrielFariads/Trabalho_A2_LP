@@ -9,6 +9,11 @@ class Button():
         font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
         normal_button = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha()
         selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
+
+        #Buttons audios
+        self.select_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Selection.wav")
+        self.click_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Click.wav")
+        self.audio = False
         
         # Get the width and height of the image
         width = normal_button.get_width()
@@ -70,6 +75,8 @@ class Button():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # 1 corresponds to the left mouse button
                 if self.rect.collidepoint(event.pos):
+                    #self.click_audio.play(0)
+                    self.click_audio.play()
                     return True
         return False
 
@@ -82,11 +89,16 @@ class Button():
         
         #check if they are overlapped by the mouse
         if self.rect.collidepoint(mouse_x, mouse_y):
-            #Change the text color and the button animation
+            #Plays the selected button sound effect
+            if not self.audio:
+                self.select_audio.play()
+                self.audio = True
+            #Change the text color and the button animation 
             self.text = self.font.render(self.text_input, True, self.hovering_color)
             self.button = self.selected_button
         else:
             #Back to normal
+            self.audio = False
             self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
 
