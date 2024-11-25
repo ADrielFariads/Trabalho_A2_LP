@@ -122,6 +122,22 @@ class Game:
             # Update the character
             self.player = self.character_dictionary[self.menu.char_selection]
             self.gun = self.player.gun
+            # Update Groups
+            self.player_group = pygame.sprite.GroupSingle(self.player)
+            self.gun_group = pygame.sprite.GroupSingle(self.gun)
+            self.bullet_group = pygame.sprite.Group()
+            self.explosion_group = pygame.sprite.Group()
+            self.enemies_group = pygame.sprite.Group()
+
+            self.player.enemies = self.enemies_group
+            self.player.explosion_group = self.enemies_group
+
+            # Interface
+            self.interface = GameInterface(self.display_surface, self.player)
+
+            # Camera interaction
+            self.all_sprites = AllSpritesgroup()
+            self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
 
             if self.menu.playing:
                 self.clock.tick(60)
