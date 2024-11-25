@@ -93,19 +93,24 @@ class LethalTempo(Skill): ## cyborg's skill
         self.duration = 3500
         self.end_time = 0
         self.original_bullets = 0
+        self.original_cooldown = 0
         super().__init__(self.name, self.cooldown, self.image)        
 
     def use(self, player):
         if not self.is_on_cooldown:
-            self.original_speed = player.gun.bullets
+            self.original_bullets = player.gun.bullets
+            self.original_cooldown = player.gun.cool_down
+            player.gun.cool_down = 500
             player.gun.bullets = self.original_bullets + 10
+            
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
             self.end_time = pygame.time.get_ticks() + self.duration
 
     def update(self, player):
         if self.is_on_cooldown and pygame.time.get_ticks() >= self.end_time:
-            player.gun.bullets = self.original_speed
+            player.gun.bullets = self.original_bullets
+            player.gun.cool_down = self.original_cooldown
         return super().update(player)
 
 
