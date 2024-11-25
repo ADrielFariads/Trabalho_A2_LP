@@ -112,6 +112,21 @@ class Game:
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
+    def initialize_player(self):
+        # Update player-specific attributes
+        self.gun = self.player.gun
+        self.player_group = pygame.sprite.GroupSingle(self.player)
+        self.gun_group = pygame.sprite.GroupSingle(self.gun)
+        self.player.enemies = self.enemies_group
+        self.player.explosion_group = self.explosion_group
+        self.interface = GameInterface(self.display_surface, self.player)
+
+        # Reset all_sprites and re-add key elements
+        self.all_sprites.empty()
+        self.all_sprites.add(self.background_group, self.player, self.gun_group, self.enemies_group)
+        self.player.offset = self.all_sprites.offset
+
+
     def run(self):
         self.auto_shoot = False
         while True:
@@ -119,26 +134,11 @@ class Game:
                 pygame.quit()
                 quit()
 
-            # Update the character
-            self.player = self.character_dictionary[self.menu.char_selection]
-            self.gun = self.player.gun
-            # Update Groups
-            self.player_group = pygame.sprite.GroupSingle(self.player)
-            self.gun_group = pygame.sprite.GroupSingle(self.gun)
-            self.bullet_group = pygame.sprite.Group()
-            self.explosion_group = pygame.sprite.Group()
-            self.enemies_group = pygame.sprite.Group()
-
-            self.player.enemies = self.enemies_group
-            self.player.explosion_group = self.enemies_group
-
-            # Interface
-            self.interface = GameInterface(self.display_surface, self.player)
-
-            # Camera interaction
-            self.all_sprites = AllSpritesgroup()
-            self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
-
+            # Update the player dynamically if menu selection changes
+            if self.player != self.character_dictionary[self.menu.char_selection]:
+                self.player = self.character_dictionary[self.menu.char_selection]
+                self.initialize_player()
+                
             if self.menu.playing:
                 self.clock.tick(60)
                 keys = pygame.key.get_pressed()
