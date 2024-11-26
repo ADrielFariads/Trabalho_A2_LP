@@ -11,7 +11,7 @@ pygame.init()
 
 class FilesPath(Enum):
     EXPLOSION1 = [f"assets\\images\\explosions\\explosion1\\Explosion_{i}.png" for i in range(1, 10)]
-    BACKGROUND = "assets\\background_files\\map007.png"
+    BACKGROUND = "assets\\background_files\\map008.png"
 
 class RectColiddersMap(Enum):
     MAPBOUNDS = pygame.Rect(1020, 710, 6460, 3480)
