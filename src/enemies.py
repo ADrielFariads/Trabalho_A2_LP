@@ -41,6 +41,7 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_counter = 50  # Time between attacks
 
         # Player interaction
+        self.attack_counter = 0
         self.target = player
         self.bullets = bullets_group
         self.experience_given = 10
@@ -169,7 +170,6 @@ class Goblin(Enemy):
         self.attack_range = 50
         self.experience_given = 30
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
-        self.attack_counter = 0
         self.direction = pygame.math.Vector2(0, 0)  # Initialize direction
 
     def load_frames(self):
@@ -325,6 +325,12 @@ class Slime(Enemy):
 
     def behavior(self):
         self.track_player()
+        self.attack_counter += 1
+        if self.player_distance() <= self.attack_range:
+            if self.attack_counter >= self.attack_delay:
+                # Attack the player if within range
+                self.attack(self.target)
+                self.attack_counter = 0
 
 class AlienBat(Enemy):
     def __init__(self, pos, player, bullets_group):
@@ -341,3 +347,10 @@ class AlienBat(Enemy):
 
     def behavior(self):
         self.track_player()
+        self.attack_counter += 1
+        if self.player_distance() <= self.attack_range:
+            if self.attack_counter >= self.attack_delay:
+                # Attack the player if within range
+                self.attack(self.target)
+                self.attack_counter = 0
+        
