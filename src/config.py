@@ -15,6 +15,7 @@ class FilesPath(Enum):
     BACKGROUND = "assets\\background_files\\map007.png"
     ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
     SLIME = "assets\\images\\enemies\\Slime\\slime_idle.png"
+    ALIENBAT = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
 
 
 class RectColiddersMap(Enum):

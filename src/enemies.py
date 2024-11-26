@@ -99,7 +99,7 @@ class Enemy(pygame.sprite.Sprite):
     def track_player(self):
         player_pos = pygame.math.Vector2(self.target.rect.center)
         current_pos = pygame.math.Vector2(self.rect.center)
-        if player_pos != current_pos:
+        if self.player_distance() > self.attack_range:
             self.direction = (player_pos - current_pos).normalize()
         else:
             self.direction = pygame.math.Vector2(0, 0)
@@ -332,7 +332,7 @@ class AlienBat(Enemy):
         self.speed = 5
         self.damage = 100
         self.attack_delay = 50
-        self.attack_range = 50
+        self.attack_range = 100
 
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 

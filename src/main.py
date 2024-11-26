@@ -170,7 +170,7 @@ class Game:
             
                 self.interface.draw()
 
-                if self.player.current_health == 0:
+                if self.player.target_health == 0:
                     self.menu.options_menu = False
                     self.menu.pause_menu = False
                     self.menu.death_menu = True
