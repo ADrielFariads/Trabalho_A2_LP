@@ -51,6 +51,7 @@ class Player(pygame.sprite.Sprite):
         #experience logic
         self.experience = 0
         self.current_level = 1
+        self.killed_enemies = 0
 
         #colidders
         self.colliders = colidders
@@ -270,3 +271,4 @@ class Player(pygame.sprite.Sprite):
 
     def enemy_killed(self):
         self.get_healed(self.life_steal)
+        self.killed_enemies += 1

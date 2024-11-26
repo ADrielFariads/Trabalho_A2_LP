@@ -95,11 +95,11 @@ class Game:
 
         ####testing enemies#####
         for i in range(10):
-            goblin = enemies.Goblin(config.random_pos(), self.player, self.bullet_group)
+            #goblin = enemies.Goblin(config.random_pos(), self.player, self.bullet_group)
             slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group)
             slime.colliders = colliders_rects
             alien_bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group)
-            self.enemies_group.add(goblin, alien_bat)
+            self.enemies_group.add( alien_bat)
             self.enemies_group.add(slime)
             
 

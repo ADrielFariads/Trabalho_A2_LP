@@ -17,10 +17,8 @@ class GameInterface:
         self.health_ratio = self.player.current_health/self.health_bar_length
 
         self.back_icon = pygame.image.load("assets\\images\\icons\\back_icon.png")
-        self.back_icon = pygame.transform.scale(self.back_icon, (50, 50))
+        self.back_icon = pygame.transform.scale(self.back_icon, (50,50))
         self.font = pygame.font.Font(None, 24)
-
-
         self.current_time = pygame.time.get_ticks()
 
     def health_bar(self): #health bar 
@@ -54,7 +52,7 @@ class GameInterface:
         
     def skills_interface(self): #skills interface
 
-        icon_size = 50
+        icon_size = 44
 
         for i, skill in enumerate(self.player.skills):
             x_pos = 50 + (i * (icon_size + 10))
@@ -62,7 +60,7 @@ class GameInterface:
 
             skill_icon = pygame.transform.scale(skill.image, (icon_size, icon_size))
             self.screen.blit(self.back_icon, (x_pos, y_pos))
-            self.screen.blit(skill_icon, (x_pos, y_pos))
+            self.screen.blit(skill_icon, (x_pos+3, y_pos+3))
             skill_icon_rect = pygame.Rect(x_pos, y_pos, icon_size, icon_size)
 
             if skill.is_on_cooldown: # cooldown animation
@@ -76,7 +74,7 @@ class GameInterface:
                 self.render_tooltip(skill, mouse_pos)
 
 
-    def render_tooltip(self, skill, mouse_pos):
+    def render_tooltip(self, skill, mouse_pos): 
         text = f"[{skill.key}]:{skill.name} - tempo de recarga: {skill.cooldown/1000} segundos. \n {skill.description}"
         text_surface = self.font.render(text, True, (255, 255, 255))
         width, height = text_surface.get_size()
@@ -95,9 +93,28 @@ class GameInterface:
     def status_render(self):
         pass
     
+    def score_render(self):
+        # Display the player's score (number of enemies killed)
+        killed_enemies = self.player.killed_enemies
+        score_text = f"Abates: {killed_enemies}"
+        score_surface = self.font.render(score_text, True, (255, 255, 255))
+
+        # Position the score at the top-right corner of the screen
+        score_rect = score_surface.get_rect(topright=(self.screen.get_width() - 10, 10))
+        self.screen.blit(score_surface, score_rect)
+
+        # Timer - time survived since the game started
+        time_survived = (pygame.time.get_ticks() - self.current_time) / 1000  # Convert to seconds
+        time_text = f"Tempo: {int(time_survived)}s"
+        time_surface = self.font.render(time_text, True, (255, 255, 255))
+
+        # Position the timer at the bottom-right corner of the screen
+        time_rect = time_surface.get_rect(topright=(self.screen.get_width() - 100,  10))
+        self.screen.blit(time_surface, time_rect)
 
     def draw(self):
         self.experience_bar()
         self.health_bar()
         self.skills_interface()
         self.status_render()
+        self.score_render()
