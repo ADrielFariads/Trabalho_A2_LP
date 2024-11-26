@@ -120,6 +120,24 @@ class Game:
             if isinstance(enemy, enemies.Enemy):  # Check to ensure it's an enemy object
                 enemy.update_target(self.player)
 
+    def initialize_player(self):
+        # Update player-specific attributes
+        self.gun = self.player.gun
+        self.player_group = pygame.sprite.GroupSingle(self.player)
+        self.gun_group = pygame.sprite.GroupSingle(self.gun)
+        self.player.enemies = self.enemies_group
+        self.player.explosion_group = self.explosion_group
+        self.interface = GameInterface(self.display_surface, self.player)
+
+        # Reset all_sprites and re-add key elements
+        self.all_sprites.empty()
+        self.all_sprites.add(self.background_group, self.player, self.gun_group, self.enemies_group)
+        self.player.offset = self.all_sprites.offset
+
+        # Update all enemies to track the new player
+        for enemy in self.enemies_group:
+            if isinstance(enemy, enemies.Enemy):  # Check to ensure it's an enemy object
+                enemy.update_target(self.player)
 
 
     def run(self):
