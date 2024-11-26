@@ -12,7 +12,7 @@ pygame.init()
 
 class FilesPath(Enum):
     EXPLOSION1 = [f"assets\\images\\explosions\\explosion1\\Explosion_{i}.png" for i in range(1, 10)]
-    BACKGROUND = "assets\\background_files\\map007.png"
+    BACKGROUND = "assets\\background_files\\map009.png"
     ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
     SLIME = "assets\\images\\enemies\\Slime\\slime_idle.png"
     ALIENBAT = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
