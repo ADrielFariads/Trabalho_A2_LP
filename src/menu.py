@@ -9,6 +9,11 @@ class Button():
         font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
         normal_button = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha()
         selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
+
+        #Buttons audios
+        self.select_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Selection.wav")
+        self.click_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Click.wav")
+        self.audio = False
         
         # Get the width and height of the image
         width = normal_button.get_width()
@@ -70,6 +75,8 @@ class Button():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # 1 corresponds to the left mouse button
                 if self.rect.collidepoint(event.pos):
+                    #self.click_audio.play(0)
+                    self.click_audio.play()
                     return True
         return False
 
@@ -82,11 +89,16 @@ class Button():
         
         #check if they are overlapped by the mouse
         if self.rect.collidepoint(mouse_x, mouse_y):
-            #Change the text color and the button animation
+            #Plays the selected button sound effect
+            if not self.audio:
+                self.select_audio.play()
+                self.audio = True
+            #Change the text color and the button animation 
             self.text = self.font.render(self.text_input, True, self.hovering_color)
             self.button = self.selected_button
         else:
             #Back to normal
+            self.audio = False
             self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
 
@@ -201,7 +213,6 @@ class Menu():
         text: The text object to display on the screen.
         *button_args: Button objects that will be displayed and interacted with.
         '''
-        
         # If in character selection state, draw the character selection background on top of the existing background
         if self.char_selection_state:
             self.screen.blit(self.menu_background, (0, 0))  # Draw the menu background first
@@ -210,16 +221,21 @@ class Menu():
         else:
             self.screen.blit(self.menu_background, (0, 0))
 
-        
         # Capture all input events
         events = pygame.event.get()
-        
+
+        # Handle global quit event
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()  # Ensure the program terminates
+
         # Process each button
         for button in button_args:
             # Draw the button and update its hover state
             button.update(self.screen)
             button.changeColor()
-            
+
             # Check for mouse click events on the button
             for event in events:
                 if button.checkForClick(event):
@@ -228,9 +244,10 @@ class Menu():
 
         # Draw the text on the screen
         text.draw(self.screen)
-        
+
         # Update the display
         pygame.display.update()
+
 
 
     def update(self):
