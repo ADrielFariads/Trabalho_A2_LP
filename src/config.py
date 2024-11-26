@@ -1,6 +1,7 @@
 import pygame
 from enum import Enum
 from background import CollisionSprite
+import random
 
 pygame.init()
 
@@ -12,6 +13,9 @@ pygame.init()
 class FilesPath(Enum):
     EXPLOSION1 = [f"assets\\images\\explosions\\explosion1\\Explosion_{i}.png" for i in range(1, 10)]
     BACKGROUND = "assets\\background_files\\map007.png"
+    ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
+    SLIME = "assets\\images\\enemies\\Slime\\slime_idle.png"
+
 
 class RectColiddersMap(Enum):
     MAPBOUNDS = pygame.Rect(1020, 710, 6460, 3480)
@@ -27,6 +31,10 @@ rects_data = [((1660, 1080), (200, 130)), ((1750, 974), (170, 150)), ((1810, 830
 
 ]
 
+def random_pos():
+    x_pos = random.randint(1100, 6400)
+    y_pos = random.randint(720, 3400)
+    return x_pos, y_pos
 
 
 
@@ -39,9 +47,10 @@ def collisionSpritesGenerator():
     return colliders
 
 
-
-
 def load_explosion_images():
     sprite_sheet = [pygame.image.load(image) for image in FilesPath.EXPLOSION1.value]
     return sprite_sheet
+
+def load_enemies_images():
+    pass
 

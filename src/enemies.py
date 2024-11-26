@@ -103,8 +103,14 @@ class Enemy(pygame.sprite.Sprite):
             self.direction = (player_pos - current_pos).normalize()
         else:
             self.direction = pygame.math.Vector2(0, 0)
+
         movement = self.direction * self.speed
-        self.rect.center += movement
+
+        self.rect.x += movement.x
+        self.collision("horizontal")
+
+        self.rect.y += movement.y
+        self.collision("vertical")
 
     def behavior(self):
         pass
@@ -145,6 +151,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # Animation logic
         self.animate()
+
 
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
@@ -245,6 +252,7 @@ class Andromaluis(Enemy):
         self.attack_range = 500
         self.enemy_group = enemy_group
         self.experience_given = 100
+        
 
         #skill atributes
         self.generation_interval = 100
@@ -312,3 +320,21 @@ class Slime(Enemy):
 
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
+    def behavior(self):
+        self.track_player()
+
+class AlienBat(Enemy):
+    def __init__(self, pos, player, bullets_group):
+        self.sprite_sheet = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
+        self.frames_x = 6
+        self.frames_y = 2
+        self.health = 300
+        self.speed = 5
+        self.damage = 100
+        self.attack_delay = 50
+        self.attack_range = 50
+
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+
+    def behavior(self):
+        self.track_player()

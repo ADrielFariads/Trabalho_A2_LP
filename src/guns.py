@@ -109,7 +109,6 @@ class MachineGun(Gun):
         mouse_x, mouse_y = pygame.mouse.get_pos() - offset
         dx = mouse_x - self.position[0]
         dy = mouse_y - self.position[1]
-        print(self.cool_down, self.bullets)
         if dx > 0: 
                 self.player.facing_right = True
         elif dx < 0: 

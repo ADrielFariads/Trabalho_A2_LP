@@ -2,14 +2,10 @@ import pygame
 import random
 
 import config
-import config
 from player import Player
 import guns
 from background import CollisionSprite
-from enemies import Goblin, generate_goblins, Andromaluis, Slime
-import guns
-from background import CollisionSprite
-from enemies import Goblin, generate_goblins, Andromaluis, Slime
+import enemies
 from groups import AllSpritesgroup
 from interface import GameInterface
 import skills
@@ -35,11 +31,10 @@ class Game:
         self.background.rect = self.background.image.get_rect(topleft=(0,0))
         self.background_group = pygame.sprite.Group(self.background) 
         self.map_bounds = config.RectColiddersMap.MAPBOUNDS.value #rect for keep the player in the map
-        self.map_bounds = config.RectColiddersMap.MAPBOUNDS.value #rect for keep the player in the map
+        
 
         #colliders
-        colliders = config.collisionSpritesGenerator()
-        self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
+        colliders_rects = config.collisionSpritesGenerator()
 
         #skills
         machinegun_render = skills.MachineGunRender()
@@ -60,17 +55,17 @@ class Game:
         #players heroes
 
         #cyborg config
-        self.cyborg = Player((1200, 1200), 1000, 8, self.map_bounds,cyborg_skillset, colliders)
+        self.cyborg = Player((1200, 1200), 1000, 7, self.map_bounds,cyborg_skillset, colliders_rects)
         self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
         self.cyborg.gun = self.machinegun
 
         #blade_master config
-        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, colliders)
+        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, colliders_rects)
         self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
         self.blade_master.gun = self.knifeThrower
 
         #berserker
-        self.berserker = Player((1200, 1200), 1500, 7, self.map_bounds, berserker_skillset, colliders)
+        self.berserker = Player((1200, 1200), 1500, 7, self.map_bounds, berserker_skillset, colliders_rects)
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
@@ -78,23 +73,6 @@ class Game:
         self.player = self.cyborg
         self.gun = self.player.gun
         
-        #colliders
-        colliders = config.collisionSpritesGenerator()
-        self.explosion_images = [f"assets\\images\\explosions\\Explosion_{i}.png" for i in range(1, 10)]
-
-        #skills
-        machinegun_render = skills.MachineGunRender()
-        knife_render = skills.KnifeThrowerRender()
-        shotgun_render = skills.ShotgunRender()
-        heal = skills.Heal()
-        dash = skills.Dash()
-        berserker_wrath = skills.BerserkerWrath()
-        blood_lust = skills.Bloodlust()
-        lethal_tempo = skills.LethalTempo()
-        missile_rain = skills.MissilRain()
-        cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
-        blade_master_skillset = [knife_render, dash, blood_lust]
-        berserker_skillset = [shotgun_render, heal, berserker_wrath]
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -104,23 +82,10 @@ class Game:
 
         #enemies generation and interation
         self.enemies_group = pygame.sprite.Group()
-
         self.player.enemies = self.enemies_group
         self.player.explosion_group = self.enemies_group
 
         #interface
-
-        self.interface = GameInterface(self.display_surface, self.player)
-        self.explosion_group = pygame.sprite.Group()
-
-        #enemies generation and interation
-        self.enemies_group = pygame.sprite.Group()
-
-        self.player.enemies = self.enemies_group
-        self.player.explosion_group = self.enemies_group
-
-        #interface
-
         self.interface = GameInterface(self.display_surface, self.player)
 
         #camera interaction
@@ -130,16 +95,14 @@ class Game:
 
         ####testing enemies#####
         for i in range(10):
-            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
-            self.enemies_group.add(miniboss)
-        self.all_sprites.add(self.enemies_group)
-        self.player.offset = self.all_sprites.offset
+            goblin = enemies.Goblin(config.random_pos(), self.player, self.bullet_group)
+            slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group)
+            slime.colliders = colliders_rects
+            alien_bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group)
+            self.enemies_group.add(goblin, alien_bat)
+            self.enemies_group.add(slime)
+            
 
-
-        ####testing enemies#####
-        for i in range(10):
-            miniboss = Andromaluis((random.randint(1000, 3000), random.randint(1000, 3000)), self.player, self.bullet_group, self.enemies_group)
-            self.enemies_group.add(miniboss)
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
@@ -176,9 +139,7 @@ class Game:
                     if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:                  
                         mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-
-                        #explosion = explosions.Explosion(mouse_pos, 150, 1000, self.enemies_group, self.explosion_images)
-                        #self.explosion_group.add(explosion)
+                        
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_b:
                             if not self.auto_shoot:
