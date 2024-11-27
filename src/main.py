@@ -113,7 +113,7 @@ class Game:
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
-        self.menu = Menu(self.display_surface, self.player, self.enemies_group)
+        self.menu = Menu(self.display_surface, self.player, self.enemies_group, self.interface)
 
         # Update all enemies to track the new player
         for enemy in self.enemies_group:
@@ -151,6 +151,7 @@ class Game:
                 
             if self.menu.playing:
                 self.clock.tick(60)
+                self.interface.running = True
                 keys = pygame.key.get_pressed()
                 # event loop
                 for event in pygame.event.get():
@@ -173,6 +174,7 @@ class Game:
                         self.menu.playing = False
                         self.menu.pause_menu = True
                         self.menu.options_menu = False
+                        self.interface.pause_game()
                     
                             
                 self.all_sprites.add(self.enemies_group, self.explosion_group)

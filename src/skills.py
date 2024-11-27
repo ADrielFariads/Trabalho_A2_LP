@@ -87,7 +87,7 @@ class LethalTempo(Skill): ## cyborg's skill
     def __init__(self):
         self.key = "Q"
         self.name = "Ritmo letal"
-        self.description = "[personagem] energiza sua metralhadora, aumentando a quantidade de disparos."
+        self.description = "O cyborg energiza sua metralhadora, aumentando a quantidade de disparos."
         self.cooldown = 8000
         self.image = "assets\\images\\icons\\lethaltempo_icon.png"
         self.duration = 3500
@@ -118,7 +118,7 @@ class BerserkerWrath(Skill):
     def __init__(self):
         self.key = "Q"
         self.name = "Fúria do Berserker"
-        self.description = "[personagem] entra em um estado de fúria. Reduzindo drasticamente o dano recebido de todas as fontes."
+        self.description = "O Berserker entra em um estado de fúria. Reduzindo drasticamente o dano recebido de todas as fontes."
         self.cooldown = 15000
         self.image = "assets\\images\\icons\\berserker_icon.png"
         self.duration = 5000
@@ -142,7 +142,7 @@ class Bloodlust(Skill):
     def __init__(self):
         self.key = "Q"
         self.name = "Sede de Sangue"
-        self.description = "Por um breve período, [nome do personagem] recebe mais dano e abater inimigos restaura vida."
+        self.description = "Por um breve período, BladeMaster recebe mais dano e abater inimigos restaura vida."
         self.cooldown = 30000
         self.image = "assets\\images\\icons\\bloodlust_icon.png"
         self.duration = 5000
@@ -175,7 +175,7 @@ class MissilRain(Skill): ##cyborg skills
     def __init__(self):
         self.key = "E"
         self.name = "Chuva de Mísseis"
-        self.description = "[nome do personagem] comanda que limpem a área, lançando muitos \n mísseis que exterminam os inimigos atingidos."
+        self.description = "Comanda que limpem a área, lançando muitos \n mísseis que exterminam os inimigos atingidos."
         self.cooldown = 15000
         self.image = "assets\\images\\icons\\missiles_icon.png"
         super().__init__(self.name, self.cooldown, self.image) 

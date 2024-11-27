@@ -103,7 +103,7 @@ class Button():
             self.text = self.font.render(self.text_input, True, self.base_color)
 
 class Menu():
-    def __init__(self, screen, player, enemy):
+    def __init__(self, screen, player, enemy, game_interface):
         '''
         Creates all button and text objects,
         and creates boolean variables to switch between the game and menus
@@ -117,6 +117,7 @@ class Menu():
         #Will be reseted
         self.player = player
         self.enemy = enemy
+        self.game_interface = game_interface
 
         #Screen/ Background
         self.screen = screen
@@ -173,14 +174,17 @@ class Menu():
             self.char_selection = 1
             self.char_selection_state = False
             self.playing = True
+            self.game_interface.reset_game_status()
         elif button == self.char2_selection_button:
             self.char_selection = 2
             self.char_selection_state = False
             self.playing = True
+            self.game_interface.reset_game_status()
         elif button == self.char3_selection_button:
             self.char_selection = 3
             self.char_selection_state = False
             self.playing = True
+            self.game_interface.reset_game_status()
         elif button == self.options_button:
             self.initial_menu = False
             self.options_menu = True
@@ -190,10 +194,12 @@ class Menu():
             self.initial_menu = True
         elif button == self.back_paused_button:
             self.playing = True
+            self.game_interface.resume_game()
         elif button == self.menu_button:
             #Reset the game when return to initial menu
             Enemy.reset_enemies(self,self.enemy)
             self.player.reset_player()
+            self.game_interface.reset_game_status()
             self.pause_menu = False
             self.death_menu = False
             self.initial_menu = True
@@ -201,7 +207,9 @@ class Menu():
             #Reset the game to play again
             Enemy.reset_enemies(self,self.enemy)
             self.player.reset_player()
+            self.game_interface.reset_game_status()
             self.playing = True
+            
 
 
     def draw(self, text, *button_args):
@@ -264,6 +272,8 @@ class Menu():
             self.draw(self.death_text,self.play_again_button,self.menu_button)
         elif self.char_selection:
             self.draw(self.char_selection_text,self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
+        self.game_interface.score_running = self.playing
+
 
 class Text():
 

@@ -20,6 +20,8 @@ class GameInterface:
         self.back_icon = pygame.transform.scale(self.back_icon, (50,50))
         self.font = pygame.font.Font(None, 24)
         self.current_time = pygame.time.get_ticks()
+        self.score_running = False
+        self.time_paused = 0
 
     def health_bar(self): #health bar 
         transition_width = 0
@@ -104,13 +106,35 @@ class GameInterface:
         self.screen.blit(score_surface, score_rect)
 
         # Timer - time survived since the game started
-        time_survived = (pygame.time.get_ticks() - self.current_time) / 1000  # Convert to seconds
+        if self.score_running:  # Only run the timer if 'score_running' is True
+            time_survived = (pygame.time.get_ticks() - self.current_time + self.time_paused) / 1000  # Convert to seconds
+        else:
+            # Timer freezes when 'score_running' is False
+            time_survived = self.time_paused / 1000  # Use the last recorded time when paused
+
         time_text = f"Tempo: {int(time_survived)}s"
         time_surface = self.font.render(time_text, True, (255, 255, 255))
 
-        # Position the timer at the bottom-right corner of the screen
-        time_rect = time_surface.get_rect(topright=(self.screen.get_width() - 100,  10))
+        # Position the timer at the top-right corner of the screen, next to the score
+        time_rect = time_surface.get_rect(topright=(self.screen.get_width() - 100, 10))
         self.screen.blit(time_surface, time_rect)
+
+    def reset_game_status(self):
+        # Reset game status such as score
+        self.player.killed_enemies = 0
+        self.current_time = pygame.time.get_ticks()  # Reset the starting time to current time
+        self.time_paused = 0  # Reset the paused time when restarting the game
+        self.score_running = True  # Ensure the timer starts running again when the game is restarted
+
+    def pause_game(self):
+        # Pauses the game and stores the current time
+        self.score_running = False
+        self.time_paused += pygame.time.get_ticks() - self.current_time  # Store the time that has passed until the pause
+
+    def resume_game(self):
+        # Resumes the game and restarts the timer
+        self.score_running = True
+        self.current_time = pygame.time.get_ticks()  
 
     def draw(self):
         self.experience_bar()
