@@ -184,7 +184,13 @@ class Menu():
         elif button == self.options_button:
             self.initial_menu = False
             self.options_menu = True
-        elif button == self.back_options_button or button == self.back_char_back_button:
+        elif button == self.back_options_button:
+            self.options_menu = False
+            self.playing = False
+            self.initial_menu = True
+        elif button == self.back_char_back_button:
+            # Reset all states to go back to the initial menu
+            self.char_selection_state = False  # Reset the character selection state
             self.options_menu = False
             self.playing = False
             self.initial_menu = True
