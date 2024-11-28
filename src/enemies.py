@@ -311,17 +311,22 @@ class Centipede(Enemy):
         self.attack_counter += 1
 
 class Slime(Enemy):
-    def __init__(self, pos, player, bullets_group):
+    def __init__(self, pos, player, bullets_group, level):
         self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
         self.frames_x = 4
         self.frames_y = 2
-        self.health = 100
+        self.level = level
+        self.health = 300*self.level
         self.speed = 3
-        self.damage = 40
+        self.damage = 20*self.level
         self.attack_delay = 50
         self.attack_range = 50
-
+        self.level = level
+        self.enemy_group = None
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, level/2)
+        self.load_frames()
+
 
     def behavior(self):
         self.track_player()
@@ -331,6 +336,19 @@ class Slime(Enemy):
                 # Attack the player if within range
                 self.attack(self.target)
                 self.attack_counter = 0
+
+    def update(self):
+        if self.level <= 0:
+            self.kill()
+        return super().update()
+    
+    def kill(self):
+        if self.level > 1:
+            child = Slime(self.position, self.target, self.bullets, (self.level-1))
+            self.enemy_group.add(child)
+        return super().kill()
+    
+
 
 class AlienBat(Enemy):
     def __init__(self, pos, player, bullets_group):
