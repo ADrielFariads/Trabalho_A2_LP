@@ -101,15 +101,14 @@ class Game:
         self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
 
         # Testing enemies
-        for i in range(10):
-            #goblin = enemies.Goblin(config.random_pos(), self.player, self.bullet_group)
-            slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, i)
-            slime.colliders = colliders_rects
-            slime.enemy_group = self.enemies_group
-            alien_bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group)
-            alien_bat.colliders = colliders_rects
-            self.enemies_group.add(alien_bat)
-            self.enemies_group.add(slime)
+        goblin = enemies.Goblin(config.random_pos(), self.player, self.bullet_group)
+        slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, 3)
+        slime.colliders = colliders_rects
+        slime.enemy_group = self.enemies_group
+        #alien_bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group)
+        #alien_bat.colliders = colliders_rects
+        self.enemies_group.add(goblin)
+        self.enemies_group.add(slime)
             
 
         self.all_sprites.add(self.enemies_group)
@@ -171,6 +170,11 @@ class Game:
                                 self.auto_shoot = True
 
                             else: self.auto_shoot = False
+                        if event.key == pygame.K_z:
+                            for each in self.enemies_group:
+                                print(each.rect)
+                            print("player rect:",self.player.rect)
+                            print(self.enemies_group)
 
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.menu.playing = False
@@ -193,7 +197,8 @@ class Game:
                 # drawings
                 self.display_surface.fill(("#4D64AA"))
                 self.all_sprites.draw(self.player.rect.center)
-            
+
+                
                 self.interface.draw()
 
                 if self.player.target_health == 0:

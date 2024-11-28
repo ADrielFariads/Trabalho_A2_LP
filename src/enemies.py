@@ -70,6 +70,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
 
+
     def animate(self):
         # Increment frame counter and update frame index
         self.frame_counter += 1
@@ -147,11 +148,13 @@ class Enemy(pygame.sprite.Sprite):
         collided_bullets = pygame.sprite.spritecollide(self, self.bullets, True)
         for bullet in collided_bullets:
             self.get_damaged(bullet.damage)
-
+        
         self.behavior()
 
         # Animation logic
         self.animate()
+        self.position.x = self.rect.x
+        self.position.y = self.rect.y
 
     def update_target(self, new_target):
         """Update the target player dynamically."""
@@ -315,18 +318,23 @@ class Slime(Enemy):
         self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
         self.frames_x = 4
         self.frames_y = 2
-        self.level = level
-        self.health = 300*self.level
-        self.speed = 3
+        self.level = min(level, 3)
+        self.health = 500*self.level
+        self.speed = 8-self.level
         self.damage = 20*self.level
-        self.attack_delay = 50
-        self.attack_range = 50
+        self.attack_delay = 100
+        self.attack_range = 10
         self.level = level
         self.enemy_group = None
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
-        self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, level/2)
+        self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, self.level)
         self.load_frames()
-
+        
+        self.rect = self.image.get_rect(center=pos)
+        self.rect.size = (12*2**self.level, 12*2**self.level)
+    
+        
+        
 
     def behavior(self):
         self.track_player()
@@ -337,15 +345,23 @@ class Slime(Enemy):
                 self.attack(self.target)
                 self.attack_counter = 0
 
+    def duplicate(self):
+        if self.level > 1:
+            child_1 = Slime((self.position.x+50, self.position.y), self.target, self.bullets, (self.level-1))
+            child_2 = Slime((self.position.x-50, self.position.y), self.target, self.bullets, (self.level-1))
+            child_1.colliders = self.colliders
+            child_2.colliders = self.colliders
+            child_1.enemy_group = self.enemy_group
+            child_2.enemy_group = self.enemy_group
+            self.enemy_group.add(child_1, child_2)
+
     def update(self):
         if self.level <= 0:
             self.kill()
         return super().update()
     
     def kill(self):
-        if self.level > 1:
-            child = Slime(self.position, self.target, self.bullets, (self.level-1))
-            self.enemy_group.add(child)
+        self.duplicate()
         return super().kill()
     
 
