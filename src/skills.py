@@ -261,7 +261,7 @@ class ShotgunRender(Skill):
         self.key = "Botão Esquerdo"
         self.name = "Espingarda"
         self.cooldown = 1500
-        self.image = "assets\\images\\Guns\\Shotgun.png"
+        self.image = "assets\\images\\Guns\\Shotgun_icon.png"
         self.description = f"Dispara uma rajada de balas em cone. Causa MUITO mais dano em alvos próximos."
         super().__init__(self.name, self.cooldown, self.image)
         self.image = pygame.transform.scale(self.image, (50, 25))

@@ -227,7 +227,7 @@ class Shotgun_bullets(Bullet):
 
 class Shotgun(Gun):
     def __init__(self, player, map_bounds):
-        texture = "assets\\images\\Guns\\Shotgun.png"
+        texture = "assets\\images\\Guns\\Shotgun_icon.png"
         damage = 500
         self.cool_down = 1500
         self.bullets = 10
@@ -238,6 +238,8 @@ class Shotgun(Gun):
         bullet_class = Shotgun_bullets  
         self.sound_delay = (self.shoot_sound.get_length() * 1000)/2
         super().__init__(player, texture, damage, self.cool_down, bullet_class, map_bounds)
+        self.original_image = pygame.transform.rotate(self.image, -45)
+        self.original_image = pygame.transform.scale_by(self.original_image, 0.8)
 
     def shoot_single_bullet(self, bullet_group, camera_offset):
         """
@@ -296,4 +298,13 @@ class Shotgun(Gun):
                 bullet.speed += random.randint(1, 3)
             self.reload_muted = False
         
-    
+    def update(self):
+        # Update gun's position based on player movement (specially for shotgun)
+        self.position = self.player.rect.center
+        self.rect.center = (self.position[0], self.position[1])
+        if self.player.facing_right:
+            self.image = self.original_image
+            self.rect.center = (self.position[0]-10, self.position[1]+10)
+        else:
+            self.image = pygame.transform.flip(self.original_image, True, False)  # Flip image if player is facing left
+            self.rect.center = (self.position[0], self.position[1]+10)

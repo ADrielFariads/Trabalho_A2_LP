@@ -397,8 +397,8 @@ class AlienBat(Enemy):
         self.damage = 100
         self.attack_delay = 50
         self.attack_range = 100
-
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        self.colliders = None
 
     def behavior(self):
         self.track_player()
