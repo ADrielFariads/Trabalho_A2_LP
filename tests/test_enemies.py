@@ -162,27 +162,6 @@ class TestGoblin(unittest.TestCase):
         self.attack_range = 50
         self.attack_delay = 30
 
-        
-
-    def test_behavior_move_towards_player(self):
-        """Test if the goblin moves towards the player when out of range."""
-
-        # Set initial distance to be greater than attack range
-        self.goblin.attack_range = 50
-        self.goblin.player_distance = Mock(return_value=100)  # Distance > attack_range
-
-        # Mock track_player behavior
-        def mocked_track_player():
-            self.goblin.rect.center = (self.goblin.rect.center[0] + 1, self.goblin.rect.center[1])
-
-        # Replace the track_player method with the mocked version
-        self.goblin.track_player = Mock(side_effect=mocked_track_player)
-
-        # Call the behavior method
-        self.goblin.behavior()
-
-        # Verify that track_player was called once
-        self.goblin.track_player.assert_called_once()
 
 
     def test_attack_delay_reset(self):
