@@ -8,7 +8,7 @@ import pygame
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, colliders=None):
+    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group,group, colliders=None):
         super().__init__()
 
         # Loading image
@@ -48,6 +48,10 @@ class Enemy(pygame.sprite.Sprite):
         self.bullets = bullets_group
         self.experience_given = 10
         self.colliders = colliders
+
+        #groups
+        group.add(self)
+        self.group = group
 
     def reset_enemies(self, enemies):
         for enemy in enemies:
@@ -315,7 +319,7 @@ class Centipede(Enemy):
         self.attack_counter += 1
 
 class Slime(Enemy):
-    def __init__(self, pos, player, bullets_group, level):
+    def __init__(self, pos, player, bullets_group, level, group):
         self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
         self.frames_x = 4
         self.frames_y = 2
@@ -326,8 +330,7 @@ class Slime(Enemy):
         self.attack_delay = 100
         self.attack_range = 10
         self.level = level
-        self.enemy_group = None
-        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, group)
         self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, self.level)
         self.load_frames()
         self.rect = self.image.get_rect(center=pos)
@@ -368,13 +371,11 @@ class Slime(Enemy):
 
     def duplicate(self):
         if self.level > 1:
-            child_1 = Slime((self.position.x+50, self.position.y), self.target, self.bullets, (self.level-1))
-            child_2 = Slime((self.position.x-50, self.position.y), self.target, self.bullets, (self.level-1))
+            child_1 = Slime((self.position.x+50, self.position.y), self.target, self.bullets, (self.level-1), self.group)
+            child_2 = Slime((self.position.x-50, self.position.y), self.target, self.bullets, (self.level-1), self.group)
             child_1.colliders = self.colliders
             child_2.colliders = self.colliders
-            child_1.enemy_group = self.enemy_group
-            child_2.enemy_group = self.enemy_group
-            self.enemy_group.add(child_1, child_2)
+            
 
     def update(self):
         if self.level <= 0:
@@ -388,19 +389,24 @@ class Slime(Enemy):
 
 
 class AlienBat(Enemy):
-    def __init__(self, pos, player, bullets_group):
+    def __init__(self, pos, player, bullets_group, group):
+        self.group = group
         self.sprite_sheet = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
         self.frames_x = 6
         self.frames_y = 2
         self.health = 300
-        self.speed = 6
+        self.speed = 0
         self.damage = 100
-        self.attack_delay = 50
+        self.attack_delay = 200
         self.attack_range = 100
-        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, self.group)
         self.colliders = None
+        self.duplicate = True
 
     def behavior(self):
+        target_lost_health = (self.target.max_health - self.target.target_health)/self.target.max_health
+        bloodLust = target_lost_health*15
+        self.speed = max(5, bloodLust)
         self.track_player()
         self.attack_counter += 1
         if self.player_distance() <= self.attack_range:
@@ -408,4 +414,12 @@ class AlienBat(Enemy):
                 # Attack the player if within range
                 self.attack(self.target)
                 self.attack_counter = 0
+                if self.duplicate:
+                    self.replicate()
+
+    def replicate(self):
+        child = AlienBat(self.position, self.target, self.bullets, self.group)
+        self.duplicate = False
+
+        
         
