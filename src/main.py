@@ -26,6 +26,11 @@ class Game:
         # Define running attribute
         self.running = False  # Set default value
 
+        #Soundtrack
+        self.soundtrack = pygame.mixer.music.load("assets\\audio\\background2_music.mp3")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.25)
+
         # Initialize background
         self.background = pygame.sprite.Sprite()
         self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
