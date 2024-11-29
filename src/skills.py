@@ -141,10 +141,10 @@ class LethalTempo(Skill): ## cyborg's skill
         return super().update(player)
 
 
-class BerserkerWrath(Skill):
+class IronWill(Skill):
     def __init__(self):
         self.key = "Q"
-        self.name = "Fúria do Berserker"
+        self.name = "Vontade de Ferro"
         self.description = "O Berserker entra em um estado de fúria. Reduzindo drasticamente o dano recebido de todas as fontes."
         self.cooldown = 15000
         self.image = "assets\\images\\icons\\berserker_icon.png"

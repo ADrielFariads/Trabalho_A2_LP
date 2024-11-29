@@ -46,14 +46,14 @@ class Game:
         time_manipulation = skills.TimeManipulation()
         heal = skills.Heal()
         dash = skills.Adrenaline()
-        berserker_wrath = skills.BerserkerWrath()
+        iron_will = skills.IronWill()
         blood_lust = skills.Bloodlust()
         lethal_tempo = skills.LethalTempo()
         missile_rain = skills.MissilRain()
         
         cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
         blade_master_skillset = [knife_render, blood_lust, time_manipulation]
-        berserker_skillset = [shotgun_render, heal, berserker_wrath]
+        berserker_skillset = [shotgun_render, iron_will]
 
 
         #players heroes
@@ -84,7 +84,6 @@ class Game:
         self.player = self.cyborg
         self.gun = self.player.gun
         
-        
 
         # groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -103,14 +102,11 @@ class Game:
         self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
 
         # Testing enemies
-        for i in range(10):
-            slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, 3)
-            slime.colliders = colliders_rects
-            slime.enemy_group = self.enemies_group
-            alien_bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group)
-            alien_bat.colliders = colliders_rects
-            self.enemies_group.add(alien_bat)
-            self.enemies_group.add(slime)
+        slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, 3)
+        slime.colliders = colliders_rects
+        slime.enemy_group = self.enemies_group
+        self.enemies_group.add(slime)
+            
             
 
         self.all_sprites.add(self.enemies_group)

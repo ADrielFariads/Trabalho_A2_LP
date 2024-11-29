@@ -228,9 +228,9 @@ class Shotgun_bullets(Bullet):
 class Shotgun(Gun):
     def __init__(self, player, map_bounds):
         texture = "assets\\images\\Guns\\Shotgun_icon.png"
-        damage = 500
+        damage = 350
         self.cool_down = 1500
-        self.bullets = 10
+        self.bullets = 25
         self.shoot_sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_sound.wav")
         self.reload_sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_reload.wav")
         self.reload_sound.set_volume(0.5)
@@ -295,7 +295,7 @@ class Shotgun(Gun):
                 height = image.get_height()
                 bullet.image = pygame.transform.scale(image, ((int(width*2)), (int(height*2))))
                 all_sprites_group.add(bullet)
-                bullet.speed += random.randint(1, 3)
+                bullet.speed += random.randint(1, 5)
             self.reload_muted = False
         
     def update(self):
