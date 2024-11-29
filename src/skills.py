@@ -53,7 +53,7 @@ class Heal(Skill):
                 self.is_on_cooldown = True
 
 
-class Dash(Skill): 
+class Adrenaline(Skill): 
     def __init__(self):
         self.key = "E"
         self.name = "Adrenalina"
@@ -82,26 +82,52 @@ class Dash(Skill):
             player.speed = self.original_speed
         return super().update(player)
     
+class TimeManipulation(Skill):
+    def __init__(self):
+        self.key = "E"
+        self.name = "Manipulação temporal"
+        self.description = "Altera o espaço-tempo ao seu redor, diminuindo a velocidade dos inimigos."
+        self.cooldown = 15000
+        self.image = "assets\\images\\icons\\timemanipulation_icon.png"
+        self.duration = 3000
+        self.end_time = 0
+        super().__init__(self.name, self.cooldown, self.image)
 
+    def use(self, player):
+        if not self.is_on_cooldown:
+            for enemy in player.enemies:
+                enemy.speed = max(int(enemy.speed/2), 1)
+                enemy.animation_speed = min(enemy.animation_speed*2, 30)
+                self.last_used_time = pygame.time.get_ticks()
+                self.is_on_cooldown = True
+                self.end_time = pygame.time.get_ticks() + self.duration
+
+    def update(self, player):
+        if self.is_on_cooldown and pygame.time.get_ticks() >= self.end_time:
+            for enemy in player.enemies:
+                enemy.speed = enemy.original_speed
+                enemy.animation_speed = enemy.original_animation_speed
+        return super().update(player)
+    
 class LethalTempo(Skill): ## cyborg's skill
     def __init__(self):
         self.key = "Q"
         self.name = "Ritmo letal"
-        self.description = "O cyborg energiza sua metralhadora, aumentando a quantidade de disparos."
+        self.description = "O cyborg energiza sua metralhadora, aumentando a frequência de disparos e o dano de cada projétil."
         self.cooldown = 8000
         self.image = "assets\\images\\icons\\lethaltempo_icon.png"
         self.duration = 3500
         self.end_time = 0
-        self.original_bullets = 0
+        self.original_damage = 0
         self.original_cooldown = 0
         super().__init__(self.name, self.cooldown, self.image)        
 
     def use(self, player):
         if not self.is_on_cooldown:
-            self.original_bullets = player.gun.bullets
+            self.original_damage = player.gun.damage
             self.original_cooldown = player.gun.cool_down
             player.gun.cool_down = 500
-            player.gun.bullets = self.original_bullets + 10
+            player.gun.damage += 25
             
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
@@ -109,8 +135,9 @@ class LethalTempo(Skill): ## cyborg's skill
 
     def update(self, player):
         if self.is_on_cooldown and pygame.time.get_ticks() >= self.end_time:
-            player.gun.bullets = self.original_bullets
+            player.gun.damage = self.original_damage
             player.gun.cool_down = self.original_cooldown
+            
         return super().update(player)
 
 
@@ -142,10 +169,10 @@ class Bloodlust(Skill):
     def __init__(self):
         self.key = "Q"
         self.name = "Sede de Sangue"
-        self.description = "Por um breve período, BladeMaster recebe mais dano e abater inimigos restaura vida."
-        self.cooldown = 30000
+        self.description = "POr um breve período, BladeMaster causa mais dano e abater inimigos restaura vida, mas ele sofre dano aumentado de todas as fontes."
+        self.cooldown = 10000
         self.image = "assets\\images\\icons\\bloodlust_icon.png"
-        self.duration = 5000
+        self.duration = 3500
         self.end_time = 0
         self.original_damage = 0
         self.original_gun_cooldown = 0
@@ -155,9 +182,10 @@ class Bloodlust(Skill):
         if not self.is_on_cooldown:
             self.original_damage = player.gun.damage
             self.original_gun_cooldown = player.gun.cool_down
-            player.life_steal = 25
+            player.life_steal = 50
             player.gun.damage *= 2
             player.gun.cool_down = 200
+            player.armor = -1
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
             self.end_time = pygame.time.get_ticks() + self.duration
@@ -165,6 +193,7 @@ class Bloodlust(Skill):
     def update(self, player):
         if self.is_on_cooldown and pygame.time.get_ticks() >= self.end_time:
             player.life_steal = 0
+            player.armor = 0
             player.damage = self.original_damage
             player.gun.cool_down = self.original_gun_cooldown
         return super().update(player)
@@ -195,7 +224,7 @@ class MissilRain(Skill): ##cyborg skills
                 spread_value_x = random.randint(-500, 500) 
                 spread_value_y = random.randint(100, 500)  
                 pos = player.position
-                missile = explosions.Missile((pos.x + spread_value_x, pos.y - spread_value_y), (pos.x + spread_value_x, pos.y + spread_value_y), 1, player.enemies, 200, self.explosion_damage, explosion_spritesheet, player.explosion_group)
+                missile = explosions.Missile((pos.x + spread_value_x, pos.y - spread_value_y), (pos.x + spread_value_x, pos.y + spread_value_y), 1, player.enemies, 100, self.explosion_damage, explosion_spritesheet, player.explosion_group)
                 if i//5 == 0:   
                     missile.muted = False
                     

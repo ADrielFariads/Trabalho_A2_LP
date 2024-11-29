@@ -24,6 +24,7 @@ class Enemy(pygame.sprite.Sprite):
         self.current_frame_index = 0
         self.animation_speed = 10  # Bigger values for a smoother animation
         self.frame_counter = 0  # Counter of animation
+        self.original_animation_speed = 10
 
         self.x = pos[0]
         self.y = pos[1]
@@ -35,6 +36,7 @@ class Enemy(pygame.sprite.Sprite):
         self.max_health = health
         self.health = health
         self.speed = speed
+        self.original_speed = speed
         self.damage = damage
         self.attack_range = attack_range
         self.attack_delay = attack_delay
@@ -109,9 +111,8 @@ class Enemy(pygame.sprite.Sprite):
         movement = self.direction * self.speed
 
         self.rect.x += movement.x
-        self.collision("horizontal")
-
         self.rect.y += movement.y
+        self.collision("horizontal")
         self.collision("vertical")
 
     def behavior(self):
@@ -329,11 +330,31 @@ class Slime(Enemy):
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
         self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, self.level)
         self.load_frames()
-        
         self.rect = self.image.get_rect(center=pos)
-        self.rect.size = (12*2**self.level, 12*2**self.level)
-    
+        print(self.rect)
+        self.rect.size = (64*self.level-32, 64*self.level-32)
         
+    def load_frames(self):
+        frame_width = self.sprite_sheet.get_width() // self.frames_x
+        frame_height = self.sprite_sheet.get_height() // self.frames_y
+
+        self.frames = []
+        for y in range(self.frames_y):
+            for x in range(self.frames_x):
+                # Calcular a posição de corte para pegar os 80% inferiores
+                y_offset = y * frame_height + int(frame_height * 0.3)  # A partir de 20% da altura do frame
+                new_frame_height = int(frame_height * 0.7)  # A altura do corte será 80% da altura do frame
+
+                # Cortar a parte inferior do frame
+                frame = self.sprite_sheet.subsurface((x * frame_width, y_offset, frame_width, new_frame_height))
+
+                # Redimensionar para o tamanho original
+                redimensioned_frame = pygame.transform.scale(frame, (frame_width, new_frame_height))
+
+                self.frames.append(redimensioned_frame)
+
+        self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
+
         
 
     def behavior(self):
@@ -372,7 +393,7 @@ class AlienBat(Enemy):
         self.frames_x = 6
         self.frames_y = 2
         self.health = 300
-        self.speed = 5
+        self.speed = 6
         self.damage = 100
         self.attack_delay = 50
         self.attack_range = 100
