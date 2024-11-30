@@ -103,9 +103,10 @@ class Game:
         self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
 
         # Testing enemies
-        slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, 3, self.enemies_group)
-        bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
-        slime.colliders = colliders_rects
+        for i in range(20):
+            slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, 3, self.enemies_group)
+            bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
+            slime.colliders = colliders_rects
             
             
 

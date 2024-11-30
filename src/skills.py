@@ -86,17 +86,19 @@ class TimeManipulation(Skill):
     def __init__(self):
         self.key = "E"
         self.name = "Manipulação temporal"
-        self.description = "Altera o espaço-tempo ao seu redor, diminuindo a velocidade dos inimigos."
+        self.description = "Altera o espaço-tempo ao seu redor, diminuindo drasticamente a velocidade dos inimigos."
         self.cooldown = 15000
         self.image = "assets\\images\\icons\\timemanipulation_icon.png"
-        self.duration = 3000
+        self.duration = 8000
         self.end_time = 0
+        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\heatbeating.wav")
         super().__init__(self.name, self.cooldown, self.image)
 
     def use(self, player):
         if not self.is_on_cooldown:
+            self.sound.play()
             for enemy in player.enemies:
-                enemy.speed = max(int(enemy.speed/2), 1)
+                enemy.speed = max(int(enemy.speed/5), 2)
                 enemy.animation_speed = min(enemy.animation_speed*2, 30)
                 self.last_used_time = pygame.time.get_ticks()
                 self.is_on_cooldown = True
@@ -236,7 +238,7 @@ class GravitionVortex(Skill):
     def __init__(self):
         self.key = "E"
         self.name = "Campo Gravitacional"
-        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projéteis inimigos. Inimigos no centro da explosão são imediatamente obliterados."
+        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projéteis inimigos. Inimigos no centro da explosão são imediatamente obliterados. O Berserker não é afetado pelo Vortex."
         self.image = "assets\\images\\explosions\\vortex\\vortex.png"
         self.cooldown = 15000
         self.duration = 11000
