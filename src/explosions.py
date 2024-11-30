@@ -85,5 +85,31 @@ class Missile(pygame.sprite.Sprite):
             self.explosion_group.add(bomb)
             self.kill()
 
+class Vortex(pygame.sprite.Sprite):
+    def __init__(self, pos, radius, target_group, image, damage, duration, explosion_group):
+        super().__init__()
+        self.radius = radius
+        self.damage = damage
+        self.pos = pos
+        self.target_group = target_group
+        self.image = pygame.image.load("assets\\images\\explosions\\vortex\\vortex.png")
+        self.original_image = image
+        self.current_frame = 0
+        self.duration = duration
+        self.scale_factor = 0.1
+    
+    def animate(self):
+        if self.scale_factor < 1: 
+            self.scale_factor += 0.02  
 
+        
+        new_width = int(self.original_image.get_width() * self.scale_factor)
+        new_height = int(self.original_image.get_height() * self.scale_factor)
+
+        
+        self.image = pygame.transform.scale(self.original_image, (new_width, new_height))
+        self.rect = self.image.get_rect(center=self.pos)
+        
+    def update(self, *args, **kwargs):
+        self.animate()
 
