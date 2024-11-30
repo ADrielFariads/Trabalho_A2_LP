@@ -140,7 +140,6 @@ class Game:
 
 
     def run(self):
-        self.auto_shoot = False
         self.running = True  # Start the game loop
         while self.running:
             # Update the player dynamically if menu selection changes
@@ -163,11 +162,7 @@ class Game:
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                         
                     if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_b:
-                            if not self.auto_shoot:
-                                self.auto_shoot = True
-
-                            else: self.auto_shoot = False
+                        pass
                         
 
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -179,8 +174,7 @@ class Game:
                             
                 self.all_sprites.add(self.enemies_group, self.explosion_group)
 
-                if self.auto_shoot:
-                    self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
+                self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                 # updates
                 self.explosion_group.update()
                 self.player.update(keys)

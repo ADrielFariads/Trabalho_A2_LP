@@ -250,6 +250,7 @@ class GravitionVortex(Skill):
             self.vortex = explosions.Vortex((mouse_pos - player.offset), 500, player.enemies, 500, self.duration)
             player.explosion_group.add(self.vortex)
             self.last_used_time = current_time
+            player.explosion_group.add(self.vortex.particles)
             self.is_on_cooldown = True
 
     def update(self, player):

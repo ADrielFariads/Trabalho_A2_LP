@@ -87,6 +87,8 @@ class Missile(pygame.sprite.Sprite):
             self.explosion_group.add(bomb)
             self.kill()
 
+
+
 class Vortex(pygame.sprite.Sprite):
     def __init__(self, pos, radius, target_group, damage, duration):
         super().__init__()
@@ -101,7 +103,7 @@ class Vortex(pygame.sprite.Sprite):
         self.scale_factor = 0.1
         self.start_time = pygame.time.get_ticks() 
         self.last_displacement_time = self.start_time
-        self.particles = []
+        self.particles = pygame.sprite.Group()
         self.z_index = 1
         self.sound = pygame.mixer.Sound("assets\\audio\\skills\\vortex_sound.wav")
         self.kill_sound = pygame.mixer.Sound("assets\\audio\\skills\\vortex_kill_sound.wav")
@@ -140,7 +142,6 @@ class Vortex(pygame.sprite.Sprite):
                         if hasattr(target, "kill"):
                             self.kill_sound.play()
                             target.kill()
-            
     def update(self):
         for each in self.particles:
             each.update()
