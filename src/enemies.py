@@ -395,7 +395,7 @@ class AlienBat(Enemy):
         self.frames_x = 6
         self.frames_y = 2
         self.health = 300
-        self.speed = 0
+        self.speed = 5
         self.damage = 100
         self.attack_delay = 200
         self.attack_range = 100
@@ -404,9 +404,6 @@ class AlienBat(Enemy):
         self.duplicate = True
 
     def behavior(self):
-        target_lost_health = (self.target.max_health - self.target.target_health)/self.target.max_health
-        bloodLust = target_lost_health*15
-        self.speed = max(5, bloodLust)
         self.track_player()
         self.attack_counter += 1
         if self.player_distance() <= self.attack_range:
