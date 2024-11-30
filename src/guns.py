@@ -11,6 +11,7 @@ class Gun(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load(image).convert_alpha()  # Load gun image
         self.player = player  # Reference to the player
+        self.z_index = 11
 
         # Format the image
         self.image_width, self.image_height = self.image.get_size()
@@ -54,6 +55,7 @@ class Bullet(pygame.sprite.Sprite): #standart bullet class
         self.pos = position
         self.image = pygame.Surface((10, 10))  # Create a bullet with a 10x10 surface
         self.rect = self.image.get_rect(center=position)  # Set bullet's initial position
+        self.z_index = 8
 
         self.speed = 20 # Set the bullet's speed
         self.damage = damage

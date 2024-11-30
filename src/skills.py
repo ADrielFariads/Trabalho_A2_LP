@@ -236,10 +236,10 @@ class GravitionVortex(Skill):
     def __init__(self):
         self.key = "E"
         self.name = "Campo Gravitacional"
-        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projéteis inimigos."
+        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projéteis inimigos. Inimigos no centro da explosão são imediatamente obliterados."
         self.image = "assets\\images\\explosions\\vortex\\vortex.png"
-        self.cooldown = 10000
-        self.duration = 8000
+        self.cooldown = 15000
+        self.duration = 11000
         super().__init__(self.name, self.cooldown, self.image)
         self.last_used_time -= self.cooldown 
     

@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.initial_pos = pos
         self.position = pygame.math.Vector2(self.initial_pos)
         self.rect = self.image.get_rect(center = (self.initial_pos))
-
+        self.z_index = 10
 
         #health logic
         self.health = health

@@ -50,6 +50,7 @@ class Enemy(pygame.sprite.Sprite):
         self.colliders = colliders
 
         #groups
+        self.z_index = 8
         group.add(self)
         self.group = group
 

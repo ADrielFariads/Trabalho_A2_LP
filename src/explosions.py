@@ -1,6 +1,6 @@
 import pygame
 import math
-
+import random
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, pos, damage, target_group, sprite_sheet, radius=100, muted=True):
@@ -14,6 +14,7 @@ class Explosion(pygame.sprite.Sprite):
         self.current_frame = 0
         self.animation_delay = 35
         self.last_frame_time = pygame.time.get_ticks()
+        self.z_index = 12
 
         if self.radius != 100:
             self.sprite_sheet = [pygame.transform.scale(img, (int(radius*2), int(radius*2))) for img in self.sprite_sheet]
@@ -64,6 +65,7 @@ class Missile(pygame.sprite.Sprite):
         self.radius = radius
         self.damage = damage
         self.muted = muted
+        self.z_index = 12
 
         self.image = pygame.image.load("assets\\images\\Bullets\\missile1.png")
         self.image = pygame.transform.rotate(self.image, 90)
@@ -99,6 +101,11 @@ class Vortex(pygame.sprite.Sprite):
         self.scale_factor = 0.1
         self.start_time = pygame.time.get_ticks() 
         self.last_displacement_time = self.start_time
+        self.particles = []
+        self.z_index = 1
+        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\vortex_sound.wav")
+        self.kill_sound = pygame.mixer.Sound("assets\\audio\\skills\\vortex_kill_sound.wav")
+        self.sound.play()
     
     def animate(self):
         if self.scale_factor < 1: 
@@ -128,7 +135,14 @@ class Vortex(pygame.sprite.Sprite):
                     # Apply a small displacement in the opposite direction of the Vortex's center
                     target.rect.x += int(direction.x * -5)  # Move along the x-axis
                     target.rect.y += int(direction.y * -5)
+
+                    if distance <= 15:  # Threshold for "death"  # Remove target from the group
+                        if hasattr(target, "kill"):
+                            self.kill_sound.play()
+                            target.kill()
             
     def update(self):
+        for each in self.particles:
+            each.update()
         self.check_collisions()
         self.animate()
