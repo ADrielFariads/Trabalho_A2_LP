@@ -171,33 +171,45 @@ class Menu():
             self.initial_menu = False
             self.char_selection_state = True
         elif button == self.char1_selection_button:
+            self.char_selection_state = False
             self.char_selection = 1
             self.char_selection_state = False
             self.playing = True
             self.game_interface.reset_game_status()
         elif button == self.char2_selection_button:
+            self.char_selection_state = False
             self.char_selection = 2
             self.char_selection_state = False
             self.playing = True
             self.game_interface.reset_game_status()
         elif button == self.char3_selection_button:
+            self.char_selection_state = False
             self.char_selection = 3
             self.char_selection_state = False
             self.playing = True
             self.game_interface.reset_game_status()
         elif button == self.options_button:
+            self.char_selection_state = False
             self.initial_menu = False
             self.options_menu = True
-        elif button == self.back_options_button or button == self.back_char_back_button:
+        elif button == self.back_options_button:
+            self.char_selection_state = False
+            self.options_menu = False
+            self.playing = False
+            self.initial_menu = True
+        elif button == self.back_char_back_button:
+            self.char_selection_state = False
             self.options_menu = False
             self.playing = False
             self.initial_menu = True
         elif button == self.back_paused_button:
+            self.char_selection_state = False
             self.playing = True
             self.game_interface.resume_game()
         elif button == self.menu_button:
             #Reset the game when return to initial menu
             Enemy.reset_enemies(self,self.enemy)
+            self.char_selection_state = False
             self.player.reset_player()
             self.game_interface.reset_game_status()
             self.pause_menu = False
@@ -207,6 +219,7 @@ class Menu():
             #Reset the game to play again
             Enemy.reset_enemies(self,self.enemy)
             self.player.reset_player()
+            self.char_selection_state = False
             self.game_interface.reset_game_status()
             self.playing = True
             
