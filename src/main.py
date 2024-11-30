@@ -47,13 +47,14 @@ class Game:
         heal = skills.Heal()
         dash = skills.Adrenaline()
         iron_will = skills.IronWill()
+        vortex = skills.GravitionVortex()
         blood_lust = skills.Bloodlust()
         lethal_tempo = skills.LethalTempo()
         missile_rain = skills.MissilRain()
         
         cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
         blade_master_skillset = [knife_render, blood_lust, time_manipulation]
-        berserker_skillset = [shotgun_render, iron_will]
+        berserker_skillset = [shotgun_render, iron_will, vortex]
 
 
         #players heroes
@@ -167,11 +168,7 @@ class Game:
                                 self.auto_shoot = True
 
                             else: self.auto_shoot = False
-                        if event.key == pygame.K_z:
-                            for each in self.enemies_group:
-                                print(each.rect)
-                            print("player rect:",self.player.rect)
-                            print(self.enemies_group)
+                        
 
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.menu.playing = False
@@ -185,11 +182,12 @@ class Game:
                 if self.auto_shoot:
                     self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                 # updates
+                self.explosion_group.update()
                 self.player.update(keys)
                 self.enemies_group.update()
                 self.gun.update()
                 self.bullet_group.update()
-                self.explosion_group.update()
+                
 
                 # drawings
                 self.display_surface.fill(("#4D64AA"))

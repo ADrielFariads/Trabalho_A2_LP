@@ -334,7 +334,6 @@ class Slime(Enemy):
         self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, self.level)
         self.load_frames()
         self.rect = self.image.get_rect(center=pos)
-        print(self.rect)
         self.rect.size = (64*self.level-32, 64*self.level-32)
         
     def load_frames(self):

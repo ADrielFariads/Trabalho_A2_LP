@@ -212,10 +212,6 @@ class MissilRain(Skill): ##cyborg skills
         self.missile_number = 9
         self.explosion_damage = 5000
         self.last_used_time -= self.cooldown
-        
-
-
-        self.missile = explosions.Missile
 
     def use(self, player):
         current_time = pygame.time.get_ticks()
@@ -235,6 +231,32 @@ class MissilRain(Skill): ##cyborg skills
 
     def update(self, player):
         return super().update(player)
+    
+class GravitionVortex(Skill):
+    def __init__(self):
+        self.key = "E"
+        self.name = "Campo Gravitacional"
+        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projéteis inimigos."
+        self.image = "assets\\images\\explosions\\vortex\\vortex.png"
+        self.cooldown = 10000
+        self.duration = 8000
+        super().__init__(self.name, self.cooldown, self.image)
+        self.last_used_time -= self.cooldown 
+    
+    def use(self, player):
+        current_time = pygame.time.get_ticks()  
+        if current_time - self.last_used_time >= self.cooldown:  
+            mouse_pos = pygame.mouse.get_pos()
+            self.vortex = explosions.Vortex((mouse_pos - player.offset), 500, player.enemies, 500, self.duration)
+            player.explosion_group.add(self.vortex)
+            self.last_used_time = current_time
+            self.is_on_cooldown = True
+
+    def update(self, player):
+        if self.is_on_cooldown and pygame.time.get_ticks() - self.last_used_time > self.duration:
+            self.vortex.kill()
+        return super().update(player)
+
 
 ########################## Guns' renders #####################################################################################################################################
 

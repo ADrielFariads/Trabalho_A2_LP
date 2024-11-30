@@ -86,23 +86,24 @@ class Missile(pygame.sprite.Sprite):
             self.kill()
 
 class Vortex(pygame.sprite.Sprite):
-    def __init__(self, pos, radius, target_group, image, damage, duration, explosion_group):
+    def __init__(self, pos, radius, target_group, damage, duration):
         super().__init__()
         self.radius = radius
         self.damage = damage
         self.pos = pos
         self.target_group = target_group
         self.image = pygame.image.load("assets\\images\\explosions\\vortex\\vortex.png")
-        self.original_image = image
+        self.original_image = self.image
         self.current_frame = 0
         self.duration = duration
         self.scale_factor = 0.1
+        self.start_time = pygame.time.get_ticks() 
+        self.last_displacement_time = self.start_time
     
     def animate(self):
         if self.scale_factor < 1: 
-            self.scale_factor += 0.02  
+            self.scale_factor += 0.1  
 
-        
         new_width = int(self.original_image.get_width() * self.scale_factor)
         new_height = int(self.original_image.get_height() * self.scale_factor)
 
@@ -110,6 +111,24 @@ class Vortex(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.original_image, (new_width, new_height))
         self.rect = self.image.get_rect(center=self.pos)
         
-    def update(self, *args, **kwargs):
-        self.animate()
+    def check_collisions(self):
+        for target in self.target_group:
+            if hasattr(target, "rect"):
+                distance = math.hypot(target.rect.centerx - self.pos[0], target.rect.centery - self.pos[1])
+                
+                # If the target is within the Vortex's radius and hasn't been processed yet
+                if distance <= self.radius:
+                    # Calculate the direction vector from the Vortex's center to the target's center
+                    direction = pygame.math.Vector2(target.rect.center) - pygame.math.Vector2(self.pos)
+                    
+                    # Normalize the direction vector to ensure uniform movement
+                    if direction.length() > 0:
+                        direction = direction.normalize()
 
+                    # Apply a small displacement in the opposite direction of the Vortex's center
+                    target.rect.x += int(direction.x * -5)  # Move along the x-axis
+                    target.rect.y += int(direction.y * -5)
+            
+    def update(self):
+        self.check_collisions()
+        self.animate()
