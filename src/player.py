@@ -9,13 +9,37 @@ import pygame
 
 
 class Player(pygame.sprite.Sprite):
+    """
+    A class representing the player character in the game.
+    Inherits from pygame.sprite.Sprite to manage sprite actions and animations.
+
+    Attributes:
+        pos (tuple): Initial position of the player.
+        health (int): Initial health value of the player.
+        speed (int): Speed at which the player moves.
+        map_bounds (pygame.Rect): Bounds of the map for movement restrictions.
+        skills (list): List of skills available to the player.
+        colidders (list, optional): List of collidable objects for detecting collisions.
+    """
+
     def __init__(self, pos, health, speed, map_bounds, skills, colidders=None):
+        """
+        Initializes the player character with the given attributes.
+
+        Args:
+            pos (tuple): Initial position of the player.
+            health (int): Initial health value of the player.
+            speed (int): Speed at which the player moves.
+            map_bounds (pygame.Rect): Bounds of the map for movement restrictions.
+            skills (list): List of skills available to the player.
+            colidders (list, optional): List of collidable objects for detecting collisions.
+        """
         super().__init__()
         #loads the image
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
         self.current_action = "idle"
 
-        #calculating the frame size 
+        #calculating the frame size
         frames_x_axis = 4
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
         frame_height = self.sprite_sheet.get_height()
@@ -27,8 +51,6 @@ class Player(pygame.sprite.Sprite):
             scale_factor = 2 # makes the image a little bigger
             redimentioned_frame = pygame.transform.scale(frame, (int(frame_widht)*scale_factor, int(frame_height)*scale_factor))
             self.frames.append(redimentioned_frame)
-        
-        
 
         #initial frame setting
         self.current_frame_index = 0
@@ -40,13 +62,13 @@ class Player(pygame.sprite.Sprite):
         #position logic
         self.initial_pos = pos
         self.position = pygame.math.Vector2(self.initial_pos)
-        self.rect = self.image.get_rect(center = (self.initial_pos))
+        self.rect = self.image.get_rect(center=(self.initial_pos))
         self.z_index = 10
 
         #health logic
         self.health = health
         self.target_health = health
-        self.direction = pygame.math.Vector2(0,0)
+        self.direction = pygame.math.Vector2(0, 0)
 
         #experience logic
         self.experience = 0
@@ -57,34 +79,42 @@ class Player(pygame.sprite.Sprite):
         self.colliders = colidders
         self.map_bounds = map_bounds
 
-        #player atributes 
+        #player atributes
         self.speed = speed
         self.max_health = health
         self.current_health = self.max_health
         self.armor = 0
         self.life_steal = 0
-        
 
         #skills logic
         self.skills = skills
 
 ################# ANIMATING FRAMES ##########################################################
     def reset_player(self):
-        '''
-        Reset player attribues to initial setting
-        '''
+        """
+        Resets the player attributes to their initial settings.
+        """
         self.current_frame_index = 0
-        self.frame_counter = 0 
-        self.image = self.frames[self.current_frame_index] 
-        self.facing_right = True 
+        self.frame_counter = 0
+        self.image = self.frames[self.current_frame_index]
+        self.facing_right = True
         self.current_health = self.max_health
         self.position = pygame.math.Vector2(self.initial_pos)
-        self.rect = self.image.get_rect(center = (self.initial_pos))
+        self.rect = self.image.get_rect(center=(self.initial_pos))
         self.current_action = "idle"
         self.target_health = self.health
 
     def load_frames(self, sprite_sheet, frames_x):
-        "Extract and scale frames from the given sprite sheet."
+        """
+        Extracts and scales frames from the given sprite sheet.
+
+        Args:
+            sprite_sheet (pygame.Surface): The sprite sheet containing the frames.
+            frames_x (int): Number of frames along the x-axis in the sprite sheet.
+
+        Returns:
+            list: A list of scaled frames as pygame surfaces.
+        """
         frames = []
         frame_width = sprite_sheet.get_width() // frames_x
         frame_height = sprite_sheet.get_height()
@@ -100,10 +130,14 @@ class Player(pygame.sprite.Sprite):
             frames.append(scaled_frame)
         return frames
 
-
 ################# ACTIONS LOGIC ################################## 
-    def set_action(self, action="idle"):#action setter for animation
-        
+    def set_action(self, action="idle"):
+        """
+        Sets the current action of the player character and loads corresponding animation frames.
+
+        Args:
+            action (str): The action to set, such as "idle", "walk", "walkup", "walkdown".
+        """
         if self.current_action != action:
             self.current_action = action
             self.current_frame_index = 0
@@ -112,7 +146,7 @@ class Player(pygame.sprite.Sprite):
             self.current_action = "idle"
             self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 4)
-        
+
         if action == "walk":
             self.current_action = "walk"
             self.sprite_sheet = pygame.image.load("assets/images/Player/Walk1.png").convert_alpha()
@@ -120,40 +154,55 @@ class Player(pygame.sprite.Sprite):
 
         if action == "walkup":
             self.current_action = "walkup"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkUp.png").convert_alpha() 
+            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkUp.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 8)
 
         if action == "walkdown":
             self.current_action = "walkdown"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkDown.png").convert_alpha() 
+            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkDown.png").convert_alpha()
             self.frames = self.load_frames(self.sprite_sheet, 8)
 
 ################# GETTER METHODS ###################################################
     def get_position(self):
+        """
+        Returns the current position of the player.
+
+        Returns:
+            pygame.math.Vector2: The current position of the player.
+        """
         return self.position
 
 ################# COLLISION METHOD ####################################################     
     def collision(self, direction):
-        if self.colliders != None:
+        """
+        Checks and resolves collisions with other sprites in the given direction.
+
+        Args:
+            direction (str): The direction of the collision to check ("horizontal" or "vertical").
+        """
+        if self.colliders is not None:
             for sprite in self.colliders:
                 if sprite.rect.colliderect(self.rect):
                     if direction == "horizontal":
                         if self.direction.x > 0:
                             self.rect.right = sprite.rect.left
-
                         if self.direction.x < 0:
                             self.rect.left = sprite.rect.right
 
                     if direction == "vertical":
                         if self.direction.y > 0:
                             self.rect.bottom = sprite.rect.top
-
                         if self.direction.y < 0:
                             self.rect.top = sprite.rect.bottom
-    
 
 ################# UPDATE METHOD #################################################### 
     def update(self, keys):
+        """
+        Updates the player's state, including animation, movement, and collisions.
+
+        Args:
+            keys (pygame.key.get_pressed): The current key states for movement and actions.
+        """
         #animation logic
         self.frame_counter += 1
         if self.frame_counter >= self.animation_speed:
@@ -161,11 +210,8 @@ class Player(pygame.sprite.Sprite):
             self.image = self.frames[self.current_frame_index]
             self.frame_counter = 0
 
-        
-
-
         #movement logic
-        
+
         self.direction.x = 0
         self.direction.y = 0
         if keys[pygame.K_a]:
@@ -186,20 +232,18 @@ class Player(pygame.sprite.Sprite):
             self.direction = self.direction.normalize()
             self.set_action("walk")
 
-        elif keys[pygame.K_w] and not keys[pygame.K_s]:  # up only
+        elif keys[pygame.K_w] and not keys[pygame.K_s]: # up only
             self.direction.y = -1
             self.set_action("walkup")
 
-        elif keys[pygame.K_s] and not keys[pygame.K_w]:  # down only
+        elif keys[pygame.K_s] and not keys[pygame.K_w]: # down only
             self.direction.y = 1
             self.set_action("walkdown")
 
-         
         if self.direction.length() == 0: #verify is player is idle
             self.set_action("idle")
 
-
-        ##collisions
+        #collisions
         self.position.x += self.direction.x * self.speed
         self.rect.centerx = self.position.x
         self.collision("horizontal")
@@ -208,28 +252,22 @@ class Player(pygame.sprite.Sprite):
         self.rect.centery = self.position.y
         self.collision("vertical")
 
-
-
         self.position = pygame.math.Vector2(self.rect.center)
 
-        
-        if self.position.x < self.map_bounds.left: 
+        if self.position.x < self.map_bounds.left:
             self.position.x = self.map_bounds.left
         elif self.position.x > self.map_bounds.right:
             self.position.x = self.map_bounds.right
 
-        if self.position.y < self.map_bounds.top: 
+        if self.position.y < self.map_bounds.top:
             self.position.y = self.map_bounds.top
         elif self.position.y > self.map_bounds.bottom:
             self.position.y = self.map_bounds.bottom
 
-
-
         current_image = self.frames[self.current_frame_index]
 
-
         if not self.facing_right:
-                self.image = pygame.transform.flip(current_image, True, False)
+            self.image = pygame.transform.flip(current_image, True, False)
         else:
             self.image = current_image
 
@@ -246,10 +284,16 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_e]:
             self.skills[-1].use(self)
-            
 
 ################# HEALTH LOGIC ##############################################################
+
     def get_damaged(self, damage):
+        """
+        Applies damage to the player, reducing health based on armor.
+
+        Args:
+            damage (int): The amount of damage to apply.
+        """
         if self.target_health > 0:
             self.target_health -= int(damage*(1-self.armor))
 
@@ -263,12 +307,19 @@ class Player(pygame.sprite.Sprite):
         if self.target_health >= self.max_health:
             self.target_health = self.max_health
 
-
 ######## level logic ######################################################################
+
     def level_up(self):
-        self.current_level += 1 
+        """
+        Increases the player's level and resets experience points.
+        """
+        self.current_level += 1
         self.experience = 0
 
+
     def enemy_killed(self):
+        """
+        Heals the player based on life steal and increments the killed enemies count.
+        """
         self.get_healed(self.life_steal)
         self.killed_enemies += 1

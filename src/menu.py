@@ -1,6 +1,5 @@
 import pygame
 from enemies import Enemy
-from player import Player
 
 class Button():
 
