@@ -1,15 +1,12 @@
 import pygame
-import random
 
 import config
 from player import Player
 import guns
-from background import CollisionSprite
 import enemies
 from groups import AllSpritesgroup
 from interface import GameInterface
 import skills
-import explosions
 from menu import Menu
 
 # initial setup

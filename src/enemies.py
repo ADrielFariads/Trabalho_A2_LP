@@ -3,12 +3,30 @@ This module handles the creation and management of enemies. It provides classes 
 
 """
 
-
 import pygame
 import random
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group,group, colliders=None):
+    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, group, colliders=None):
+        """
+        Initializes the Enemy sprite with specified attributes.
+
+        Args:
+        pos (tuple): The position of the enemy (x, y).
+        sprite_sheet (str): Path to the sprite sheet image.
+        frames_x (int): The number of frames in the horizontal direction.
+        frames_y (int): The number of frames in the vertical direction.
+        health (int): The initial health of the enemy.
+        speed (int): The movement speed of the enemy.
+        damage (int): The damage dealt by the enemy.
+        attack_range (int): The range within which the enemy can attack.
+        attack_delay (int): Delay between consecutive attacks.
+        player (Player): The player character the enemy will interact with.
+        bullets_group (pygame.sprite.Group): Group containing all the bullets.
+        group (pygame.sprite.Group): Group the enemy belongs to.
+        colliders (list, optional): List of colliders to check for collisions.
+
+        """
         super().__init__()
 
         # Loading image
@@ -55,6 +73,13 @@ class Enemy(pygame.sprite.Sprite):
         self.group = group
 
     def reset_enemies(self, enemies):
+        """
+        Resets the state of all enemies in the list to their initial conditions.
+
+        Args:
+        enemies (list): List of enemies to be reset.
+
+        """
         for enemy in enemies:
             enemy.health = enemy.max_health
             enemy.position = pygame.math.Vector2(enemy.x, enemy.y)
@@ -65,6 +90,10 @@ class Enemy(pygame.sprite.Sprite):
             enemy.frame_counter = 0
 
     def load_frames(self):
+        """
+        Loads frames from the sprite sheet based on the number of frames horizontally and vertically.
+
+        """
         frame_width = self.sprite_sheet.get_width() // self.frames_x
         frame_height = self.sprite_sheet.get_height() // self.frames_y
 
@@ -77,35 +106,69 @@ class Enemy(pygame.sprite.Sprite):
 
         self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
 
-
     def animate(self):
+        """
+        Updates the current animation frame based on the animation speed.
+
+        """
         # Increment frame counter and update frame index
         self.frame_counter += 1
         if self.frame_counter >= self.animation_speed:
             self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
             self.image = self.frames[self.current_frame_index]
             self.frame_counter = 0
-
     # Fight logic
     def get_damaged(self, damage):
+        """
+        Reduces the enemy's health by the given damage.
+
+        Args:
+        damage (int): The amount of damage to be applied to the enemy.
+
+        """
         self.health -= damage
     
     def get_healed(self, amount):
+        """
+        Increases the enemy's health by the specified amount, ensuring it doesn't exceed the maximum health.
+
+        Args:
+        amount (int): The amount to heal.
+
+        """
         if self.health <= self.max_health:
             self.health += amount
         if self.health > self.max_health:
             self.health = self.max_health
 
     def attack(self, target):
+        """
+        Attacks the target player, reducing their health by the enemy's damage.
+
+        Args:
+        target (Player): The target player to be attacked.
+
+        """
         target.get_damaged(self.damage)
 
     def player_distance(self):
+        """
+        Calculates the distance between the enemy and the player.
+
+        Returns:
+        float: The distance between the enemy and the player.
+
+        """
         player_pos = pygame.math.Vector2(self.target.rect.center)
         current_pos = pygame.math.Vector2(self.rect.center)
         distance = current_pos.distance_to(player_pos)
         return distance
 
     def track_player(self):
+        """
+        Tracks the player's position and moves the enemy toward the player, considering the attack range.
+
+        """
         player_pos = pygame.math.Vector2(self.target.rect.center)
         current_pos = pygame.math.Vector2(self.rect.center)
         if self.player_distance() > self.attack_range:
@@ -121,10 +184,20 @@ class Enemy(pygame.sprite.Sprite):
         self.collision("vertical")
 
     def behavior(self):
+        """
+        Placeholder for enemy behavior logic, can be extended in subclasses.
+
+        """
         pass
 
-
     def collision(self, direction):
+        """
+        Handles collision detection and resolution for the enemy.
+
+        Args:
+        direction (str): The direction to check for collisions ('horizontal' or 'vertical').
+
+        """
         if self.colliders != None:
             for sprite in self.colliders:
                 if sprite.rect.colliderect(self.rect):
@@ -142,8 +215,11 @@ class Enemy(pygame.sprite.Sprite):
                         if self.direction.y < 0:
                             self.rect.top = sprite.rect.bottom
 
-
     def update(self):
+        """
+        Updates the enemy state, including checking for death, handling bullet collisions, and animating.
+
+        """
         # Checks the mob's death
         if self.health <= 0:
             self.target.experience += self.damage
@@ -163,8 +239,15 @@ class Enemy(pygame.sprite.Sprite):
         self.position.y = self.rect.y
 
     def update_target(self, new_target):
-        """Update the target player dynamically."""
+        """
+        Dynamically updates the enemy's target to a new player.
+
+        Args:
+        new_target (Player): The new player target.
+
+        """
         self.target = new_target
+
 
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
@@ -252,8 +335,16 @@ def generate_goblins(num_goblins, top, bottom, left, right, player, bullets_grou
         goblins_group.add(goblin)
 
 class Andromaluis(Enemy):
-    def __init__(self, pos,player, bullets_group, enemy_group):
-
+    def __init__(self, pos, player, bullets_group, enemy_group):
+        """
+        Initialize the Andromaluis class with specific attributes such as sprite sheet, health, 
+        speed, damage, attack delay, attack range, and skill-related attributes.
+        
+        :param pos: The initial position of Andromaluis.
+        :param player: The player object that Andromaluis will target.
+        :param bullets_group: The group of bullets for collision detection.
+        :param enemy_group: The group to which Andromaluis belongs, for adding spawned enemies.
+        """
         self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
         self.frames_x = 8
         self.frames_y = 3
@@ -265,27 +356,40 @@ class Andromaluis(Enemy):
         self.enemy_group = enemy_group
         self.experience_given = 100
         
-
-        #skill atributes
+        # Skill attributes
         self.generation_interval = 100
         self.generation_timer = 10
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
-
-
     def behavior(self):
+        """
+        Define the behavior of Andromaluis. It generates goblins if the distance to the target is 
+        less than 200 and the generation timer has elapsed.
+        """
+        # Calculate the distance to the target (player)
         distance_to_enemy = self.target.position - self.position
 
         if distance_to_enemy.length() < 200:
+            # If the distance is less than 200 and the generation timer has elapsed, generate goblins
             if self.generation_timer <= 0:
                 generate_goblins(4, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
 
+        # Decrease the generation timer
         self.generation_timer -= 1
+
 
 
 class Centipede(Enemy):
     def __init__(self, pos, player, bullets_group):
+        """
+        Initialize the Centipede class with specific attributes such as sprite sheet, health, 
+        speed, damage, attack delay, and attack range.
+
+        :param pos: The initial position of the centipede.
+        :param player: The player object that the centipede will target.
+        :param bullets_group: The group of bullets for collision detection.
+        """
         self.sprite_sheet = "assets\\images\\enemies\\Centipeder\\Centipede_walk.png"
         self.frames_x = 4
         self.frames_y = 1
@@ -298,36 +402,59 @@ class Centipede(Enemy):
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
 
     def load_frames(self):
+        """
+        Load the frames from the sprite sheet and divide them into sublists based on the movement direction.
+        """
+        # Calculate frame dimensions
         frame_width = self.sprite_sheet.get_width() // self.frames_x
         frame_height = self.sprite_sheet.get_height() // self.frames_y
 
         self.frames = []
         for y in range(self.frames_y):
             for x in range(self.frames_x):
+                # Extract each frame from the sprite sheet
                 frame = self.sprite_sheet.subsurface((x * frame_width, y * frame_height, frame_width, frame_height))
                 redimensioned_frame = pygame.transform.scale(frame, (int(frame_width), int(frame_height)))
                 self.frames.append(redimensioned_frame)
 
+        # Divide frames into sublists for each direction
         self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
 
     def behavior(self):
+        """
+        Define the behavior of the Centipede. The centipede will either track the player or attack 
+        if within range.
+        """
         if self.player_distance() > self.attack_range:
+            # Track the player if the distance is greater than the attack range
             self.track_player()
         else:
+            # If within attack range, perform an attack
             if self.attack_counter >= self.attack_delay:
                 self.attack(self.target)
                 self.attack_counter = 0
         self.attack_counter += 1
 
+
 class Slime(Enemy):
     def __init__(self, pos, player, bullets_group, level, group):
+        """
+        Initialize the Slime class with specific attributes such as sprite sheet, health, 
+        speed, damage, attack delay, attack range, and level-specific attributes.
+
+        :param pos: The initial position of the slime.
+        :param player: The player object that the slime will target.
+        :param bullets_group: The group of bullets for collision detection.
+        :param level: The level of the slime, affecting its attributes.
+        :param group: The group to which the slime belongs, used for collision detection.
+        """
         self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
         self.frames_x = 4
         self.frames_y = 2
         self.level = min(level, 3)
-        self.health = 500*self.level
-        self.speed = 8-self.level
-        self.damage = 20*self.level
+        self.health = 500 * self.level
+        self.speed = 8 - self.level
+        self.damage = 20 * self.level
         self.attack_delay = 100
         self.attack_range = 10
         self.level = level
@@ -335,61 +462,94 @@ class Slime(Enemy):
         self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, self.level)
         self.load_frames()
         self.rect = self.image.get_rect(center=pos)
-        self.rect.size = (64*self.level-32, 64*self.level-32)
-        
+        self.rect.size = (64 * self.level - 32, 64 * self.level - 32)
+
     def load_frames(self):
+        """
+        Load the frames from the sprite sheet, cutting 80% of the frame height and 
+        resizing them to the appropriate size.
+
+        The frames are divided into sublists based on their direction.
+        """
         frame_width = self.sprite_sheet.get_width() // self.frames_x
         frame_height = self.sprite_sheet.get_height() // self.frames_y
 
         self.frames = []
         for y in range(self.frames_y):
             for x in range(self.frames_x):
-                # Calcular a posição de corte para pegar os 80% inferiores
-                y_offset = y * frame_height + int(frame_height * 0.3)  # A partir de 20% da altura do frame
-                new_frame_height = int(frame_height * 0.7)  # A altura do corte será 80% da altura do frame
+                # Calculate the cutting position to get the bottom 80% of the frame
+                y_offset = y * frame_height + int(frame_height * 0.3)  # Starting from 30% of the frame height
+                new_frame_height = int(frame_height * 0.7)  # The height of the cut will be 80% of the original frame height
 
-                # Cortar a parte inferior do frame
+                # Cut the bottom part of the frame
                 frame = self.sprite_sheet.subsurface((x * frame_width, y_offset, frame_width, new_frame_height))
 
-                # Redimensionar para o tamanho original
+                # Resize to the original size
                 redimensioned_frame = pygame.transform.scale(frame, (frame_width, new_frame_height))
 
                 self.frames.append(redimensioned_frame)
 
-        self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
-
-        
+        # Divide the frames into sublists for each direction
+        self.divided_frames = [self.frames[i:i + self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
 
     def behavior(self):
+        """
+        Define the behavior of the slime. The slime tracks the player and attacks 
+        if within range.
+        """
         self.track_player()
         self.attack_counter += 1
         if self.player_distance() <= self.attack_range:
+            # Attack the player if within range and the attack delay has passed
             if self.attack_counter >= self.attack_delay:
-                # Attack the player if within range
                 self.attack(self.target)
                 self.attack_counter = 0
 
     def duplicate(self):
+        """
+        Duplicate the slime if its level is greater than 1. This creates two smaller 
+        slimes at positions near the original slime.
+
+        This method is called when the slime is killed.
+        """
         if self.level > 1:
-            child_1 = Slime((self.position.x+50, self.position.y), self.target, self.bullets, (self.level-1), self.group)
-            child_2 = Slime((self.position.x-50, self.position.y), self.target, self.bullets, (self.level-1), self.group)
+            # Create two smaller slimes at different positions
+            child_1 = Slime((self.position.x + 50, self.position.y), self.target, self.bullets, (self.level - 1), self.group)
+            child_2 = Slime((self.position.x - 50, self.position.y), self.target, self.bullets, (self.level - 1), self.group)
             child_1.colliders = self.colliders
             child_2.colliders = self.colliders
-            
 
     def update(self):
+        """
+        Update the slime's behavior and check if its level has reached zero. If so, 
+        the slime is killed and duplicates are created.
+
+        :return: The result of the superclass update method.
+        """
         if self.level <= 0:
             self.kill()
         return super().update()
-    
+
     def kill(self):
+        """
+        Kill the slime by duplicating it before removing it from the game.
+
+        :return: The result of the superclass kill method.
+        """
         self.duplicate()
         return super().kill()
-    
-
 
 class AlienBat(Enemy):
     def __init__(self, pos, player, bullets_group, group):
+        """
+        Initialize the AlienBat class with specific attributes such as sprite sheet, health, 
+        speed, damage, attack delay, attack range, and a flag for duplication.
+
+        :param pos: The initial position of the alien bat.
+        :param player: The player object that the alien bat will target.
+        :param bullets_group: The group of bullets for collision detection.
+        :param group: The group to which the alien bat belongs, used for collision detection.
+        """
         self.group = group
         self.sprite_sheet = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
         self.frames_x = 6
@@ -404,6 +564,12 @@ class AlienBat(Enemy):
         self.duplicate = True
 
     def behavior(self):
+        """
+        Define the behavior of the AlienBat. The AlienBat tracks the player and attacks 
+        when within range. If it attacks, it replicates itself if the duplication flag is True.
+
+        The attack counter is incremented and checked to ensure the attack is delayed appropriately.
+        """
         self.track_player()
         self.attack_counter += 1
         if self.player_distance() <= self.attack_range:
@@ -415,8 +581,15 @@ class AlienBat(Enemy):
                     self.replicate()
 
     def replicate(self):
+        """
+        Create a duplicate of the AlienBat at the same position and target.
+        The duplication flag is set to False to prevent further replication.
+
+        A new AlienBat instance is created with the same position, target, and bullets group.
+        """
         child = AlienBat(self.position, self.target, self.bullets, self.group)
         self.duplicate = False
+
 
         
         
