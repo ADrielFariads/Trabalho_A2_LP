@@ -11,6 +11,16 @@ pygame.init()
 # print(ScreenWidth, ScreenHeight)
 
 class FilesPath(Enum):
+    """
+    An enumeration defining file paths for game assets.
+
+    Attributes:
+        EXPLOSION1 (list): File paths for explosion sprite images.
+        BACKGROUND (str): File path for the background image.
+        ANDROMALUIS (str): File path for the Andromalius enemy image.
+        SLIME (str): File path for the Slime enemy image.
+        ALIENBAT (str): File path for the Alien Bat enemy image.
+    """
     EXPLOSION1 = [f"assets\\images\\explosions\\explosion1\\Explosion_{i}.png" for i in range(1, 10)]
     BACKGROUND = "assets\\background_files\\map009.png"
     ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
@@ -19,7 +29,14 @@ class FilesPath(Enum):
 
 
 class RectColiddersMap(Enum):
+    """
+    An enumeration defining collision boundaries for the game map.
+
+    Attributes:
+        MAPBOUNDS (pygame.Rect): A rectangle defining the map's boundaries.
+    """
     MAPBOUNDS = pygame.Rect(1020, 710, 6460, 3480)
+
 
 rects_data = [((1660, 1080), (200, 130)), ((1750, 974), (170, 150)), ((1810, 830), (100, 100)), ((1700, 890), (30, 30)), ((1713, 855), (25, 25)),((1722, 833), (20,20)) ,((1830, 775), (25, 25)), 
               ((1823, 742), (20,20)), #starship_rects
@@ -29,17 +46,28 @@ rects_data = [((1660, 1080), (200, 130)), ((1750, 974), (170, 150)), ((1810, 830
                 ((7078, 1068), (88, 132)), ((7189, 1115), (135, 20)), #cave_rects
                 ((2233,3771), (390,452)), ((2169,3516), (302,175)), ((2009,3433), (161,190)), ((1842,3331), (208,153)), ((1657,3226), (339,161)), ((1384,3083), (209,255)), ((1517,3118), (138,248)),
                 ((1416,3500), (211,95)), ((1350,3297), (75,108)), ((1340,3431), (73,99)), ((1450,3532), (239,129)), ((1520,3650), (97,87)), ((1670,3720), (170,97)), ((1850,3800), (162,92)), ((1973,3850), (205,70))
-
 ]
 
+
 def random_pos():
+    """
+    Generates a random position within defined bounds.
+
+    Returns:
+        tuple: A tuple (x, y) representing a random position.
+    """
     x_pos = random.randint(1100, 6400)
     y_pos = random.randint(720, 3400)
     return x_pos, y_pos
 
 
-
 def collisionSpritesGenerator():
+    """
+    Creates and returns a list of collision sprites based on predefined data.
+
+    Returns:
+        list: A list of CollisionSprite objects created from `rects_data`.
+    """
     colliders = []
     for each in rects_data:
         rect = CollisionSprite(each[0], each[1])
@@ -49,9 +77,23 @@ def collisionSpritesGenerator():
 
 
 def load_explosion_images():
+    """
+    Loads and returns explosion images as surfaces.
+
+    Returns:
+        list: A list of pygame.Surface objects representing explosion frames.
+    """
     sprite_sheet = [pygame.image.load(image) for image in FilesPath.EXPLOSION1.value]
     return sprite_sheet
 
+
 def load_enemies_images():
+    """
+    Placeholder for loading enemy images.
+
+    TODO:
+        Implement the logic to load enemy images as needed.
+    """
     pass
+
 

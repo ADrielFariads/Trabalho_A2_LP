@@ -1,24 +1,27 @@
 import pygame
-import random
 
 import config
 from player import Player
 import guns
-from background import CollisionSprite
 import enemies
 from groups import AllSpritesgroup
 from interface import GameInterface
 import skills
-import explosions
 from menu import Menu
 
-# initial setup
 class Game:
+    """
+    The Game class initializes and runs the game loop for the Cosmic Survivor game.
+    It handles game setup, player initialization, enemy updates, and interactions between game components.
+    """
+
     def __init__(self):
-        # initial setup
+        """
+        Initialize the game, including setup for display, sounds, players, enemies, and skills.
+        """
+        # Initial setup
         pygame.init()
         pygame.mixer.init()
-        self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
         self.display_surface = pygame.display.set_mode((1200, 800), pygame.RESIZABLE)
         pygame.display.set_caption("Cosmic Survivor")
         self.clock = pygame.time.Clock()
@@ -26,7 +29,7 @@ class Game:
         # Define running attribute
         self.running = False  # Set default value
 
-        #Soundtrack
+        # Soundtrack
         self.soundtrack = pygame.mixer.music.load("assets\\audio\\background2_music.mp3")
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.25)
@@ -34,23 +37,18 @@ class Game:
         # Initialize background
         self.background = pygame.sprite.Sprite()
         self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
-        self.background.rect = self.background.image.get_rect(topleft=(0,0))
-        self.background.image = pygame.image.load(config.FilesPath.BACKGROUND.value) 
-        self.background.rect = self.background.image.get_rect(topleft=(0,0))
-        self.background_group = pygame.sprite.Group(self.background) 
-        self.map_bounds = config.RectColiddersMap.MAPBOUNDS.value #rect for keep the player in the map
-        
+        self.background.rect = self.background.image.get_rect(topleft=(0, 0))
+        self.background_group = pygame.sprite.Group(self.background)
+        self.map_bounds = config.RectColiddersMap.MAPBOUNDS.value  # Rect for keeping the player in the map
 
-        #colliders
+        # Colliders
         colliders_rects = config.collisionSpritesGenerator()
 
-        #skills
+        # Skills
         machinegun_render = skills.MachineGunRender()
         knife_render = skills.KnifeThrowerRender()
         shotgun_render = skills.ShotgunRender()
         time_manipulation = skills.TimeManipulation()
-        heal = skills.Heal()
-        dash = skills.Adrenaline()
         iron_will = skills.IronWill()
         vortex = skills.GravitionVortex()
         blood_lust = skills.Bloodlust()
@@ -61,20 +59,15 @@ class Game:
         blade_master_skillset = [knife_render, blood_lust, time_manipulation]
         berserker_skillset = [shotgun_render, iron_will, vortex]
 
-
-        #players heroes
-
-        #cyborg config
-        self.cyborg = Player((1200, 1200), 1000, 7, self.map_bounds,cyborg_skillset, colliders_rects)
+        # Players (heroes)
+        self.cyborg = Player((1200, 1200), 1000, 7, self.map_bounds, cyborg_skillset, colliders_rects)
         self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
         self.cyborg.gun = self.machinegun
 
-        #blade_master config
         self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, colliders_rects)
         self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
         self.blade_master.gun = self.knifeThrower
 
-        #berserker
         self.berserker = Player((1200, 1200), 2000, 7, self.map_bounds, berserker_skillset, colliders_rects)
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
@@ -86,21 +79,20 @@ class Game:
             3: self.berserker
         }
 
-        # default player
+        # Default player
         self.player = self.cyborg
         self.gun = self.player.gun
-        
 
-        # groups
+        # Groups
         self.player_group = pygame.sprite.GroupSingle(self.player)
         self.gun_group = pygame.sprite.GroupSingle(self.gun)
         self.bullet_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
         self.enemies_group = pygame.sprite.Group()
         self.player.enemies = self.enemies_group
-        self.player.explosion_group = self.enemies_group
+        self.player.explosion_group = self.explosion_group
 
-        #interface
+        # Interface
         self.interface = GameInterface(self.display_surface, self.player)
 
         # Camera interaction
@@ -112,8 +104,6 @@ class Game:
             slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, 3, self.enemies_group)
             bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
             slime.colliders = colliders_rects
-            
-            
 
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
@@ -126,6 +116,10 @@ class Game:
                 enemy.update_target(self.player)
 
     def initialize_player(self):
+        """
+        Initializes the player by updating attributes, resetting sprite groups, 
+        and re-adding key elements like the player and enemies to the sprite groups.
+        """
         # Update player-specific attributes
         self.gun = self.player.gun
         self.player_group = pygame.sprite.GroupSingle(self.player)
@@ -144,56 +138,54 @@ class Game:
             if isinstance(enemy, enemies.Enemy):  # Check to ensure it's an enemy object
                 enemy.update_target(self.player)
 
-
     def run(self):
+        """
+        Runs the main game loop, processing events, updating the game state, 
+        and rendering the screen.
+        """
         self.running = True  # Start the game loop
         while self.running:
             # Update the player dynamically if menu selection changes
             if self.player != self.character_dictionary[self.menu.char_selection]:
                 self.player = self.character_dictionary[self.menu.char_selection]
                 self.initialize_player()
-                
+
             if self.menu.playing:
                 self.clock.tick(60)
                 self.interface.running = True
                 keys = pygame.key.get_pressed()
-                # event loop
+                # Event loop
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:  # Handle window close
                         print("Closing game")
                         self.running = False
 
-                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:                  
-                        mouse_pos = pygame.mouse.get_pos() - self.all_sprites.offset
+                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:                   
                         self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
                         
                     if event.type == pygame.KEYDOWN:
                         pass
-                        
 
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                         self.menu.playing = False
                         self.menu.pause_menu = True
                         self.menu.options_menu = False
                         self.interface.pause_game()
-                    
-                            
+
                 self.all_sprites.add(self.enemies_group, self.explosion_group)
 
                 self.gun.shoot(self.bullet_group, self.all_sprites.offset, self.all_sprites)
-                # updates
+                # Updates
                 self.explosion_group.update()
                 self.player.update(keys)
                 self.enemies_group.update()
                 self.gun.update()
                 self.bullet_group.update()
-                
 
-                # drawings
+                # Drawings
                 self.display_surface.fill(("#4D64AA"))
                 self.all_sprites.draw(self.player.rect.center)
 
-                
                 self.interface.draw()
 
                 if self.player.target_health == 0:
@@ -201,14 +193,13 @@ class Game:
                     self.menu.pause_menu = False
                     self.menu.death_menu = True
                     self.menu.playing = False
-                
 
             else:
                 self.menu.update()
 
             pygame.display.update()
 
-        pygame.quit()  # Ensure pygame resources are cleaned up after the loop end
+        pygame.quit()  # Ensure pygame resources are cleaned up after the loop ends
         exit()  # Ensure the program terminates
 
 
