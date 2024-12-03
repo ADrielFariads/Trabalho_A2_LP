@@ -131,7 +131,7 @@ class Menu():
     def reset_states(self):
         """Reset all game states to avoid overlap."""
         self.initial_menu = False
-        self.options_menu = False
+        self.controls_menu = False
         self.death_menu = False
         self.pause_menu = False
         self.char_selection_state = False
@@ -242,36 +242,75 @@ class Menu():
         pygame.display.update()
 
     def draw_controls_screen(self):
+        # Draw the background
         self.screen.blit(self.menu_background, (0, 0))
-        
+
+        # Load and prepare the image (mouse and keyboard)
+        mousekeyboard_image = pygame.image.load("assets/images/Menu/mousekeyboard.png").convert_alpha()
+        image_width, image_height = mousekeyboard_image.get_size()
+        scaled_size = (int(image_width * 1), int(image_height * 1))  # Scale the image
+        mousekeyboard_image = pygame.transform.scale(mousekeyboard_image, scaled_size)
+
+        # Controls text
         controls_text = [
             "Move Up: W",
             "Move Left: A",
             "Move Down: S",
             "Move Right: D",
-            "Player Skill 1: Q",
-            "Player Skill 2: E",
-            "Pause: Esc"
+            "Skill 1: Q",
+            "Skill 2: E",
+            "Pause: Esc",
+            "Shoot: Left Mouse Button"
         ]
-        
-        y_pos = 250  # Starting y position
-        for line in controls_text:
-            rendered_text = Text(600, y_pos, line, (255, 255, 255), 40)
-            rendered_text.draw(self.screen)
-            y_pos += 50
 
-        # Add back button
+        # Text positions
+        text_start_x = 20
+        text_start_y = 150
+        line_spacing = 50
+
+        # Calculate maximum text width for alignment
+        font = pygame.font.Font(None, 40)  # Default font
+        max_text_width = max(font.size(line)[0] for line in controls_text)
+        
+        # Position the image beside the text
+        image_x = 0
+        image_y = -75
+
+        # Draw each line of controls text
+        for i, line in enumerate(controls_text):
+            y_pos = text_start_y + i * line_spacing
+            rendered_text = Text(text_start_x, y_pos, line, (255, 255, 255), 40)
+            rendered_text.draw(self.screen, left_align=True)
+
+        # Draw the image beside the text
+        self.screen.blit(mousekeyboard_image, (image_x, image_y))
+
+        # Update button position dynamically below the text or image
+        button_center_x = self.screen.get_width() // 2
+        button_y_offset = text_start_y + len(controls_text) * line_spacing + 50
+        self.back_options_button.x_pos = button_center_x
+        self.back_options_button.y_pos = button_y_offset
+
+        # Update button rects for drawing and interaction
+        self.back_options_button.rect = self.back_options_button.button.get_rect(center=(self.back_options_button.x_pos, self.back_options_button.y_pos))
+        self.back_options_button.text_rect = self.back_options_button.text.get_rect(center=(self.back_options_button.x_pos, self.back_options_button.y_pos))
+
+        # Draw and update the button
         self.back_options_button.update(self.screen)
         self.back_options_button.changeColor()
 
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
             if self.back_options_button.checkForClick(event):
                 self.back_to_main_menu()
-        
+
+        # Update the display
         pygame.display.update()
+
+
 
     def update(self):
         """
@@ -312,10 +351,21 @@ class Text():
         self.pos_x = pos_x
         self.pos_y = pos_y
 
-    def draw(self, screen):
-        '''
-        Draw text on the screen
-        '''
+    def draw(self, screen, left_align=False):
+        """
+        Draw text on the screen.
+
+        Parameters:
+        -----------
+        screen : pygame.Surface
+            The screen to draw the text on.
+        left_align : bool, optional
+            Whether to align text to the left instead of centering it (default is False).
+        """
         text_surface = self.font.render(self.text, True, self.color)
-        text_rect = text_surface.get_rect(center=(self.pos_x, self.pos_y))
+        text_rect = text_surface.get_rect()
+        if left_align:
+            text_rect.topleft = (self.pos_x, self.pos_y)
+        else:
+            text_rect.center = (self.pos_x, self.pos_y)
         screen.blit(text_surface, text_rect)
