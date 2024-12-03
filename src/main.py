@@ -147,12 +147,12 @@ class Game:
         while self.running:
             # Update the player dynamically if menu selection changes
             if self.player != self.character_dictionary[self.menu.char_selection]:
-                log = config.log(self.player) # match information
+                log = config.Log(self.player) # match information
                 self.log = log
                 self.player = self.character_dictionary[self.menu.char_selection]
                 self.initialize_player()
             else: 
-                log = config.log(self.player) # match information
+                log = config.Log(self.player) # match information
                 self.log = log
             
 
