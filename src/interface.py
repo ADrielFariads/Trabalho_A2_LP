@@ -74,7 +74,7 @@ class GameInterface:
         else:
             level_text = f"nivel maximo"
             experience_rect = pygame.Rect(10, 50, self.experience_bar_lenght, 15)
-        text_surface = font.render(level_text, True, (200, 200, 200))
+        text_surface = font.render(level_text, True, (255, 255, 255))
         text_rect = text_surface.get_rect(midleft=(border_rect.right + 10, border_rect.centery))
         
         pygame.draw.rect(self.screen, (0, 0, 255), experience_rect)
@@ -122,23 +122,32 @@ class GameInterface:
             skill (Skill): The skill object to display information about.
             mouse_pos (tuple): The mouse cursor's position on the screen.
         """
-        unlock_text = f"HABILIDADE DESBLOQUEADA NO NIVEL {skill.unlock_level}"
+        render_font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14)
 
-        text = f"[{skill.key}]: {skill.name} - tempo de recarga: {skill.cooldown / 1000} segundos.\n{skill.description}"
+        locked_text = f"HABILIDADE DESBLOQUEIA NO NIVEL {skill.unlock_level}!"
+        unlocked_text = "HABILIDADE DESBLOQUEADA"
+
+        skill_text = f"[{skill.key}]: {skill.name} - tempo de recarga: {skill.cooldown / 1000} segundos.\n{skill.description}"
+
         if self.player.current_level < skill.unlock_level:
-            text_surface = self.font.render(unlock_text, True, (255, 255, 255))
+            skill_status_surface = render_font.render(locked_text, True, (255, 255, 0))
         else:
-            text_surface = self.font.render(text, True, (255, 255, 255))
-        width, height = text_surface.get_size()
-        height += 10
+            skill_status_surface = render_font.render(unlocked_text, True, (50, 255, 50))
+
+        text_surface = render_font.render(skill_text, True, (255, 255, 255))
+
+        width = max(skill_status_surface.get_width(), text_surface.get_width())
+        height = skill_status_surface.get_height() + text_surface.get_height() + 10
 
         tooltip_x = mouse_pos[0] + 10
         tooltip_y = mouse_pos[1] - height - 100
 
-        pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
-        pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
 
-        self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
+        pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 15, height + 10))  # Background
+        pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 15, height + 10), 2)  # Border
+
+        self.screen.blit(skill_status_surface, (tooltip_x + 10, tooltip_y + 10))
+        self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10 + skill_status_surface.get_height()))
 
     def status_render(self):
         """
