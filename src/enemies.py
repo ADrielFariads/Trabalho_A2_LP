@@ -256,7 +256,7 @@ class Enemy(pygame.sprite.Sprite):
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
         # Initialize the sprite sheet and animation parameters
-        self.sprite_sheet = image_dict["GOBLIN1"]
+        self.sprite_sheet = image_dict["GOBLIN"]
         self.frames_x = 11  # colums
         self.frames_y = 5  # lines
         self.health = 500

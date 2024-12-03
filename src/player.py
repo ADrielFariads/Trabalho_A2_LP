@@ -7,6 +7,16 @@ actions and can level up, heal, and use special abilities while navigating withi
 
 import pygame
 
+import config
+import skills
+
+#loading images
+
+player_sprites = config.load_player_images()
+cyborg_images_dict = player_sprites[0]
+blademaster_image_dict = player_sprites[1]
+berserker_image_dict = player_sprites[2]
+
 
 class Player(pygame.sprite.Sprite):
     """
@@ -22,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         colidders (list, optional): List of collidable objects for detecting collisions.
     """
 
-    def __init__(self, pos, health, speed, map_bounds, skills, colidders=None):
+    def __init__(self, pos, health, speed, map_bounds, skills, spritesheet_dict, colidders=None):
         """
         Initializes the player character with the given attributes.
 
@@ -35,8 +45,11 @@ class Player(pygame.sprite.Sprite):
             colidders (list, optional): List of collidable objects for detecting collisions.
         """
         super().__init__()
+
+        self.sprite_sheet_dict = spritesheet_dict
+
         #loads the image
-        self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+        self.sprite_sheet = self.sprite_sheet_dict['IDLE']
         self.current_action = "idle"
 
         #calculating the frame size
@@ -144,22 +157,22 @@ class Player(pygame.sprite.Sprite):
 
         if action == "idle":
             self.current_action = "idle"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+            self.sprite_sheet = self.sprite_sheet_dict['IDLE']
             self.frames = self.load_frames(self.sprite_sheet, 4)
 
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/Walk1.png").convert_alpha()
+            self.sprite_sheet = self.sprite_sheet_dict['WALK']
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
         if action == "walkup":
             self.current_action = "walkup"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkUp.png").convert_alpha()
+            self.sprite_sheet = self.sprite_sheet_dict['WALKUP']
             self.frames = self.load_frames(self.sprite_sheet, 8)
 
         if action == "walkdown":
             self.current_action = "walkdown"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkDown.png").convert_alpha()
+            self.sprite_sheet = self.sprite_sheet_dict['WALKDOWN']
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
 ################# GETTER METHODS ###################################################
@@ -325,3 +338,30 @@ class Player(pygame.sprite.Sprite):
         """
         self.get_healed(self.life_steal)
         self.killed_enemies += 1
+
+
+
+############################################### subclasses creation ########################################################
+cyborg_skills = [skills.MachineGunRender(), skills.LethalTempo(), skills.MissilRain()]
+blademaster_skills = [skills.KnifeThrowerRender(), skills.Bloodlust(), skills.TimeManipulation()]
+berserker_skills = [skills.ShotgunRender(), skills.IronWill(), skills.GravitionVortex()]
+
+class Cyborg(Player):
+    def __init__(self, pos, map_bounds, colidders=None):
+        health = 1500
+        speed = 9
+        super().__init__(pos, health, speed, map_bounds, cyborg_skills, cyborg_images_dict, colidders)
+
+class BladeMaster(Player):
+    def __init__(self, pos, map_bounds, colidders=None):
+
+        health = 1200
+        speed = 10
+        super().__init__(pos, health, speed, map_bounds, blademaster_skills, blademaster_image_dict, colidders)
+
+class Berserker(Player):
+    def __init__(self, pos, map_bounds, colidders=None):
+
+        health = 2000
+        speed = 7
+        super().__init__(pos, health, speed, map_bounds, berserker_skills, berserker_image_dict, colidders)

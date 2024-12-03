@@ -25,8 +25,21 @@ class FilesPath(Enum):
     ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
     SLIME = "assets\\images\\enemies\\Slime\\slime_idle.png"
     ALIENBAT = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
-    GOBLIN1 = "assets\\images\\enemies\\goblins\\goblinsword.png"
-    
+    GOBLIN = "assets\\images\\enemies\\goblins\\goblinsword.png"
+    CYBORGIDLE = "assets\\images\\Player\\cyborg\\Idle.png"
+    CYBORGWALK = "assets\\images\Player\cyborg\\Walk.png"
+    CYBORGWALKUP = "assets\\images\\Player\\cyborg\\WalkUp.png"
+    CYBORGWALKDOWN = "assets\\images\\Player\cyborg\\WalkDown.png"
+    BLADEMASTERIDLE = "assets\\images\\Player\\blademaster\\Idle.png"
+    BLADEMASTERWALK = "assets\\images\\Player\\blademaster\\Walk.png"
+    BLADEMASTERWALKUP = "assets\\images\\Player\\blademaster\\WalkUp.png"
+    BLADEMASTERWALKDOWN = "assets\\images\\Player\\blademaster\\WalkDown.png"
+    BERSERKERIDLE = "assets\\images\\Player\\berserker\\Idle.png"
+    BERSERKERWALK = "assets\\images\\Player\\berserker\\Walk.png"
+    BERSERKERWALKUP = "assets\\images\\Player\\berserker\\WalkUp.png"
+    BERSERKERWALKDOWN = "assets\\images\\Player\\berserker\\WalkDown.png"
+
+
 
 
 class RectColiddersMap(Enum):
@@ -94,10 +107,32 @@ def load_enemies_images():
 
     """
     pygame.init()
-    subset = list(FilesPath)[2:]
+    subset = list(FilesPath)[2:6]
     image_dict = {item.name: pygame.image.load(item.value) for item in subset}
     return image_dict
 
 
-load_enemies_images()
+def load_player_images():
 
+    pygame.init()
+    subset = list(FilesPath)[6:]
+    cyborg_dict = {
+        item.name.removeprefix("CYBORG"): pygame.image.load(item.value)
+        for item in subset
+        if item.name.startswith("CYBORG")
+    }
+
+    blademaster_dict = {
+        item.name.removeprefix("BLADEMASTER"): pygame.image.load(item.value)
+        for item in subset
+        if item.name.startswith("BLADEMASTER")
+    }
+
+    berserker_dict = {
+        item.name.removeprefix("BERSERKER"): pygame.image.load(item.value)
+        for item in subset
+        if item.name.startswith("BERSERKER")
+    }
+
+
+    return [cyborg_dict, blademaster_dict, berserker_dict]
