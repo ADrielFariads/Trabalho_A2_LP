@@ -594,6 +594,6 @@ class AlienBat(Enemy):
         child = AlienBat(self.position, self.target, self.bullets, self.group)
         self.duplicate = False
 
-
-        
-        
+class EnemyWaveControler:
+    def __init__(self, target, ):
+        pass       
