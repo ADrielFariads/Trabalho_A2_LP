@@ -91,7 +91,7 @@ class Game:
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
-        self.menu = Menu(self.display_surface, self.player, self.enemies_group, self.interface)
+        self.menu = Menu(self.display_surface, self.player, self.enemy_army, self.interface)
 
         # Update all enemies to track the new player
         for enemy in self.enemies_group:

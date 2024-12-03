@@ -183,14 +183,14 @@ class Menu():
 
     def return_to_main_menu(self):
         self.reset_states()
-        Enemy.reset_enemies(self, self.enemy)
+        self.enemy.reset_enemies()
         self.player.reset_player()
         self.game_interface.reset_game_status()
         self.initial_menu = True
 
     def restart_game(self):
         self.reset_states()
-        Enemy.reset_enemies(self, self.enemy)
+        self.enemy.reset_enemies()
         self.player.reset_player()
         self.game_interface.reset_game_status()
         self.playing = True
