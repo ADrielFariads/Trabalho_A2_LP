@@ -1,7 +1,7 @@
 import pygame
 
 import config
-from player import Player
+import player
 import guns
 import enemies
 from groups import AllSpritesgroup
@@ -44,31 +44,16 @@ class Game:
         # Colliders
         colliders_rects = config.collisionSpritesGenerator()
 
-        # Skills
-        machinegun_render = skills.MachineGunRender()
-        knife_render = skills.KnifeThrowerRender()
-        shotgun_render = skills.ShotgunRender()
-        time_manipulation = skills.TimeManipulation()
-        iron_will = skills.IronWill()
-        vortex = skills.GravitionVortex()
-        blood_lust = skills.Bloodlust()
-        lethal_tempo = skills.LethalTempo()
-        missile_rain = skills.MissilRain()
-        
-        cyborg_skillset = [machinegun_render, lethal_tempo, missile_rain]
-        blade_master_skillset = [knife_render, blood_lust, time_manipulation]
-        berserker_skillset = [shotgun_render, iron_will, vortex]
-
         # Players (heroes)
-        self.cyborg = Player((1200, 1200), 1000, 7, self.map_bounds, cyborg_skillset, "Cyborg", 0, colliders_rects)
+        self.cyborg = player.Cyborg((1200, 1200), self.map_bounds, "Cyborg", 0, colliders_rects)
         self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
         self.cyborg.gun = self.machinegun
 
-        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, "Blade_master", 0,colliders_rects)
+        self.blade_master = player.BladeMaster((1200, 1200), self.map_bounds, "Blade_master", 0,colliders_rects)
         self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
         self.blade_master.gun = self.knifeThrower
 
-        self.berserker = Player((1200, 1200), 2000, 7, self.map_bounds, berserker_skillset, "Berserker", 0,colliders_rects)
+        self.berserker = player.Berserker((1200, 1200), self.map_bounds, "Berserker", 0,colliders_rects)
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
@@ -100,15 +85,13 @@ class Game:
         self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
 
         # Testing enemies
-        for i in range(20):
-            slime = enemies.Slime(config.random_pos(), self.player, self.bullet_group, 3, self.enemies_group)
-            bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
-            slime.colliders = colliders_rects
+        # for i in range(20):
+        #     bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
 
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
-        self.menu = Menu(self.display_surface, self.player, self.enemies_group, self.interface)
+        self.menu = Menu(self.display_surface, self.cyborg,self.blade_master,self.berserker, self.enemies_group, self.interface)
 
         # Update all enemies to track the new player
         for enemy in self.enemies_group:

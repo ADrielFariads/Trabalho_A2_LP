@@ -26,6 +26,7 @@ class Skill:
         self.image = pygame.image.load(image)
         self.last_used_time = 0
         self.is_on_cooldown = False
+        self.unlock_level=0
 
     def use(self, player):
         """
@@ -60,6 +61,7 @@ class Skill:
                     
 
 class Heal(Skill):
+
     def __init__(self):
         """
         Initializes the Heal skill with specific values for healing, cooldown, and image.
@@ -96,7 +98,6 @@ class Heal(Skill):
                 player.get_healed(self.heal_value)
                 self.last_used_time = pygame.time.get_ticks()
                 self.is_on_cooldown = True
-
 
 class Adrenaline(Skill):
     def __init__(self):
@@ -192,6 +193,7 @@ class TimeManipulation(Skill):
         self.end_time = 0
         self.sound = pygame.mixer.Sound("assets\\audio\\skills\\heatbeating.wav")
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 7
 
     def use(self, player):
         """
@@ -260,6 +262,7 @@ class LethalTempo(Skill):
         self.original_damage = 0
         self.original_cooldown = 0
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 3
 
     def use(self, player):
         """
@@ -326,6 +329,7 @@ class IronWill(Skill):
         self.duration = 5000
         self.end_time = 0
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 3
 
     def use(self, player):
         """
@@ -392,6 +396,7 @@ class Bloodlust(Skill):
         self.original_damage = 0
         self.original_gun_cooldown = 0
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 3
 
     def use(self, player):
         """
@@ -463,6 +468,7 @@ class MissilRain(Skill):
         self.missile_number = 9
         self.explosion_damage = 5000
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
+        self.unlock_level = 7
 
     def use(self, player):
         """
@@ -533,12 +539,13 @@ class GravitionVortex(Skill):
     def __init__(self):
         self.key = "E"
         self.name = "Campo Gravitacional"
-        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projéteis inimigos. Inimigos no centro da explosão são imediatamente obliterados. O Berserker não é afetado pelo Vortex."
+        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projeteis inimigos. Inimigos no centro da explosão são imediatamente obliterados. O Berserker não é afetado pelo Vortex."
         self.image = "assets\\images\\explosions\\vortex\\vortex.png"
-        self.cooldown = 15000
+        self.cooldown = 20000
         self.duration = 11000
         super().__init__(self.name, self.cooldown, self.image)
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
+        self.unlock_level = 7
 
     def use(self, player):
         """
@@ -597,10 +604,10 @@ class MachineGunRender(Skill):
         description (str): A brief description of the skill's effect.
     """
     def __init__(self):
-        self.key = "Botão Esquerdo"
+        self.key = "Ataque básico"
         self.name = "Metralhadora"
         self.cooldown = 500
-        self.image = "assets\\images\\icons\\machinegun_icon.png"
+        self.image = "assets\\images\\Guns\\machinegun1.png"
         self.description = f"Dispara uma saraivada de balas no local alvo."
         super().__init__(self.name, self.cooldown, self.image)
 
@@ -620,7 +627,7 @@ class KnifeThrowerRender(Skill):
         description (str): A brief description of the skill's effect.
     """
     def __init__(self):
-        self.key = "Botão Esquerdo"
+        self.key = "Ataque básico"
         self.name = "Arremesso de facas"
         self.cooldown = 1000
         self.image = "assets\\images\\Guns\\Knifeicon.png"
@@ -643,7 +650,7 @@ class ShotgunRender(Skill):
         description (str): A brief description of the skill's effect.
     """
     def __init__(self):
-        self.key = "Botão Esquerdo"
+        self.key = "Ataque básico"
         self.name = "Espingarda"
         self.cooldown = 1500
         self.image = "assets\\images\\Guns\\Shotgun_icon.png"

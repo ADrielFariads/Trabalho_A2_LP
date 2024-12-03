@@ -62,21 +62,9 @@ class Gun(pygame.sprite.Sprite):
 
     def update(self):
         """
-        Update the gun's position based on the player's movement. The gun's image is flipped
-        depending on whether the player is facing left or right.
-
-        :return: None
+        the update function depends on which gun the player has.
         """
-        # Update gun's position based on player movement
-        self.position = self.player.rect.center
-        self.rect.center = (self.position[0]-10, self.position[1]+15)
-
-        if self.player.facing_right:
-            self.image = self.original_image
-            self.rect.center = (self.position[0]-10, self.position[1]+15)
-        else:
-            self.image = pygame.transform.flip(self.original_image, True, False)  # Flip image if player is facing left
-            self.rect.center = (self.position[0], self.position[1]+15)
+        pass
 
 class Bullet(pygame.sprite.Sprite): #standart bullet class
     """
@@ -161,7 +149,7 @@ class MachineGun(Gun):
         :param player: The player object that the gun belongs to.
         :param map_bounds: The bounds of the map to constrain gun movement.
         """
-        texture = "assets\\images\\Guns\\machinegun.png"
+        texture = "assets\\images\\Guns\\machinegun1.png"
         damage = 50
         self.cool_down = 1000  # Cooldown between shots in milliseconds
         self.bullets = 5  # Number of bullets fired in a single shot
@@ -171,6 +159,8 @@ class MachineGun(Gun):
         self.sound.set_volume(0.5)
         
         super().__init__(player, texture, damage, self.cool_down, bullet_class, map_bounds)
+        self.original_image = pygame.transform.rotate(self.image, -45)
+        self.original_image = pygame.transform.scale(self.original_image, (64,64))
 
     def shoot_single_bullet(self, bullet_group, camera_offset):
         """
@@ -225,6 +215,45 @@ class MachineGun(Gun):
                 bullet.image = pygame.transform.scale(image, ((int(width * 2)), (int(height * 2))))
                 bullet.speed -= i  # Adjust speed for each bullet in the burst
                 all_sprites_group.add(bullet)  # Add the bullet to the group
+        
+    def update(self):
+        self.position = self.player.rect.center
+        self.rect.center = (self.position[0], self.position[1])
+
+
+        mouse_pos = pygame.mouse.get_pos() - self.player.offset
+        dx = mouse_pos[0] - self.position[0]
+        dy = mouse_pos[1] - self.position[1]
+
+        angle_deg = math.atan2(-dy, dx)
+        angle_deg = math.degrees(angle_deg)
+
+        if dx>0:
+            angle = min(max(angle_deg,-45), 45)
+            self.rect.centerx = self.player.rect.centerx-25
+            
+            
+        else:
+            angle = 180-angle_deg
+            if dy<0:
+                angle = min(angle, 45)
+            else:
+                angle = max(angle, 225)
+            self.rect.centerx = self.player.rect.centerx
+            
+
+        rotated_image = pygame.transform.rotate(self.original_image, angle)
+
+        self.image = rotated_image
+        if self.player.current_action == "walkup":
+            self.rect.centery = self.player.rect.centery - 10
+        else:
+            self.rect.centery = self.player.rect.centery + 5
+
+
+        if not self.player.facing_right:
+            self.image = pygame.transform.flip(self.image, True, False)
+        
 
 
 ########### Knife thrower logic ###########################
@@ -302,7 +331,7 @@ class KnifeThrower(Gun):
         self.cool_down = 750  # Cooldown time between shots (milliseconds)
         
         # Load and prepare the weapon's image
-        self.original_image = pygame.transform.scale(self.image, (30, 30))
+        self.original_image = pygame.transform.scale(self.image, (25, 25))
         self.original_image = pygame.transform.rotate(self.original_image, -60)
         self.image = self.original_image
         
@@ -384,6 +413,7 @@ class KnifeThrower(Gun):
             # If the player is facing left, flip the image
             self.image = pygame.transform.flip(self.original_image, True, False)
             self.rect.center = (self.position[0] + 15, self.position[1] + 30)
+        
 
 
 
@@ -557,10 +587,37 @@ class Shotgun(Gun):
         self.position = self.player.rect.center
         self.rect.center = (self.position[0], self.position[1])
 
-        # Adjust the image of the shotgun depending on the player's direction
-        if self.player.facing_right:
-            self.image = self.original_image
-            self.rect.center = (self.position[0]-10, self.position[1]+10)
+
+        mouse_pos = pygame.mouse.get_pos() - self.player.offset
+        dx = mouse_pos[0] - self.position[0]
+        dy = mouse_pos[1] - self.position[1]
+
+        angle_deg = math.atan2(-dy, dx)
+        angle_deg = math.degrees(angle_deg)
+
+        if dx>0:
+            angle = min(max(angle_deg,-45), 45)
+            self.rect.centerx = self.player.rect.centerx-25
+            
+            
         else:
-            self.image = pygame.transform.flip(self.original_image, True, False)  # Flip image if player is facing left
-            self.rect.center = (self.position[0], self.position[1]+10)
+            angle = 180-angle_deg
+            if dy<0:
+                angle = min(angle, 45)
+            else:
+                angle = max(angle, 225)
+            self.rect.centerx = self.player.rect.centerx
+            
+
+        rotated_image = pygame.transform.rotate(self.original_image, angle)
+
+        self.image = rotated_image
+        if self.player.current_action == "walkup":
+            self.rect.centery = self.player.rect.centery - 10
+        else:
+            self.rect.centery = self.player.rect.centery
+
+
+        if not self.player.facing_right:
+            self.image = pygame.transform.flip(self.image, True, False)
+        

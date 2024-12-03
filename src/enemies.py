@@ -6,6 +6,10 @@ This module handles the creation and management of enemies. It provides classes 
 import pygame
 import random
 
+import config
+
+image_dict = config.load_enemies_images()
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, group, colliders=None):
         """
@@ -13,7 +17,7 @@ class Enemy(pygame.sprite.Sprite):
 
         Args:
         pos (tuple): The position of the enemy (x, y).
-        sprite_sheet (str): Path to the sprite sheet image.
+        sprite_sheet (str): Sprite sheet loaded with pygame
         frames_x (int): The number of frames in the horizontal direction.
         frames_y (int): The number of frames in the vertical direction.
         health (int): The initial health of the enemy.
@@ -30,7 +34,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
 
         # Loading image
-        self.sprite_sheet = pygame.image.load(sprite_sheet).convert_alpha()
+        self.sprite_sheet = sprite_sheet
 
         self.frames_x = frames_x
         self.frames_y = frames_y
@@ -252,7 +256,7 @@ class Enemy(pygame.sprite.Sprite):
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
         # Initialize the sprite sheet and animation parameters
-        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblinsword.png"
+        self.sprite_sheet = image_dict["GOBLIN"]
         self.frames_x = 11  # colums
         self.frames_y = 5  # lines
         self.health = 500
@@ -345,7 +349,7 @@ class Andromaluis(Enemy):
         :param bullets_group: The group of bullets for collision detection.
         :param enemy_group: The group to which Andromaluis belongs, for adding spawned enemies.
         """
-        self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
+        self.sprite_sheet = image_dict["ANDROMALUIS"]
         self.frames_x = 8
         self.frames_y = 3
         self.health = 1500
@@ -448,7 +452,7 @@ class Slime(Enemy):
         :param level: The level of the slime, affecting its attributes.
         :param group: The group to which the slime belongs, used for collision detection.
         """
-        self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
+        self.sprite_sheet = image_dict["SLIME"]
         self.frames_x = 4
         self.frames_y = 2
         self.level = min(level, 3)
@@ -551,7 +555,7 @@ class AlienBat(Enemy):
         :param group: The group to which the alien bat belongs, used for collision detection.
         """
         self.group = group
-        self.sprite_sheet = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
+        self.sprite_sheet = image_dict["ALIENBAT"]
         self.frames_x = 6
         self.frames_y = 2
         self.health = 300

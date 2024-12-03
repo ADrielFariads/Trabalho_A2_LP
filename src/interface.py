@@ -19,10 +19,12 @@ class GameInterface:
         """
         self.screen = screen
         self.player = player
-        self.experience_bar_lenght, self.health_bar_length = 500, 500
+
+        self.experience_bar_lenght, self.health_bar_length = 400, 500
         self.health_change_speed = 2
         self.health_ratio = self.player.current_health / self.health_bar_length
-
+        self.experience_ratio = self.player.experience_needed / self.experience_bar_lenght
+        
         self.back_icon = pygame.image.load("assets\\images\\icons\\back_icon.png")
         self.back_icon = pygame.transform.scale(self.back_icon, (50, 50))
         self.font = pygame.font.Font(None, 24)
@@ -64,9 +66,22 @@ class GameInterface:
 
         The experience bar's length is determined by the player's experience.
         """
-        experience_rect = pygame.Rect(10, 50, self.player.experience, 15)
+        experience_rect = pygame.Rect(10, 50, self.player.experience/self.experience_ratio, 15)
+        border_rect = pygame.Rect(10, 50, self.experience_bar_lenght, 15)
+
+        font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 20)
+
+        if self.player.current_level < 10:
+            level_text = f"nivel {self.player.current_level}"
+        else:
+            level_text = f"nivel maximo"
+            experience_rect = pygame.Rect(10, 50, self.experience_bar_lenght, 15)
+        text_surface = font.render(level_text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect(midleft=(border_rect.right + 10, border_rect.centery))
+        
         pygame.draw.rect(self.screen, (0, 0, 255), experience_rect)
         pygame.draw.rect(self.screen, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
+        self.screen.blit(text_surface, text_rect)
 
     def skills_interface(self):
         """
@@ -84,6 +99,12 @@ class GameInterface:
             self.screen.blit(self.back_icon, (x_pos, y_pos))
             self.screen.blit(skill_icon, (x_pos + 3, y_pos + 3))
             skill_icon_rect = pygame.Rect(x_pos, y_pos, icon_size, icon_size)
+
+            if self.player.current_level < skill.unlock_level:
+                surface = pygame.Surface((50, 50))
+                surface.fill((30, 30, 30))
+                surface.set_alpha(200)
+                self.screen.blit(surface, (x_pos, y_pos))
 
             if skill.is_on_cooldown:  # Cooldown animation
                 surface = pygame.Surface((50, 50))
@@ -103,18 +124,33 @@ class GameInterface:
             skill (Skill): The skill object to display information about.
             mouse_pos (tuple): The mouse cursor's position on the screen.
         """
-        text = f"[{skill.key}]: {skill.name} - tempo de recarga: {skill.cooldown / 1000} segundos.\n{skill.description}"
-        text_surface = self.font.render(text, True, (255, 255, 255))
-        width, height = text_surface.get_size()
-        height += 10
+        text_font = pygame.font.Font("assets\\images\\Fonts\\ShareTech-Regular.ttf", 16)
+        render_font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14)
+
+        locked_text = f"HABILIDADE DESBLOQUEIA NO NIVEL {skill.unlock_level}!"
+        unlocked_text = "HABILIDADE DESBLOQUEADA"
+
+        skill_text = f"[{skill.key}]: {skill.name} - tempo de recarga: {skill.cooldown / 1000} segundos.\n{skill.description}"
+
+        if self.player.current_level < skill.unlock_level:
+            skill_status_surface = render_font.render(locked_text, True, (255, 255, 0))
+        else:
+            skill_status_surface = render_font.render(unlocked_text, True, (50, 255, 50))
+
+        text_surface = text_font.render(skill_text, True, (255, 255, 255))
+
+        width = max(skill_status_surface.get_width(), text_surface.get_width())
+        height = skill_status_surface.get_height() + text_surface.get_height() + 10
 
         tooltip_x = mouse_pos[0] + 10
         tooltip_y = mouse_pos[1] - height - 100
 
-        pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
-        pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
 
-        self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
+        pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 15, height + 10))  # Background
+        pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 15, height + 10), 2)  # Border
+
+        self.screen.blit(skill_status_surface, (tooltip_x + 10, tooltip_y + 10))
+        self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10 + skill_status_surface.get_height()))
 
     def status_render(self):
         """
@@ -153,6 +189,7 @@ class GameInterface:
         # Position the timer at the top-right corner of the screen, next to the score
         time_rect = time_surface.get_rect(topright=(self.screen.get_width() - 100, 10))
         self.screen.blit(time_surface, time_rect)
+
 
     def reset_game_status(self):
         """

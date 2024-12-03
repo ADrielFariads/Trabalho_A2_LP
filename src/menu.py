@@ -4,108 +4,79 @@ import json
 
 from enemies import Enemy
 
-class Button():
-
+class Button:
     def __init__(self, pos, text_input, base_color, hovering_color, scale):
-        #Define commom atributes
-        font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
-        normal_button = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha()
-        selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
-
-        #Buttons audios
-        self.select_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Selection.wav")
-        self.click_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Click.wav")
-        self.audio = False
+        # Font setup
+        self.font = pygame.font.Font("assets/images/Menu/font.ttf", 20)
+        # Load images after pygame.init()
+        self.normal_button = pygame.image.load("assets/images/Menu/button_normal.png").convert_alpha()
+        self.selected_button = pygame.image.load("assets/images/Menu/button_pressed.png").convert_alpha()
         
-        # Get the width and height of the image
-        width = normal_button.get_width()
-        height = normal_button.get_height()
-
-        # Scale the image according to the provided scale factor
-        self.button = pygame.transform.scale(normal_button, (int(width * scale), int(height * scale)))
-        self.selected_button = pygame.transform.scale(selected_button, (int(width * scale), int(height * scale)))
-
-        #Variable to return the button animation to normal
-        self.unselected_button = pygame.transform.scale(normal_button, (int(width * scale), int(height * scale)))
+        # Scale the images
+        scaled_size = (int(self.normal_button.get_width() * scale), int(self.normal_button.get_height() * scale))
+        self.button = pygame.transform.scale(self.normal_button, scaled_size)
+        self.selected_button = pygame.transform.scale(self.selected_button, scaled_size)
         
-        # Button position (x and y)
-        self.x_pos = pos[0]
-        self.y_pos = pos[1]
-        
-        # Font and colors
-        self.font = font
+        # Button position and text setup
+        self.x_pos, self.y_pos = pos
         self.base_color, self.hovering_color = base_color, hovering_color
         self.text_input = text_input
         self.text = self.font.render(self.text_input, True, self.base_color)
         
-        # If the image is None, use the text as the image (fallback)
-        if self.button is None:
-            self.button = self.text
-        
-        # Create the rectangle for the button's collision area (for detecting clicks)
+        # Rect setup for button and text positioning
         self.rect = self.button.get_rect(center=(self.x_pos, self.y_pos))
-        
-        # Create the rectangle for the text's collision area
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+        
+        # Audio setup
+        self.select_audio = pygame.mixer.Sound("assets/audio/menu/Menu_Selection.wav")
+        self.click_audio = pygame.mixer.Sound("assets/audio/menu/Menu_Click.wav")
+        self.audio = False
 
     def update(self, screen):
-        '''
-        Draw button on the screen
-
+        """
+        Draw button on the screen.
+        
         Parameters:
-        -----------
-        screen where the button will be shown
-        '''
-        if self.button is not None:
-            screen.blit(self.button, self.rect)
-        #If the button image doesn't exist draw only the text
+        screen: pygame.Surface - The screen to display the button on.
+        """
+        screen.blit(self.button, self.rect)
         screen.blit(self.text, self.text_rect)
 
     def checkForClick(self, event):
-        '''
-        Check if the mouse was pressed once (using pygame event)
-
+        """
+        Check if the mouse button was pressed and if it's over the button.
+        
         Parameters:
-        ------------
-        event: pygame event (to detect MOUSEBUTTONDOWN)
-
-        Return:
-        --------
-        True: if the mouse was pressed
-        False: otherwise
-        '''
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # 1 corresponds to the left mouse button
-                if self.rect.collidepoint(event.pos):
-                    #self.click_audio.play(0)
-                    self.click_audio.play()
-                    return True
+        event: pygame.event - Event to check mouse interaction.
+        
+        Returns:
+        bool - True if clicked, False otherwise.
+        """
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos):
+                self.click_audio.play()
+                return True
         return False
 
-
     def changeColor(self):
-        '''
-        Change the text color and the button animation if you overlay them with the mouse
-        '''
+        """
+        Change button color and sound when hovered.
+        """
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        
-        #check if they are overlapped by the mouse
         if self.rect.collidepoint(mouse_x, mouse_y):
-            #Plays the selected button sound effect
             if not self.audio:
                 self.select_audio.play()
                 self.audio = True
-            #Change the text color and the button animation 
             self.text = self.font.render(self.text_input, True, self.hovering_color)
             self.button = self.selected_button
         else:
-            #Back to normal
             self.audio = False
-            self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
+            self.button = pygame.transform.scale(self.normal_button, self.button.get_size())
+
 
 class Menu():
-    def __init__(self, screen, player, enemy, game_interface):
+    def __init__(self, screen, cyborg,blade,berseker, enemy, game_interface):
         '''
         Creates all button and text objects,
         and creates boolean variables to switch between the game and menus
@@ -116,8 +87,11 @@ class Menu():
 
         '''
 
+        #Players
+        self.characters_list = [cyborg, blade, berseker]
+        self.player = self.characters_list[1]
+
         #Will be reseted
-        self.player = player
         self.enemy = enemy
         self.game_interface = game_interface
 
@@ -129,114 +103,113 @@ class Menu():
         self.char_selection_background = pygame.image.load("assets\\images\\Menu\\selectcharacters.png").convert_alpha()
         
         #Buttons
-        self.play_button = Button([600,400], "PLAY", (255,255,255), (0,0,0), 1)
-        self.options_button = Button([600,550], "OPTIONS",(255,255,255), (0,0,0), 1)
-        self.play_again_button = Button([400,450], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
-        self.back_options_button = Button([500,450], "BACK",(255,255,255), (0,0,0), 1)
-        self.back_paused_button = Button([400,450], "BACK",(255,255,255), (0,0,0), 1)
+        self.play_button = Button([600,400], "JOGAR", (255,255,255), (0,0,0), 1)
+        self.controls_button = Button([600, 550], "CONTROLES", (255, 255, 255), (0, 0, 0), 1)
+        self.play_again_button = Button([400,450], "NOVO JOGO",(255,255,255), (0,0,0), 1)
+        self.back_options_button = Button([500,450], "VOLTAR",(255,255,255), (0,0,0), 1)
+        self.back_paused_button = Button([400,450], "VOLTAR",(255,255,255), (0,0,0), 1)
         self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1)
+
         #Selection Characters
         self.char1_selection_button = Button([300, 600], "Cyborg", (255, 255, 255), (0, 0, 0), 1)
         self.char2_selection_button = Button([600, 600], "Blade Master", (255, 255, 255), (0, 0, 0), 1)
         self.char3_selection_button = Button([900, 600], "Berserk", (255, 255, 255), (0, 0, 0), 1)
         self.back_char_back_button = Button([600, 700], "Menu", (255, 255, 255), (0, 0, 0), 1)
+
+
+
         #character default selected
         self.char_selection = 1
 
 
         #Texts
         self.menu_text = Text(600,150,"Cosmic Survivor", (255,255,255), 56)
-        self.paused_text = Text(600,150,"Game Paused", (255,255,255), 56)
-        self.options_text = Text(600,250, "Press Esc to pause", (255,255,255), 50)
-        self.death_text = Text(600,150,"Game Over!", (255,255,255), 56)
-        self.char_selection_text = Text(600,150,"Main Characters", (255,255,255), 56)
+        self.paused_text = Text(600,150,"Jogo Pausado", (255,255,255), 56)
+        self.death_text = Text(600,150,"Você Perdeu!", (255,255,255), 56)
+        self.char_selection_text = Text(600,150,"Personagens", (255,255,255), 56)
+    
 
         #Game states
         self.initial_menu = True
-        self.options_menu = False
+        self.controls_menu = False
         self.death_menu = False
         self.pause_menu = False
         self.playing = False
         self.char_selection_state = False
 
+    def reset_states(self):
+        """Reset all game states to avoid overlap."""
+        self.initial_menu = False
+        self.controls_menu = False
+        self.death_menu = False
+        self.pause_menu = False
+        self.char_selection_state = False
+        self.playing = False
+
     def change_current_game_state(self, button, alow_heroe):
         '''
         Verify the button and change the current game state or start the game
         through user interaction with the buttons.
-
-        Parameters:
-        ------------
-        Button that was pressed
         '''
-
-
-        if button == self.play_button:
-            self.initial_menu = False
-            self.char_selection_state = True
-            self.game_interface.change_playing_status(False) 
-        elif button == self.options_button:
-            self.char_selection_state = False
-            self.initial_menu = False
-            self.options_menu = True
-            self.game_interface.change_playing_status(False) 
-        elif button == self.back_options_button:
-            self.char_selection_state = False
-            self.options_menu = False
-            self.playing = False
-            self.initial_menu = True
-            self.game_interface.change_playing_status(False) 
-        elif button == self.back_char_back_button:
-            self.char_selection_state = False
-            self.options_menu = False
-            self.playing = False
-            self.initial_menu = True
-            self.game_interface.change_playing_status(False) 
-        elif button == self.back_paused_button:
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.resume_game()
-            self.game_interface.change_playing_status(False) 
-        elif button == self.menu_button:
-            #Reset the game when return to initial menu
-            Enemy.reset_enemies(self,self.enemy)
-            self.char_selection_state = False
-            self.player.reset_player()
-            self.game_interface.reset_game_status()
-            self.pause_menu = False
-            self.death_menu = False
-            self.initial_menu = True
-            self.game_interface.change_playing_status(False) 
-        elif button == self.play_again_button:
-            #Reset the game to play again
-            Enemy.reset_enemies(self,self.enemy)
-            self.player.reset_player()
-            self.char_selection_state = False
-            self.game_interface.reset_game_status()
-            self.playing = True
-            self.game_interface.change_playing_status(False) 
-        else:            
-            if button == self.char1_selection_button:
-                self.char_selection_state = False
-                self.char_selection = 1
-                self.char_selection_state = False
-                self.playing = True
-                self.game_interface.reset_game_status()
-            elif button == self.char2_selection_button and alow_heroe["Blade_master"] == True:
-                self.char_selection_state = False
-                self.char_selection = 2
-                self.char_selection_state = False
-                self.playing = True
-                self.game_interface.reset_game_status()
-            elif button == self.char3_selection_button and alow_heroe["Berserker"] == True:
-                self.char_selection_state = False
-                self.char_selection = 3
-                self.char_selection_state = False
-                self.playing = True
-                self.game_interface.reset_game_status()
-            self.game_interface.change_playing_status(True)            
-        
+        button_actions = {
+            self.play_button: self.start_character_selection,
+            self.char1_selection_button: lambda: self.start_game(1),
+            self.char2_selection_button: lambda: self.start_game(2),
+            self.char3_selection_button: lambda: self.start_game(3),
+            self.controls_button: self.open_controls_screen,
+            self.back_options_button: self.back_to_main_menu,
+            self.back_char_back_button: self.back_to_main_menu,
+            self.back_paused_button: self.resume_game,
+            self.menu_button: self.return_to_main_menu,
+            self.play_again_button: self.restart_game,
             
+        }
+        
+        action = button_actions.get(button)
+        if action:
+            action()
 
+    # Supporting methods
+    def start_character_selection(self):
+        self.reset_states()
+        self.char_selection_state = True
+    
+
+    def start_game(self, character):
+        self.reset_states()
+        self.char_selection = character
+        self.player = self.characters_list[character-1]
+        self.playing = True
+        self.game_interface.reset_game_status()
+    
+        
+
+    def open_controls_screen(self):
+        self.reset_states()
+        self.controls_menu = True
+
+    def back_to_main_menu(self):
+        self.reset_states()
+        self.initial_menu = True
+
+    def resume_game(self):
+        self.reset_states()
+        self.playing = True
+        self.game_interface.resume_game()
+
+    def return_to_main_menu(self):
+        self.reset_states()
+        Enemy.reset_enemies(self, self.enemy)
+        self.player.reset_player()
+        self.game_interface.reset_game_status()
+        self.initial_menu = True
+
+    def restart_game(self):
+        self.reset_states()
+        Enemy.reset_enemies(self, self.enemy)
+        self.player.reset_player()
+        self.game_interface.reset_game_status()
+        self.playing = True
 
     def draw(self, text, *button_args):
         '''
@@ -334,24 +307,94 @@ class Menu():
         # Update the display
         pygame.display.update()
 
+    def draw_controls_screen(self):
+        # Draw the background
+        self.screen.blit(self.menu_background, (0, 0))
+
+        # Load and prepare the image (mouse and keyboard)
+        mousekeyboard_image = pygame.image.load("assets/images/Menu/mousekeyboard.png").convert_alpha()
+        image_width, image_height = mousekeyboard_image.get_size()
+        scaled_size = (int(image_width * 1), int(image_height * 1))  # Scale the image
+        mousekeyboard_image = pygame.transform.scale(mousekeyboard_image, scaled_size)
+
+        # Controls text
+        controls_text = [
+            "Cima: W",
+            "Esquerda: A",
+            "Baixo: S",
+            "Direita: D",
+            "Hablidade 1: Q",
+            "Hablidade 2: E",
+            "Pausa: Esc",
+            "Atirar: Botão Esquerdo"
+        ]
+
+        # Text positions
+        text_start_x = 20
+        text_start_y = 150
+        line_spacing = 50
+
+        # Calculate maximum text width for alignment
+        font = pygame.font.Font(None, 40)  # Default font
+        max_text_width = max(font.size(line)[0] for line in controls_text)
+        
+        # Position the image beside the text
+        image_x = 40
+        image_y = -75
+
+        # Draw each line of controls text
+        for i, line in enumerate(controls_text):
+            y_pos = text_start_y + i * line_spacing
+            rendered_text = Text(text_start_x, y_pos, line, (255, 255, 255), 40)
+            rendered_text.draw(self.screen, left_align=True)
+
+        # Draw the image beside the text
+        self.screen.blit(mousekeyboard_image, (image_x, image_y))
+
+        # Update button position dynamically below the text or image
+        button_center_x = self.screen.get_width() // 2
+        button_y_offset = text_start_y + len(controls_text) * line_spacing + 50
+        self.back_options_button.x_pos = button_center_x
+        self.back_options_button.y_pos = button_y_offset
+
+        # Update button rects for drawing and interaction
+        self.back_options_button.rect = self.back_options_button.button.get_rect(center=(self.back_options_button.x_pos, self.back_options_button.y_pos))
+        self.back_options_button.text_rect = self.back_options_button.text.get_rect(center=(self.back_options_button.x_pos, self.back_options_button.y_pos))
+
+        # Draw and update the button
+        self.back_options_button.update(self.screen)
+        self.back_options_button.changeColor()
+
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if self.back_options_button.checkForClick(event):
+                self.back_to_main_menu()
+
+        # Update the display
+        pygame.display.update()
+
 
 
     def update(self):
-        '''
-        Calls the draw function to the current menu
-        '''
+        """
+        Calls the appropriate draw function based on the current menu state.
+        """
         if self.initial_menu:
-            self.draw(self.menu_text, self.play_button, self.options_button)
-        elif self.options_menu:
-            self.draw(self.options_text,self.back_options_button)
+            self.draw(self.menu_text, self.play_button, self.controls_button)
+        elif self.controls_menu:
+            self.draw_controls_screen()
         elif self.pause_menu:
-            self.draw(self.paused_text, self.menu_button,self.back_paused_button)
+            self.draw(self.paused_text, self.menu_button, self.back_paused_button)
         elif self.death_menu:
-            self.draw(self.death_text,self.play_again_button,self.menu_button)
-        elif self.char_selection:
-            self.draw(self.char_selection_text,self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
-            
-
+            self.draw(self.death_text, self.play_again_button, self.menu_button)
+        elif self.char_selection_state:  # Fix typo here from char_selection to char_selection_state
+            self.draw(self.char_selection_text, self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
+    
+        
+        self.game_interface.score_running = self.playing
 
 class Text():
 
@@ -375,10 +418,21 @@ class Text():
         self.pos_x = pos_x
         self.pos_y = pos_y
 
-    def draw(self, screen):
-        '''
-        Draw text on the screen
-        '''
+    def draw(self, screen, left_align=False):
+        """
+        Draw text on the screen.
+
+        Parameters:
+        -----------
+        screen : pygame.Surface
+            The screen to draw the text on.
+        left_align : bool, optional
+            Whether to align text to the left instead of centering it (default is False).
+        """
         text_surface = self.font.render(self.text, True, self.color)
-        text_rect = text_surface.get_rect(center=(self.pos_x, self.pos_y))
+        text_rect = text_surface.get_rect()
+        if left_align:
+            text_rect.topleft = (self.pos_x, self.pos_y)
+        else:
+            text_rect.center = (self.pos_x, self.pos_y)
         screen.blit(text_surface, text_rect)

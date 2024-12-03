@@ -7,6 +7,16 @@ actions and can level up, heal, and use special abilities while navigating withi
 
 import pygame
 
+import config
+import skills
+
+#loading images
+
+player_sprites = config.load_player_images()
+cyborg_images_dict = player_sprites[0]
+blademaster_image_dict = player_sprites[1]
+berserker_image_dict = player_sprites[2]
+
 
 class Player(pygame.sprite.Sprite):
     """
@@ -22,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         colidders (list, optional): List of collidable objects for detecting collisions.
     """
 
-    def __init__(self, pos, health, speed, map_bounds, skills, heroe, time_of_playing ,colidders=None):
+    def __init__(self, pos, health, speed, map_bounds, skills, spritesheet_dict, heroe, time_of_playing , colidders=None):
         """
         Initializes the player character with the given attributes.
 
@@ -35,8 +45,11 @@ class Player(pygame.sprite.Sprite):
             colidders (list, optional): List of collidable objects for detecting collisions.
         """
         super().__init__()
+
+        self.sprite_sheet_dict = spritesheet_dict
+
         #loads the image
-        self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+        self.sprite_sheet = self.sprite_sheet_dict['IDLE']
         self.current_action = "idle"
 
 
@@ -76,6 +89,7 @@ class Player(pygame.sprite.Sprite):
         self.experience = 0
         self.current_level = 1
         self.killed_enemies = 0
+        self.experience_needed = 500 * self.current_level
 
         #colidders
         self.colliders = colidders
@@ -150,22 +164,25 @@ class Player(pygame.sprite.Sprite):
 
         if action == "idle":
             self.current_action = "idle"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
+            self.sprite_sheet = self.sprite_sheet_dict['IDLE']
             self.frames = self.load_frames(self.sprite_sheet, 4)
 
         if action == "walk":
             self.current_action = "walk"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/Walk1.png").convert_alpha()
+            self.sprite_sheet = self.sprite_sheet_dict['WALK']
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
         if action == "walkup":
             self.current_action = "walkup"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkUp.png").convert_alpha()
-            self.frames = self.load_frames(self.sprite_sheet, 8)
+            self.sprite_sheet = self.sprite_sheet_dict['WALKUP']
+            self.frames = self.load_frames(self.sprite_sheet, 6)
+            self.gun.z_index = self.z_index - 1
+        else:
+            self.gun.z_index = self.z_index + 1
 
         if action == "walkdown":
             self.current_action = "walkdown"
-            self.sprite_sheet = pygame.image.load("assets/images/Player/WalkDown.png").convert_alpha()
+            self.sprite_sheet = self.sprite_sheet_dict['WALKDOWN']
             self.frames = self.load_frames(self.sprite_sheet, 6)
 
 ################# GETTER METHODS ###################################################
@@ -225,25 +242,29 @@ class Player(pygame.sprite.Sprite):
         # Horizontal movement first (priority)
         if keys[pygame.K_a]:  # Left
             self.direction.x = -1
-            self.facing_right = False
+            #self.facing_right = False
             self.set_action("walk")
         elif keys[pygame.K_d]:  # Right
             self.direction.x = 1
-            self.facing_right = True
+            #self.facing_right = True
             self.set_action("walk")
 
-        # Vertical movement only if no horizontal input
-        if self.direction.x == 0:
-            if keys[pygame.K_w]:  # Up
-                self.direction.y = -1
-                self.set_action("walkup")
-            elif keys[pygame.K_s]:  # Down
-                self.direction.y = 1
+        # Vertical animation only if no horizontal input
+        
+        if keys[pygame.K_w]:  # Up
+            self.direction.y = -1
+            if self.direction.x == 0:
+                    self.set_action("walkup")
+        elif keys[pygame.K_s]:  # Down
+            self.direction.y = 1
+            if self.direction.x == 0:
                 self.set_action("walkdown")
 
         # Set idle if no keys are pressed
         if self.direction.length() == 0:
             self.set_action("idle")
+        else:
+            self.direction.normalize_ip()
 
         # Update sprite flip for horizontal movement
         if not self.facing_right:
@@ -279,7 +300,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = current_image
 
-        if self.experience >= 500:
+        if self.experience >= self.experience_needed:
             self.level_up()
         
         #skills
@@ -287,10 +308,10 @@ class Player(pygame.sprite.Sprite):
         for skill in self.skills:
             skill.update(self)
 
-        if keys[pygame.K_q]:
+        if keys[pygame.K_q] and self.current_level >= self.skills[-2].unlock_level:
             self.skills[-2].use(self)
 
-        if keys[pygame.K_e]:
+        if keys[pygame.K_e] and self.current_level >= self.skills[-1].unlock_level:
             self.skills[-1].use(self)
 
 ################# HEALTH LOGIC ##############################################################
@@ -331,3 +352,30 @@ class Player(pygame.sprite.Sprite):
         """
         self.get_healed(self.life_steal)
         self.killed_enemies += 1
+
+
+
+############################################### subclasses creation ########################################################
+cyborg_skills = [skills.MachineGunRender(), skills.LethalTempo(), skills.MissilRain()]
+blademaster_skills = [skills.KnifeThrowerRender(), skills.Bloodlust(), skills.TimeManipulation()]
+berserker_skills = [skills.ShotgunRender(), skills.IronWill(), skills.GravitionVortex()]
+
+class Cyborg(Player):
+    def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
+        health = 1500
+        speed = 8
+        super().__init__(pos, health, speed, map_bounds, cyborg_skills, cyborg_images_dict, heroe, time_of_playing, colidders)
+
+class BladeMaster(Player):
+    def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
+
+        health = 1200
+        speed = 10
+        super().__init__(pos, health, speed, map_bounds, blademaster_skills, blademaster_image_dict, heroe, time_of_playing, colidders)
+
+class Berserker(Player):
+    def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
+
+        health = 2000
+        speed = 7
+        super().__init__(pos, health, speed, map_bounds, berserker_skills, berserker_image_dict, heroe, time_of_playing, colidders)
