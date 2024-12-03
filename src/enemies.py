@@ -256,7 +256,7 @@ class Enemy(pygame.sprite.Sprite):
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group):
         # Initialize the sprite sheet and animation parameters
-        self.sprite_sheet = "assets\\images\\enemies\\goblins\\goblinsword.png"
+        self.sprite_sheet = image_dict["GOBLIN1"]
         self.frames_x = 11  # colums
         self.frames_y = 5  # lines
         self.health = 500
@@ -349,7 +349,7 @@ class Andromaluis(Enemy):
         :param bullets_group: The group of bullets for collision detection.
         :param enemy_group: The group to which Andromaluis belongs, for adding spawned enemies.
         """
-        self.sprite_sheet = "assets\\images\\enemies\\andromaluis\\andromalius.png"
+        self.sprite_sheet = image_dict["ANDROMALUIS"]
         self.frames_x = 8
         self.frames_y = 3
         self.health = 1500
@@ -452,7 +452,7 @@ class Slime(Enemy):
         :param level: The level of the slime, affecting its attributes.
         :param group: The group to which the slime belongs, used for collision detection.
         """
-        self.sprite_sheet = "assets\\images\\enemies\\Slime\\slime_idle.png"
+        self.sprite_sheet = image_dict["SLIME"]
         self.frames_x = 4
         self.frames_y = 2
         self.level = min(level, 3)
@@ -555,7 +555,7 @@ class AlienBat(Enemy):
         :param group: The group to which the alien bat belongs, used for collision detection.
         """
         self.group = group
-        self.sprite_sheet = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
+        self.sprite_sheet = image_dict["ALIENBAT"]
         self.frames_x = 6
         self.frames_y = 2
         self.health = 300

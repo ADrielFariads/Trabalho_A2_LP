@@ -25,6 +25,8 @@ class FilesPath(Enum):
     ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
     SLIME = "assets\\images\\enemies\\Slime\\slime_idle.png"
     ALIENBAT = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
+    GOBLIN1 = "assets\\images\\enemies\\goblins\\goblinsword.png"
+    
 
 
 class RectColiddersMap(Enum):
@@ -94,7 +96,7 @@ def load_enemies_images():
     pygame.init()
     subset = list(FilesPath)[2:]
     image_dict = {item.name: pygame.image.load(item.value) for item in subset}
-    print(image_dict)
+    return image_dict
 
 
 load_enemies_images()
