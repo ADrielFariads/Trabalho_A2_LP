@@ -117,7 +117,7 @@ class Menu():
         self.menu_text = Text(600,150,"Cosmic Survivor", (255,255,255), 56)
         self.paused_text = Text(600,150,"Jogo Pausado", (255,255,255), 56)
         self.death_text = Text(600,150,"Você Perdeu!", (255,255,255), 56)
-        self.char_selection_text = Text(600,150,"Personagens Principais", (255,255,255), 56)
+        self.char_selection_text = Text(600,150,"Personagens", (255,255,255), 56)
 
         #Game states
         self.initial_menu = True
