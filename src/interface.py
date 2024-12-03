@@ -18,10 +18,11 @@ class GameInterface:
         self.screen = screen
         self.player = player
 
-        self.experience_bar_lenght, self.health_bar_length = 500, 500
+        self.experience_bar_lenght, self.health_bar_length = 400, 500
         self.health_change_speed = 2
         self.health_ratio = self.player.current_health / self.health_bar_length
-
+        self.experience_ratio = self.player.experience_needed / self.experience_bar_lenght
+        
         self.back_icon = pygame.image.load("assets\\images\\icons\\back_icon.png")
         self.back_icon = pygame.transform.scale(self.back_icon, (50, 50))
         self.font = pygame.font.Font(None, 24)
@@ -63,7 +64,7 @@ class GameInterface:
 
         The experience bar's length is determined by the player's experience.
         """
-        experience_rect = pygame.Rect(10, 50, self.player.experience, 15)
+        experience_rect = pygame.Rect(10, 50, self.player.experience/self.experience_ratio, 15)
         pygame.draw.rect(self.screen, (0, 0, 255), experience_rect)
         pygame.draw.rect(self.screen, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
 
@@ -150,6 +151,7 @@ class GameInterface:
         # Position the timer at the top-right corner of the screen, next to the score
         time_rect = time_surface.get_rect(topright=(self.screen.get_width() - 100, 10))
         self.screen.blit(time_surface, time_rect)
+
 
     def reset_game_status(self):
         """

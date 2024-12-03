@@ -87,6 +87,7 @@ class Player(pygame.sprite.Sprite):
         self.experience = 0
         self.current_level = 1
         self.killed_enemies = 0
+        self.experience_needed = 500 * self.current_level
 
         #colidders
         self.colliders = colidders
@@ -290,7 +291,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image = current_image
 
-        if self.experience >= 500:
+        if self.experience >= self.experience_needed:
             self.level_up()
         
         #skills
