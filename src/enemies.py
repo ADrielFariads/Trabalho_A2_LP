@@ -164,10 +164,10 @@ class Enemy(pygame.sprite.Sprite):
         current_pos = pygame.math.Vector2(self.rect.center)
         if self.player_distance() > self.attack_range:
             self.direction = (player_pos - current_pos).normalize()
+            movement = self.direction * self.speed
         else:
-            self.direction = pygame.math.Vector2(0, 0)
-
-        movement = self.direction * self.speed
+            self.direction = player_pos - current_pos
+            movement = pygame.math.Vector2(0,0)
 
         self.rect.x += movement.x
         self.rect.y += movement.y
@@ -447,6 +447,8 @@ class Slime(Enemy):
         for x in range(4):
             frame_ = self.additional_image.subsurface((x * frame_width, 0, frame_width,  frame_height))
             self.attack_frames.append(frame_)
+        self.idle_frames_flipped = [pygame.transform.flip(each, True, False) for each in self.idle_frames]
+        self.attack_frames_flipped = [pygame.transform.flip(each, True, False) for each in self.attack_frames]
         self.frames = self.idle_frames
 
         # Divide the frames into sublists for each direction
@@ -461,16 +463,25 @@ class Slime(Enemy):
         self.attack_counter += 1
         if self.player_distance() <= self.attack_range:
             # Attack the player if within range and the attack delay has passed
-            self.frames = self.attack_frames
+            if self.direction.x > 0 :
+                self.frames = self.attack_frames
+            else:
+                self.frames = self.attack_frames_flipped
             self.frames_y = 1
             self.animation_speed = 15
             if self.attack_counter >= self.attack_delay:
                 self.attack(self.target)
                 self.attack_counter = 0
         else:
-            self.frames = self.idle_frames
+            if self.direction.x > 0 :
+                self.frames = self.idle_frames
+            else:
+                self.frames = self.idle_frames_flipped
             self.animation_speed = 10
             self.frames_y = 2
+
+
+
 
     def duplicate(self):
         """
