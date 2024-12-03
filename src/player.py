@@ -239,7 +239,7 @@ class Player(pygame.sprite.Sprite):
             self.facing_right = True
             self.set_action("walk")
 
-        # Vertical movement only if no horizontal input
+        # Vertical animation only if no horizontal input
         
         if keys[pygame.K_w]:  # Up
             self.direction.y = -1
@@ -253,6 +253,8 @@ class Player(pygame.sprite.Sprite):
         # Set idle if no keys are pressed
         if self.direction.length() == 0:
             self.set_action("idle")
+        else:
+            self.direction.normalize_ip()
 
         # Update sprite flip for horizontal movement
         if not self.facing_right:
@@ -351,7 +353,7 @@ berserker_skills = [skills.ShotgunRender(), skills.IronWill(), skills.GravitionV
 class Cyborg(Player):
     def __init__(self, pos, map_bounds, colidders=None):
         health = 1500
-        speed = 9
+        speed = 8
         super().__init__(pos, health, speed, map_bounds, cyborg_skills, cyborg_images_dict, colidders)
 
 class BladeMaster(Player):

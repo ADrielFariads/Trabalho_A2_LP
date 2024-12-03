@@ -597,7 +597,7 @@ class MachineGunRender(Skill):
         description (str): A brief description of the skill's effect.
     """
     def __init__(self):
-        self.key = "Botão Esquerdo"
+        self.key = "Ataque básico"
         self.name = "Metralhadora"
         self.cooldown = 500
         self.image = "assets\\images\\icons\\machinegun_icon.png"
@@ -620,7 +620,7 @@ class KnifeThrowerRender(Skill):
         description (str): A brief description of the skill's effect.
     """
     def __init__(self):
-        self.key = "Botão Esquerdo"
+        self.key = "Ataque básico"
         self.name = "Arremesso de facas"
         self.cooldown = 1000
         self.image = "assets\\images\\Guns\\Knifeicon.png"
@@ -643,7 +643,7 @@ class ShotgunRender(Skill):
         description (str): A brief description of the skill's effect.
     """
     def __init__(self):
-        self.key = "Botão Esquerdo"
+        self.key = "Ataque básico"
         self.name = "Espingarda"
         self.cooldown = 1500
         self.image = "assets\\images\\Guns\\Shotgun_icon.png"

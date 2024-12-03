@@ -44,28 +44,16 @@ class Game:
         # Colliders
         colliders_rects = config.collisionSpritesGenerator()
 
-        # Skills
-        knife_render = skills.KnifeThrowerRender()
-        shotgun_render = skills.ShotgunRender()
-        time_manipulation = skills.TimeManipulation()
-        iron_will = skills.IronWill()
-        vortex = skills.GravitionVortex()
-        blood_lust = skills.Bloodlust()
-
-        
-        blade_master_skillset = [knife_render, blood_lust, time_manipulation]
-        berserker_skillset = [shotgun_render, iron_will, vortex]
-
         # Players (heroes)
-        self.cyborg = player.Cyborg((1200, 1200), self.map_bounds)
+        self.cyborg = player.Cyborg((1200, 1200), self.map_bounds, colliders_rects)
         self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
         self.cyborg.gun = self.machinegun
 
-        self.blade_master = player.BladeMaster((1200, 1200), self.map_bounds)
+        self.blade_master = player.BladeMaster((1200, 1200), self.map_bounds, colliders_rects)
         self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
         self.blade_master.gun = self.knifeThrower
 
-        self.berserker = player.Berserker((1200, 1200), self.map_bounds)
+        self.berserker = player.Berserker((1200, 1200), self.map_bounds, colliders_rects)
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
