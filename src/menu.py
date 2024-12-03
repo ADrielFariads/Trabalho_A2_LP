@@ -1,4 +1,7 @@
 import pygame
+import config
+import json 
+
 from enemies import Enemy
 
 class Button:
@@ -133,7 +136,6 @@ class Menu():
         self.pause_menu = False
         self.playing = False
         self.char_selection_state = False
-        
 
     def reset_states(self):
         """Reset all game states to avoid overlap."""
@@ -144,7 +146,7 @@ class Menu():
         self.char_selection_state = False
         self.playing = False
 
-    def change_current_game_state(self, button):
+    def change_current_game_state(self, button, alow_heroe):
         '''
         Verify the button and change the current game state or start the game
         through user interaction with the buttons.
@@ -218,6 +220,13 @@ class Menu():
         text: The text object to display on the screen.
         *button_args: Button objects that will be displayed and interacted with.
         '''
+
+        alow_heroe = {
+            "Cyborg": True,
+            "Blade_master": False,
+            "Berserker": False
+        }
+
         # If in character selection state, draw the character selection background on top of the existing background
         if self.char_selection_state:
             self.screen.blit(self.menu_background, (0, 0))  # Draw the menu background first
@@ -228,6 +237,23 @@ class Menu():
 
         # Capture all input events
         events = pygame.event.get()
+
+        data = config.read_json("progress_game.json")          
+        for obj in data:
+            # Replace single quotes with double quotes to ensure the string is valid JSON
+            json_correct = obj.replace("'", '"')
+                
+            # Parse the corrected JSON string into a dictionary
+            obj_dic = json.loads(json_correct)
+                
+            # Iterate over the key-value pairs in the dictionary
+            for key, value in obj_dic.items():
+                if key == "Kills" and value >= 15:
+                        # If the key is "Kills" and the value is 15 or more, enable "Blade_master"
+                    alow_heroe["Blade_master"] = True
+                if key == "Kills" and value >= 25:
+                    # If the key is "Kills" and the value is 25 or more, enable "Berserker"
+                    alow_heroe["Berserker"] = True
 
         # Handle global quit event
         for event in events:
@@ -244,8 +270,36 @@ class Menu():
             # Check for mouse click events on the button
             for event in events:
                 if button.checkForClick(event):
-                    # Perform the action assigned to the clicked button
-                    self.change_current_game_state(button)
+                    # Perform the action assigned to the clicked button                    
+                    self.change_current_game_state(button, alow_heroe)
+
+            if button == self.char2_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Blade_master"] == False:
+                    message = f"Personagem não liberado!! Nescessario recorde de 15 mortes"
+                    text_surface = pygame.font.Font(None, 24).render(message, True, (255, 255, 255))
+                    width, height = text_surface.get_size()
+                    height += 10
+
+                    tooltip_x = pygame.mouse.get_pos()[0] + 10
+                    tooltip_y = pygame.mouse.get_pos()[1] - height - 100
+
+                    pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
+
+                    self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
+            elif button == self.char3_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Berserker"] == False: 
+                    message = f"Personagem não liberado!! Nescessario recorde de 25 mortes"
+                    text_surface = pygame.font.Font(None, 24).render(message, True, (255, 255, 255))
+                    width, height = text_surface.get_size()
+                    height += 10
+
+                    tooltip_x = pygame.mouse.get_pos()[0] - width - 20
+                    tooltip_y = pygame.mouse.get_pos()[1] - height - 100
+
+                    pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
+
+                    self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
+
 
         # Draw the text on the screen
         text.draw(self.screen)

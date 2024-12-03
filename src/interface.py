@@ -6,6 +6,8 @@
 
 import pygame 
 
+playing_status = False # Global variable to facilitate control of match status
+
 class GameInterface:
     def __init__(self, screen, player):
         """
@@ -174,11 +176,13 @@ class GameInterface:
         self.screen.blit(score_surface, score_rect)
 
         # Timer - time survived since the game started
-        if self.score_running:  # Only run the timer if 'score_running' is True
+        if self.score_running or playing_status:  # Only run the timer if 'score_running' is True or playing_status
             time_survived = (pygame.time.get_ticks() - self.current_time + self.time_paused) / 1000  # Convert to seconds
         else:
             time_survived = self.time_paused / 1000  # Use the last recorded time when paused
 
+        self.player.time_of_playing = time_survived
+        
         time_text = f"Tempo: {int(time_survived)}s"
         time_surface = self.font.render(time_text, True, (255, 255, 255))
 
@@ -227,3 +231,7 @@ class GameInterface:
         self.skills_interface()
         self.status_render()
         self.score_render()
+
+    def change_playing_status(self, boolean):
+        global playing_status
+        playing_status = boolean
