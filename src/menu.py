@@ -98,11 +98,11 @@ class Menu():
         self.char_selection_background = pygame.image.load("assets\\images\\Menu\\selectcharacters.png").convert_alpha()
         
         #Buttons
-        self.play_button = Button([600,400], "PLAY", (255,255,255), (0,0,0), 1)
-        self.controls_button = Button([600, 550], "CONTROLS", (255, 255, 255), (0, 0, 0), 1)
-        self.play_again_button = Button([400,450], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
-        self.back_options_button = Button([500,450], "BACK",(255,255,255), (0,0,0), 1)
-        self.back_paused_button = Button([400,450], "BACK",(255,255,255), (0,0,0), 1)
+        self.play_button = Button([600,400], "JOGAR", (255,255,255), (0,0,0), 1)
+        self.controls_button = Button([600, 550], "CONTROLES", (255, 255, 255), (0, 0, 0), 1)
+        self.play_again_button = Button([400,450], "JOGAR NOVAMENTE",(255,255,255), (0,0,0), 1)
+        self.back_options_button = Button([500,450], "VOLTAR",(255,255,255), (0,0,0), 1)
+        self.back_paused_button = Button([400,450], "VOLTAR",(255,255,255), (0,0,0), 1)
         self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1)
         #Selection Characters
         self.char1_selection_button = Button([300, 600], "Cyborg", (255, 255, 255), (0, 0, 0), 1)
@@ -115,10 +115,9 @@ class Menu():
 
         #Texts
         self.menu_text = Text(600,150,"Cosmic Survivor", (255,255,255), 56)
-        self.paused_text = Text(600,150,"Game Paused", (255,255,255), 56)
-        self.options_text = Text(600,250, "Press Esc to pause", (255,255,255), 50)
-        self.death_text = Text(600,150,"Game Over!", (255,255,255), 56)
-        self.char_selection_text = Text(600,150,"Main Characters", (255,255,255), 56)
+        self.paused_text = Text(600,150,"Jogo Pausado", (255,255,255), 56)
+        self.death_text = Text(600,150,"Você Perdeu!", (255,255,255), 56)
+        self.char_selection_text = Text(600,150,"Personagens Principais", (255,255,255), 56)
 
         #Game states
         self.initial_menu = True
@@ -253,14 +252,14 @@ class Menu():
 
         # Controls text
         controls_text = [
-            "Move Up: W",
-            "Move Left: A",
-            "Move Down: S",
-            "Move Right: D",
-            "Skill 1: Q",
-            "Skill 2: E",
-            "Pause: Esc",
-            "Shoot: Left Mouse Button"
+            "Cima: W",
+            "Esquerda: A",
+            "Baixo: S",
+            "Direita: D",
+            "Hablidade 1: Q",
+            "Hablidade 2: E",
+            "Pausa: Esc",
+            "Atirar: Botão Esquerdo"
         ]
 
         # Text positions
@@ -273,7 +272,7 @@ class Menu():
         max_text_width = max(font.size(line)[0] for line in controls_text)
         
         # Position the image beside the text
-        image_x = 0
+        image_x = 40
         image_y = -75
 
         # Draw each line of controls text
