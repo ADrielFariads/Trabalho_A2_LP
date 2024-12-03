@@ -99,10 +99,10 @@ class Menu():
         #Buttons
         self.play_button = Button([600,400], "JOGAR", (255,255,255), (0,0,0), 1)
         self.controls_button = Button([600, 550], "CONTROLES", (255, 255, 255), (0, 0, 0), 1)
-        self.play_again_button = Button([400,450], "JOGAR NOVAMENTE",(255,255,255), (0,0,0), 1.2)
+        self.play_again_button = Button([400,450], "NOVO JOGO",(255,255,255), (0,0,0), 1)
         self.back_options_button = Button([500,450], "VOLTAR",(255,255,255), (0,0,0), 1)
         self.back_paused_button = Button([400,450], "VOLTAR",(255,255,255), (0,0,0), 1)
-        self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1.2)
+        self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1)
         #Selection Characters
         self.char1_selection_button = Button([300, 600], "Cyborg", (255, 255, 255), (0, 0, 0), 1)
         self.char2_selection_button = Button([600, 600], "Blade Master", (255, 255, 255), (0, 0, 0), 1)
