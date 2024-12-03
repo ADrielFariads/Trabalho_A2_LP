@@ -153,9 +153,9 @@ class Menu():
         '''
         button_actions = {
             self.play_button: self.start_character_selection,
-            self.char1_selection_button: lambda: self.start_game(1),
-            self.char2_selection_button: lambda: self.start_game(2),
-            self.char3_selection_button: lambda: self.start_game(3),
+            self.char1_selection_button: lambda: self.start_game(1, alow_heroe),
+            self.char2_selection_button: lambda: self.start_game(2, alow_heroe),
+            self.char3_selection_button: lambda: self.start_game(3, alow_heroe),
             self.controls_button: self.open_controls_screen,
             self.back_options_button: self.back_to_main_menu,
             self.back_char_back_button: self.back_to_main_menu,
@@ -175,12 +175,25 @@ class Menu():
         self.char_selection_state = True
     
 
-    def start_game(self, character):
-        self.reset_states()
-        self.char_selection = character
-        self.player = self.characters_list[character-1]
-        self.playing = True
-        self.game_interface.reset_game_status()
+    def start_game(self, character, alow_heroe):
+        if(character == 1):
+            self.reset_states()
+            self.char_selection = character
+            self.player = self.characters_list[character-1]
+            self.playing = True
+            self.game_interface.reset_game_status()
+        elif (character == 2 and alow_heroe["Blade_master"] == True):
+            self.reset_states()
+            self.char_selection = character
+            self.player = self.characters_list[character-1]
+            self.playing = True
+            self.game_interface.reset_game_status()
+        elif (character == 3 and alow_heroe["Blade_master"] == True):
+            self.reset_states()
+            self.char_selection = character
+            self.player = self.characters_list[character-1]
+            self.playing = True
+            self.game_interface.reset_game_status()
     
         
 
