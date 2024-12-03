@@ -607,7 +607,7 @@ class MachineGunRender(Skill):
         self.key = "Ataque básico"
         self.name = "Metralhadora"
         self.cooldown = 500
-        self.image = "assets\\images\\icons\\machinegun_icon.png"
+        self.image = "assets\\images\\Guns\\machinegun1.png"
         self.description = f"Dispara uma saraivada de balas no local alvo."
         super().__init__(self.name, self.cooldown, self.image)
 
