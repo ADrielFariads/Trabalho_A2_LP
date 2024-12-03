@@ -122,6 +122,7 @@ class GameInterface:
             skill (Skill): The skill object to display information about.
             mouse_pos (tuple): The mouse cursor's position on the screen.
         """
+        text_font = pygame.font.Font("assets\\images\\Fonts\\ShareTech-Regular.ttf", 16)
         render_font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14)
 
         locked_text = f"HABILIDADE DESBLOQUEIA NO NIVEL {skill.unlock_level}!"
@@ -134,7 +135,7 @@ class GameInterface:
         else:
             skill_status_surface = render_font.render(unlocked_text, True, (50, 255, 50))
 
-        text_surface = render_font.render(skill_text, True, (255, 255, 255))
+        text_surface = text_font.render(skill_text, True, (255, 255, 255))
 
         width = max(skill_status_surface.get_width(), text_surface.get_width())
         height = skill_status_surface.get_height() + text_surface.get_height() + 10
