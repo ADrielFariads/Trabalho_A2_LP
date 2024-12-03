@@ -5,13 +5,15 @@ This module handles the creation and management of enemies. It provides classes 
 
 import pygame
 import random
+from enum import Enum
+import math
 
 import config
 
 image_dict = config.load_enemies_images()
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, group, colliders=None):
+    def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, group, colliders=None, additional_image=None):
         """
         Initializes the Enemy sprite with specified attributes.
 
@@ -35,6 +37,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # Loading image
         self.sprite_sheet = sprite_sheet
+        self.additional_image = additional_image
 
         self.frames_x = frames_x
         self.frames_y = frames_y
@@ -63,7 +66,7 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_range = attack_range
         self.attack_delay = attack_delay
         self.attack_counter = 50  # Time between attacks
-
+        
         # Player interaction
         self.attack_counter = 0
         self.target = player
@@ -99,6 +102,7 @@ class Enemy(pygame.sprite.Sprite):
 
         """
         # Increment frame counter and update frame index
+
         self.frame_counter += 1
         if self.frame_counter >= self.animation_speed:
             self.current_frame_index = (self.current_frame_index + 1) % len(self.frames)
@@ -235,13 +239,18 @@ class Enemy(pygame.sprite.Sprite):
         """
         self.target = new_target
 
+class Direction(Enum):
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
 
 class Goblin(Enemy):
     def __init__(self, pos, player, bullets_group, group):
         # Initialize the sprite sheet and animation parameters
         self.sprite_sheet = image_dict["GOBLIN"]
         self.frames_x = 11  # colums
-        self.frames_y = 5  # lines
+        self.frames_y = 4  # lines
         self.health = 500
         self.speed = random.uniform(2, 6)  # Random speed for each goblin
         self.damage = 100
@@ -268,6 +277,7 @@ class Goblin(Enemy):
         self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
 
     def behavior(self):
+        self.animate()
         self.track_player()
         self.attack_counter += 1
         if self.player_distance() <= self.attack_range:
@@ -275,9 +285,44 @@ class Goblin(Enemy):
                 # Attack the player if within range
                 self.attack(self.target)
                 self.attack_counter = 0
+        
+        # Calculate the angle in degrees from the direction vector
+        angle = math.degrees(math.atan2(self.direction.y, self.direction.x))  # Convert radians to degrees
+        
+        # Determine the movement direction based on the angle
+        if angle >= -45 and angle < 45:
+            self.current_direction = Direction.RIGHT
+        elif angle >= -135 and angle < -45: 
+            self.current_direction = Direction.UP
+        elif angle >= 135 or angle < -135:
+            self.current_direction = Direction.LEFT
+        elif angle >= 45 and angle < 135: 
+            self.current_direction = Direction.DOWN
 
 
+    def animate(self):
+        """
+        Updates the current animation frame based on the animation speed and direction.
+        """
+        # Increment the frame counter and update the frame index
+        self.frame_counter += 1
+        
+        if self.frame_counter >= self.animation_speed:
+            # Select the row of frames based on the current direction
+            if self.current_direction == Direction.UP:
+                row = 2
+            elif self.current_direction == Direction.DOWN:
+                row = 0
+            elif self.current_direction == Direction.LEFT:
+                row = 3
+            elif self.current_direction == Direction.RIGHT:
+                row = 1
 
+            # Update the current frame index and reset the counter
+            self.current_frame_index = (self.current_frame_index + 1) % self.frames_x
+            self.image = self.divided_frames[row][self.current_frame_index]
+            
+            self.frame_counter = 0
 
 def generate_goblins(num_goblins, top, bottom, left, right, player, bullets_group, goblins_group):
     for _ in range(num_goblins):
@@ -338,63 +383,9 @@ class Andromaluis(Enemy):
         # Decrease the generation timer
         self.generation_timer -= 1
 
-
-
-class Centipede(Enemy):
-    def __init__(self, pos, player, bullets_group):
-        """
-        Initialize the Centipede class with specific attributes such as sprite sheet, health, 
-        speed, damage, attack delay, and attack range.
-
-        :param pos: The initial position of the centipede.
-        :param player: The player object that the centipede will target.
-        :param bullets_group: The group of bullets for collision detection.
-        """
-        self.sprite_sheet = "assets\\images\\enemies\\Centipeder\\Centipede_walk.png"
-        self.frames_x = 4
-        self.frames_y = 1
-        self.health = 50
-        self.speed = 3
-        self.damage = 40
-        self.attack_delay = 50
-        self.attack_range = 50
-
-        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
-
-    def load_frames(self):
-        """
-        Load the frames from the sprite sheet and divide them into sublists based on the movement direction.
-        """
-        # Calculate frame dimensions
-        frame_width = self.sprite_sheet.get_width() // self.frames_x
-        frame_height = self.sprite_sheet.get_height() // self.frames_y
-
-        self.frames = []
-        for y in range(self.frames_y):
-            for x in range(self.frames_x):
-                # Extract each frame from the sprite sheet
-                frame = self.sprite_sheet.subsurface((x * frame_width, y * frame_height, frame_width, frame_height))
-                redimensioned_frame = pygame.transform.scale(frame, (int(frame_width), int(frame_height)))
-                self.frames.append(redimensioned_frame)
-
-        # Divide frames into sublists for each direction
-        self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
-
-    def behavior(self):
-        """
-        Define the behavior of the Centipede. The centipede will either track the player or attack 
-        if within range.
-        """
-        if self.player_distance() > self.attack_range:
-            # Track the player if the distance is greater than the attack range
-            self.track_player()
-        else:
-            # If within attack range, perform an attack
-            if self.attack_counter >= self.attack_delay:
-                self.attack(self.target)
-                self.attack_counter = 0
-        self.attack_counter += 1
-
+class action(Enum):
+    IDLE = 0
+    ATTACK = 1
 
 class Slime(Enemy):
     def __init__(self, pos, player, bullets_group, level, group):
@@ -409,6 +400,7 @@ class Slime(Enemy):
         :param group: The group to which the slime belongs, used for collision detection.
         """
         self.sprite_sheet = image_dict["SLIME"]
+        self.original_image = self.sprite_sheet
         self.frames_x = 4
         self.frames_y = 2
         self.level = min(level, 3)
@@ -416,13 +408,15 @@ class Slime(Enemy):
         self.speed = 8 - self.level
         self.damage = 20 * self.level
         self.attack_delay = 100
-        self.attack_range = 10
+        self.attack_range = 100
         self.level = level
-        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, group)
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, group, additional_image=image_dict["SLIMEATTACK"])
         self.sprite_sheet = pygame.transform.scale_by(self.sprite_sheet, self.level)
+        self.additional_image = pygame.transform.scale_by(self.additional_image, self.level)
         self.load_frames()
         self.rect = self.image.get_rect(center=pos)
         self.rect.size = (64 * self.level - 32, 64 * self.level - 32)
+        
 
     def load_frames(self):
         """
@@ -435,8 +429,10 @@ class Slime(Enemy):
         frame_height = self.sprite_sheet.get_height() // self.frames_y
 
         self.frames = []
-        for y in range(self.frames_y):
-            for x in range(self.frames_x):
+        self.idle_frames = []
+        self.attack_frames = []
+        for y in range(2):
+            for x in range(4):
                 # Calculate the cutting position to get the bottom 80% of the frame
                 y_offset = y * frame_height + int(frame_height * 0.3)  # Starting from 30% of the frame height
                 new_frame_height = int(frame_height * 0.7)  # The height of the cut will be 80% of the original frame height
@@ -447,7 +443,11 @@ class Slime(Enemy):
                 # Resize to the original size
                 redimensioned_frame = pygame.transform.scale(frame, (frame_width, new_frame_height))
 
-                self.frames.append(redimensioned_frame)
+                self.idle_frames.append(redimensioned_frame)
+        for x in range(4):
+            frame_ = self.additional_image.subsurface((x * frame_width, 0, frame_width,  frame_height))
+            self.attack_frames.append(frame_)
+        self.frames = self.idle_frames
 
         # Divide the frames into sublists for each direction
         self.divided_frames = [self.frames[i:i + self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
@@ -461,9 +461,16 @@ class Slime(Enemy):
         self.attack_counter += 1
         if self.player_distance() <= self.attack_range:
             # Attack the player if within range and the attack delay has passed
+            self.frames = self.attack_frames
+            self.frames_y = 1
+            self.animation_speed = 15
             if self.attack_counter >= self.attack_delay:
                 self.attack(self.target)
                 self.attack_counter = 0
+        else:
+            self.frames = self.idle_frames
+            self.animation_speed = 10
+            self.frames_y = 2
 
     def duplicate(self):
         """
@@ -550,6 +557,9 @@ class AlienBat(Enemy):
         child = AlienBat(self.position, self.target, self.bullets, self.group)
         self.duplicate = False
 
+
+
+
 class EnemyWaveControler:
     def __init__(self, target, map_bounds, enemy_group, bullets_group, collide_rects):
         self.target = target
@@ -562,9 +572,9 @@ class EnemyWaveControler:
         self.collide_rects = collide_rects
         self.last_wave_time = -self.wave_timer
         self.enemy_types = {
-            "alienbat":(AlienBat, 0.4),
+            "alienbat":(AlienBat, 0.5),
             "Goblin":(Goblin, 0.3),
-            "Slime":(Slime, 0.2),
+            "Slime":(Slime, 0.1),
             "Andromaluis":(Andromaluis, 0.1)
         }
 
@@ -606,5 +616,3 @@ class EnemyWaveControler:
             self.wave_generator(num_enemies)
             self.last_wave_time = current_time
         self.active_enemies = [enemy for enemy in self.active_enemies if enemy.alive()]
-
-        

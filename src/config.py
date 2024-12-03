@@ -22,10 +22,13 @@ class FilesPath(Enum):
     """
     EXPLOSION1 = [f"assets\\images\\explosions\\explosion1\\Explosion_{i}.png" for i in range(1, 10)]
     BACKGROUND = "assets\\background_files\\map009.png"
+
     ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
     SLIME = "assets\\images\\enemies\\Slime\\slime_idle.png"
+    SLIMEATTACK = "assets\\images\\enemies\\Slime\\slime_attack.png"
     ALIENBAT = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
     GOBLIN = "assets\\images\\enemies\\goblins\\goblinsword.png"
+
     CYBORGIDLE = "assets\\images\\Player\\cyborg\\Idle.png"
     CYBORGWALK = "assets\\images\Player\cyborg\\Walk.png"
     CYBORGWALKUP = "assets\\images\\Player\\cyborg\\WalkUp.png"
@@ -107,7 +110,7 @@ def load_enemies_images():
 
     """
     pygame.init()
-    subset = list(FilesPath)[2:6]
+    subset = list(FilesPath)[2:]
     image_dict = {item.name: pygame.image.load(item.value) for item in subset}
     return image_dict
 

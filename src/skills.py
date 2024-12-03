@@ -208,8 +208,8 @@ class TimeManipulation(Skill):
         if not self.is_on_cooldown:
             self.sound.play()
             for enemy in player.enemies:
-                enemy.speed = max(int(enemy.speed / 5), 2)  # Decreases enemy speed with a lower limit
-                enemy.animation_speed = min(enemy.animation_speed * 2, 30)  # Increases animation speed
+                enemy.speed = max(int(enemy.speed /6), 2)  # Decreases enemy speed with a lower limit
+                enemy.animation_speed = min(enemy.animation_speed * 3, 30)  # Increases animation speed
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
             self.end_time = pygame.time.get_ticks() + self.duration
@@ -388,7 +388,7 @@ class Bloodlust(Skill):
     def __init__(self):
         self.key = "Q"
         self.name = "Sede de Sangue"
-        self.description = "Por um breve período, BladeMaster causa mais dano e abater inimigos restaura vida, mas ele sofre dano aumentado de todas as fontes."
+        self.description = "Por um breve período, BladeMaster causa mais dano, ataca com maior freqência e \n abater inimigos restaura vida, mas ele sofre dano aumentado de todas as fontes."
         self.cooldown = 10000
         self.image = "assets\\images\\icons\\bloodlust_icon.png"
         self.duration = 3500
