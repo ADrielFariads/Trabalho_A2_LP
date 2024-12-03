@@ -99,7 +99,7 @@ class Menu():
         
         #Buttons
         self.play_button = Button([600,400], "PLAY", (255,255,255), (0,0,0), 1)
-        self.options_button = Button([600,550], "OPTIONS",(255,255,255), (0,0,0), 1)
+        self.controls_button = Button([600, 550], "CONTROLS", (255, 255, 255), (0, 0, 0), 1)
         self.play_again_button = Button([400,450], "PLAY AGAIN",(255,255,255), (0,0,0), 1)
         self.back_options_button = Button([500,450], "BACK",(255,255,255), (0,0,0), 1)
         self.back_paused_button = Button([400,450], "BACK",(255,255,255), (0,0,0), 1)
@@ -122,7 +122,7 @@ class Menu():
 
         #Game states
         self.initial_menu = True
-        self.options_menu = False
+        self.controls_menu = False
         self.death_menu = False
         self.pause_menu = False
         self.playing = False
@@ -147,7 +147,7 @@ class Menu():
             self.char1_selection_button: lambda: self.start_game(1),
             self.char2_selection_button: lambda: self.start_game(2),
             self.char3_selection_button: lambda: self.start_game(3),
-            self.options_button: self.open_options_menu,
+            self.controls_button: self.open_controls_screen,
             self.back_options_button: self.back_to_main_menu,
             self.back_char_back_button: self.back_to_main_menu,
             self.back_paused_button: self.resume_game,
@@ -170,9 +170,9 @@ class Menu():
         self.playing = True
         self.game_interface.reset_game_status()
 
-    def open_options_menu(self):
+    def open_controls_screen(self):
         self.reset_states()
-        self.options_menu = True
+        self.controls_menu = True
 
     def back_to_main_menu(self):
         self.reset_states()
@@ -241,24 +241,54 @@ class Menu():
         # Update the display
         pygame.display.update()
 
+    def draw_controls_screen(self):
+        self.screen.blit(self.menu_background, (0, 0))
+        
+        controls_text = [
+            "Move Up: W",
+            "Move Left: A",
+            "Move Down: S",
+            "Move Right: D",
+            "Player Skill 1: Q",
+            "Player Skill 2: E",
+            "Pause: Esc"
+        ]
+        
+        y_pos = 250  # Starting y position
+        for line in controls_text:
+            rendered_text = Text(600, y_pos, line, (255, 255, 255), 40)
+            rendered_text.draw(self.screen)
+            y_pos += 50
 
+        # Add back button
+        self.back_options_button.update(self.screen)
+        self.back_options_button.changeColor()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if self.back_options_button.checkForClick(event):
+                self.back_to_main_menu()
+        
+        pygame.display.update()
 
     def update(self):
-        '''
-        Calls the draw function to the current menu
-        '''
+        """
+        Calls the appropriate draw function based on the current menu state.
+        """
         if self.initial_menu:
-            self.draw(self.menu_text, self.play_button, self.options_button)
-        elif self.options_menu:
-            self.draw(self.options_text,self.back_options_button)
+            self.draw(self.menu_text, self.play_button, self.controls_button)
+        elif self.controls_menu:
+            self.draw_controls_screen()
         elif self.pause_menu:
-            self.draw(self.paused_text, self.menu_button,self.back_paused_button)
+            self.draw(self.paused_text, self.menu_button, self.back_paused_button)
         elif self.death_menu:
-            self.draw(self.death_text,self.play_again_button,self.menu_button)
-        elif self.char_selection:
-            self.draw(self.char_selection_text,self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
+            self.draw(self.death_text, self.play_again_button, self.menu_button)
+        elif self.char_selection_state:  # Fix typo here from char_selection to char_selection_state
+            self.draw(self.char_selection_text, self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
+        
         self.game_interface.score_running = self.playing
-
 
 class Text():
 
