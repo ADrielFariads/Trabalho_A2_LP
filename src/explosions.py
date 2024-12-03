@@ -16,8 +16,6 @@ class Explosion(pygame.sprite.Sprite):
         self.last_frame_time = pygame.time.get_ticks()
         self.z_index = 12
 
-        if self.radius != 100:
-            self.sprite_sheet = [pygame.transform.scale(img, (int(radius*2), int(radius*2))) for img in self.sprite_sheet]
 
         self.image = self.sprite_sheet[self.current_frame]
         self.rect = self.image.get_rect(center=self.pos)

@@ -222,7 +222,7 @@ class MissilRain(Skill): ##cyborg skills
                 spread_value_x = random.randint(-500, 500) 
                 spread_value_y = random.randint(100, 500)  
                 pos = player.position
-                missile = explosions.Missile((pos.x + spread_value_x, pos.y - spread_value_y), (pos.x + spread_value_x, pos.y + spread_value_y), 1, player.enemies, 100, self.explosion_damage, explosion_spritesheet, player.explosion_group)
+                missile = explosions.Missile((pos.x + spread_value_x, pos.y - spread_value_y), (pos.x + spread_value_x, pos.y + spread_value_y), 1, player.enemies, 200, self.explosion_damage, explosion_spritesheet, player.explosion_group)
                 if i//5 == 0:   
                     missile.muted = False
                     
