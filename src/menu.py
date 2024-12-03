@@ -197,10 +197,6 @@ class Menu():
         self.game_interface.reset_game_status()
         self.playing = True
 
-
-            
-
-
     def draw(self, text, *button_args):
         '''
         Draws the screen and handles button events.
