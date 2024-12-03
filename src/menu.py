@@ -156,71 +156,76 @@ class Menu():
         self.playing = False
         self.char_selection_state = False
 
+    def reset_states(self):
+        """Reset all game states to avoid overlap."""
+        self.initial_menu = False
+        self.options_menu = False
+        self.death_menu = False
+        self.pause_menu = False
+        self.char_selection_state = False
+        self.playing = False
+
     def change_current_game_state(self, button):
         '''
         Verify the button and change the current game state or start the game
         through user interaction with the buttons.
-
-        Parameters:
-        ------------
-        Button that was pressed
         '''
+        button_actions = {
+            self.play_button: self.start_character_selection,
+            self.char1_selection_button: lambda: self.start_game(1),
+            self.char2_selection_button: lambda: self.start_game(2),
+            self.char3_selection_button: lambda: self.start_game(3),
+            self.options_button: self.open_options_menu,
+            self.back_options_button: self.back_to_main_menu,
+            self.back_char_back_button: self.back_to_main_menu,
+            self.back_paused_button: self.resume_game,
+            self.menu_button: self.return_to_main_menu,
+            self.play_again_button: self.restart_game
+        }
+        
+        action = button_actions.get(button)
+        if action:
+            action()
 
-        if button == self.play_button:
-            self.initial_menu = False
-            self.char_selection_state = True
-        elif button == self.char1_selection_button:
-            self.char_selection_state = False
-            self.char_selection = 1
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.reset_game_status()
-        elif button == self.char2_selection_button:
-            self.char_selection_state = False
-            self.char_selection = 2
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.reset_game_status()
-        elif button == self.char3_selection_button:
-            self.char_selection_state = False
-            self.char_selection = 3
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.reset_game_status()
-        elif button == self.options_button:
-            self.char_selection_state = False
-            self.initial_menu = False
-            self.options_menu = True
-        elif button == self.back_options_button:
-            self.char_selection_state = False
-            self.options_menu = False
-            self.playing = False
-            self.initial_menu = True
-        elif button == self.back_char_back_button:
-            self.char_selection_state = False
-            self.options_menu = False
-            self.playing = False
-            self.initial_menu = True
-        elif button == self.back_paused_button:
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.resume_game()
-        elif button == self.menu_button:
-            #Reset the game when return to initial menu
-            Enemy.reset_enemies(self,self.enemy)
-            self.char_selection_state = False
-            self.player.reset_player()
-            self.game_interface.reset_game_status()
-            self.pause_menu = False
-            self.death_menu = False
-            self.initial_menu = True
-        elif button == self.play_again_button:
-            #Reset the game to play again
-            Enemy.reset_enemies(self,self.enemy)
-            self.player.reset_player()
-            self.char_selection_state = False
-            self.game_interface.reset_game_status()
-            self.playing = True
+    # Supporting methods
+    def start_character_selection(self):
+        self.reset_states()
+        self.char_selection_state = True
+
+    def start_game(self, character):
+        self.reset_states()
+        self.char_selection = character
+        self.playing = True
+        self.game_interface.reset_game_status()
+
+    def open_options_menu(self):
+        self.reset_states()
+        self.options_menu = True
+
+    def back_to_main_menu(self):
+        self.reset_states()
+        self.initial_menu = True
+
+    def resume_game(self):
+        self.reset_states()
+        self.playing = True
+        self.game_interface.resume_game()
+
+    def return_to_main_menu(self):
+        self.reset_states()
+        Enemy.reset_enemies(self, self.enemy)
+        self.player.reset_player()
+        self.game_interface.reset_game_status()
+        self.initial_menu = True
+
+    def restart_game(self):
+        self.reset_states()
+        Enemy.reset_enemies(self, self.enemy)
+        self.player.reset_player()
+        self.game_interface.reset_game_status()
+        self.playing = True
+
+
             
 
 
