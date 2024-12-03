@@ -1,105 +1,81 @@
 import pygame
 from enemies import Enemy
 
-class Button():
+import pygame
 
+import pygame
+
+class Button:
     def __init__(self, pos, text_input, base_color, hovering_color, scale):
-        #Define commom atributes
-        font = pygame.font.Font("assets\\images\\Menu\\font.ttf", 20)
-        normal_button = pygame.image.load("assets\\images\\Menu\\button_normal.png").convert_alpha()
-        selected_button = pygame.image.load("assets\\images\\Menu\\button_pressed.png").convert_alpha()
-
-        #Buttons audios
-        self.select_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Selection.wav")
-        self.click_audio = pygame.mixer.Sound("assets\\audio\\menu\\Menu_Click.wav")
-        self.audio = False
+        # Font setup
+        self.font = pygame.font.Font("assets/images/Menu/font.ttf", 20)
         
-        # Get the width and height of the image
-        width = normal_button.get_width()
-        height = normal_button.get_height()
-
-        # Scale the image according to the provided scale factor
-        self.button = pygame.transform.scale(normal_button, (int(width * scale), int(height * scale)))
-        self.selected_button = pygame.transform.scale(selected_button, (int(width * scale), int(height * scale)))
-
-        #Variable to return the button animation to normal
-        self.unselected_button = pygame.transform.scale(normal_button, (int(width * scale), int(height * scale)))
+        # Load images after pygame.init()
+        self.normal_button = pygame.image.load("assets/images/Menu/button_normal.png").convert_alpha()
+        self.selected_button = pygame.image.load("assets/images/Menu/button_pressed.png").convert_alpha()
         
-        # Button position (x and y)
-        self.x_pos = pos[0]
-        self.y_pos = pos[1]
+        # Scale the images
+        scaled_size = (int(self.normal_button.get_width() * scale), int(self.normal_button.get_height() * scale))
+        self.button = pygame.transform.scale(self.normal_button, scaled_size)
+        self.selected_button = pygame.transform.scale(self.selected_button, scaled_size)
         
-        # Font and colors
-        self.font = font
+        # Button position and text setup
+        self.x_pos, self.y_pos = pos
         self.base_color, self.hovering_color = base_color, hovering_color
         self.text_input = text_input
         self.text = self.font.render(self.text_input, True, self.base_color)
         
-        # If the image is None, use the text as the image (fallback)
-        if self.button is None:
-            self.button = self.text
-        
-        # Create the rectangle for the button's collision area (for detecting clicks)
+        # Rect setup for button and text positioning
         self.rect = self.button.get_rect(center=(self.x_pos, self.y_pos))
-        
-        # Create the rectangle for the text's collision area
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+        
+        # Audio setup
+        self.select_audio = pygame.mixer.Sound("assets/audio/menu/Menu_Selection.wav")
+        self.click_audio = pygame.mixer.Sound("assets/audio/menu/Menu_Click.wav")
+        self.audio = False
 
     def update(self, screen):
-        '''
-        Draw button on the screen
-
+        """
+        Draw button on the screen.
+        
         Parameters:
-        -----------
-        screen where the button will be shown
-        '''
-        if self.button is not None:
-            screen.blit(self.button, self.rect)
-        #If the button image doesn't exist draw only the text
+        screen: pygame.Surface - The screen to display the button on.
+        """
+        screen.blit(self.button, self.rect)
         screen.blit(self.text, self.text_rect)
 
     def checkForClick(self, event):
-        '''
-        Check if the mouse was pressed once (using pygame event)
-
+        """
+        Check if the mouse button was pressed and if it's over the button.
+        
         Parameters:
-        ------------
-        event: pygame event (to detect MOUSEBUTTONDOWN)
-
-        Return:
-        --------
-        True: if the mouse was pressed
-        False: otherwise
-        '''
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # 1 corresponds to the left mouse button
-                if self.rect.collidepoint(event.pos):
-                    #self.click_audio.play(0)
-                    self.click_audio.play()
-                    return True
+        event: pygame.event - Event to check mouse interaction.
+        
+        Returns:
+        bool - True if clicked, False otherwise.
+        """
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if self.rect.collidepoint(event.pos):
+                self.click_audio.play()
+                return True
         return False
 
-
     def changeColor(self):
-        '''
-        Change the text color and the button animation if you overlay them with the mouse
-        '''
+        """
+        Change button color and sound when hovered.
+        """
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        
-        #check if they are overlapped by the mouse
         if self.rect.collidepoint(mouse_x, mouse_y):
-            #Plays the selected button sound effect
             if not self.audio:
                 self.select_audio.play()
                 self.audio = True
-            #Change the text color and the button animation 
             self.text = self.font.render(self.text_input, True, self.hovering_color)
             self.button = self.selected_button
         else:
-            #Back to normal
             self.audio = False
-            self.button = self.unselected_button
             self.text = self.font.render(self.text_input, True, self.base_color)
+            self.button = pygame.transform.scale(self.normal_button, self.button.get_size())
+
 
 class Menu():
     def __init__(self, screen, player, enemy, game_interface):
