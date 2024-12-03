@@ -73,7 +73,7 @@ class Button:
 
 
 class Menu():
-    def __init__(self, screen, player, enemy, game_interface):
+    def __init__(self, screen, cyborg,blade,berseker, enemy, game_interface):
         '''
         Creates all button and text objects,
         and creates boolean variables to switch between the game and menus
@@ -84,8 +84,11 @@ class Menu():
 
         '''
 
+        #Players
+        self.characters_list = [cyborg, blade, berseker]
+        self.player = self.characters_list[1]
+
         #Will be reseted
-        self.player = player
         self.enemy = enemy
         self.game_interface = game_interface
 
@@ -103,11 +106,15 @@ class Menu():
         self.back_options_button = Button([500,450], "VOLTAR",(255,255,255), (0,0,0), 1)
         self.back_paused_button = Button([400,450], "VOLTAR",(255,255,255), (0,0,0), 1)
         self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1)
+
         #Selection Characters
         self.char1_selection_button = Button([300, 600], "Cyborg", (255, 255, 255), (0, 0, 0), 1)
         self.char2_selection_button = Button([600, 600], "Blade Master", (255, 255, 255), (0, 0, 0), 1)
         self.char3_selection_button = Button([900, 600], "Berserk", (255, 255, 255), (0, 0, 0), 1)
         self.back_char_back_button = Button([600, 700], "Menu", (255, 255, 255), (0, 0, 0), 1)
+
+
+
         #character default selected
         self.char_selection = 1
 
@@ -117,6 +124,7 @@ class Menu():
         self.paused_text = Text(600,150,"Jogo Pausado", (255,255,255), 56)
         self.death_text = Text(600,150,"Você Perdeu!", (255,255,255), 56)
         self.char_selection_text = Text(600,150,"Personagens", (255,255,255), 56)
+    
 
         #Game states
         self.initial_menu = True
@@ -125,6 +133,7 @@ class Menu():
         self.pause_menu = False
         self.playing = False
         self.char_selection_state = False
+        
 
     def reset_states(self):
         """Reset all game states to avoid overlap."""
@@ -150,7 +159,8 @@ class Menu():
             self.back_char_back_button: self.back_to_main_menu,
             self.back_paused_button: self.resume_game,
             self.menu_button: self.return_to_main_menu,
-            self.play_again_button: self.restart_game
+            self.play_again_button: self.restart_game,
+            
         }
         
         action = button_actions.get(button)
@@ -161,12 +171,16 @@ class Menu():
     def start_character_selection(self):
         self.reset_states()
         self.char_selection_state = True
+    
 
     def start_game(self, character):
         self.reset_states()
         self.char_selection = character
+        self.player = self.characters_list[character-1]
         self.playing = True
         self.game_interface.reset_game_status()
+    
+        
 
     def open_controls_screen(self):
         self.reset_states()
@@ -324,6 +338,7 @@ class Menu():
             self.draw(self.death_text, self.play_again_button, self.menu_button)
         elif self.char_selection_state:  # Fix typo here from char_selection to char_selection_state
             self.draw(self.char_selection_text, self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
+    
         
         self.game_interface.score_running = self.playing
 
