@@ -595,5 +595,44 @@ class AlienBat(Enemy):
         self.duplicate = False
 
 class EnemyWaveControler:
-    def __init__(self, target, ):
-        pass       
+    def __init__(self, target, map_bounds, enemy_group, bullets_group, collide_rects):
+        self.target = target
+        self.map_bounds = map_bounds
+        self.enemy_group = enemy_group 
+        self.bullets_group = bullets_group 
+        self.target_level = self.target.current_level
+        self.active_enemies = []
+        self.wave_timer = 10000
+        self.collide_rects = collide_rects
+        self.last_wave_time = -self.wave_timer
+        self.enemy_types = {
+            "alienbat":(AlienBat, 0.2),
+            "Goblin":(Goblin, 0.3),
+            "Slime":(Slime, 0.4),
+            "Andromaluis":(Andromaluis, 0.1)
+        }
+
+    def generate_random_enemy(self, position):
+        enemy_class = random.choices(
+        list(self.enemy_types.values()), 
+        weights=[weight for _, weight in self.enemy_types.values()])[0][0]
+
+
+        if enemy_class == AlienBat:
+            alien_bat = AlienBat(position, self.target, self.bullets_group, self.enemy_group)
+        elif enemy_class == Goblin:
+            goblin = Goblin(position, self.target, self.bullets_group)
+            goblin.colliders = self.collide_rects
+        elif enemy_class == Slime:
+            slime = Slime(position, self.target, self.bullets_group, int(self.target_level)/2, self.enemy_group)
+            slime.colliders = self.collide_rects
+        elif enemy_class == Andromaluis:
+            andromaluis = Andromaluis(position, self.target, self.bullets_group, self.enemy_group)
+
+    def wave_generator(self, number):
+        for _ in range(number):
+            position = config.random_pos()
+            self.generate_random_enemy(position)
+
+    def update(self):
+        pass
