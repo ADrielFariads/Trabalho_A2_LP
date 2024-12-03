@@ -170,6 +170,9 @@ class Player(pygame.sprite.Sprite):
             self.current_action = "walkup"
             self.sprite_sheet = self.sprite_sheet_dict['WALKUP']
             self.frames = self.load_frames(self.sprite_sheet, 6)
+            self.gun.z_index = self.z_index - 1
+        else:
+            self.gun.z_index = self.z_index + 1
 
         if action == "walkdown":
             self.current_action = "walkdown"
@@ -233,11 +236,11 @@ class Player(pygame.sprite.Sprite):
         # Horizontal movement first (priority)
         if keys[pygame.K_a]:  # Left
             self.direction.x = -1
-            self.facing_right = False
+            #self.facing_right = False
             self.set_action("walk")
         elif keys[pygame.K_d]:  # Right
             self.direction.x = 1
-            self.facing_right = True
+            #self.facing_right = True
             self.set_action("walk")
 
         # Vertical animation only if no horizontal input

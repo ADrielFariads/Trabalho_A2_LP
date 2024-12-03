@@ -302,7 +302,7 @@ class KnifeThrower(Gun):
         self.cool_down = 750  # Cooldown time between shots (milliseconds)
         
         # Load and prepare the weapon's image
-        self.original_image = pygame.transform.scale(self.image, (30, 30))
+        self.original_image = pygame.transform.scale(self.image, (25, 25))
         self.original_image = pygame.transform.rotate(self.original_image, -60)
         self.image = self.original_image
         
@@ -384,6 +384,7 @@ class KnifeThrower(Gun):
             # If the player is facing left, flip the image
             self.image = pygame.transform.flip(self.original_image, True, False)
             self.rect.center = (self.position[0] + 15, self.position[1] + 30)
+        
 
 
 
@@ -561,6 +562,7 @@ class Shotgun(Gun):
         if self.player.facing_right:
             self.image = self.original_image
             self.rect.center = (self.position[0]-10, self.position[1]+10)
+        
         else:
             self.image = pygame.transform.flip(self.original_image, True, False)  # Flip image if player is facing left
             self.rect.center = (self.position[0], self.position[1]+10)

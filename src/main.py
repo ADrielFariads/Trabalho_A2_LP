@@ -85,8 +85,8 @@ class Game:
         self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
 
         # Testing enemies
-        for i in range(20):
-            bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
+        # for i in range(20):
+        #     bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
 
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
