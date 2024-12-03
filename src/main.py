@@ -85,8 +85,8 @@ class Game:
         self.all_sprites.add(self.background_group, self.enemies_group, self.player, self.gun_group, self.bullet_group)
 
         # Testing enemies
-        # for i in range(20):
-        #     bat = enemies.AlienBat(config.random_pos(), self.player, self.bullet_group, self.enemies_group)
+        self.enemy_army = enemies.EnemyWaveControler(self.player, self.map_bounds, self.enemies_group, self.bullet_group, colliders_rects)
+
 
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
@@ -117,9 +117,11 @@ class Game:
         self.player.offset = self.all_sprites.offset
 
         # Update all enemies to track the new player
-        for enemy in self.enemies_group:
-            if isinstance(enemy, enemies.Enemy):  # Check to ensure it's an enemy object
-                enemy.update_target(self.player)
+        self.enemy_army.update_target(self.player)
+
+        # for enemy in self.enemies_group:
+        #     if isinstance(enemy, enemies.Enemy):  # Check to ensure it's an enemy object
+        #         enemy.update_target(self.player)
 
     def run(self):
         """
@@ -164,6 +166,7 @@ class Game:
                 self.enemies_group.update()
                 self.gun.update()
                 self.bullet_group.update()
+                self.enemy_army.update()
 
                 # Drawings
                 self.display_surface.fill(("#4D64AA"))

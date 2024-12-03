@@ -76,23 +76,6 @@ class Enemy(pygame.sprite.Sprite):
         group.add(self)
         self.group = group
 
-    def reset_enemies(self, enemies):
-        """
-        Resets the state of all enemies in the list to their initial conditions.
-
-        Args:
-        enemies (list): List of enemies to be reset.
-
-        """
-        for enemy in enemies:
-            enemy.health = enemy.max_health
-            enemy.position = pygame.math.Vector2(enemy.x, enemy.y)
-            enemy.image = enemy.frames[enemy.current_frame_index]
-            enemy.rect = enemy.image.get_rect(center=(enemy.x, enemy.y))
-            enemy.current_frame_index = 0
-            enemy.animation_speed = 10  
-            enemy.frame_counter = 0
-
     def load_frames(self):
         """
         Loads frames from the sprite sheet based on the number of frames horizontally and vertically.
@@ -254,7 +237,7 @@ class Enemy(pygame.sprite.Sprite):
 
 
 class Goblin(Enemy):
-    def __init__(self, pos, player, bullets_group):
+    def __init__(self, pos, player, bullets_group, group):
         # Initialize the sprite sheet and animation parameters
         self.sprite_sheet = image_dict["GOBLIN"]
         self.frames_x = 11  # colums
@@ -265,7 +248,7 @@ class Goblin(Enemy):
         self.attack_delay = 50
         self.attack_range = 50
         self.experience_given = 30
-        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, group)
         self.direction = pygame.math.Vector2(0, 0)  # Initialize direction
 
     def load_frames(self):
@@ -285,39 +268,14 @@ class Goblin(Enemy):
         self.divided_frames = [self.frames[i:i+self.frames_x] for i in range(0, len(self.frames), self.frames_x)]
 
     def behavior(self):
-        if self.player_distance() > self.attack_range:
-            # Calculate direction towards the player
-            direction = pygame.math.Vector2(self.target.rect.center) - pygame.math.Vector2(self.rect.center)
-            if direction.length() > 0:
-                direction = direction.normalize()
-            
-            # Add a small random variation to the direction
-            randomness = pygame.math.Vector2(random.uniform(-0.2, 0.2), random.uniform(-0.2, 0.2))
-            direction += randomness
-            direction = direction.normalize()
-
-            # Move the goblin in the calculated direction
-            self.position += direction * self.speed * 0.5
-            self.rect.center = self.position
-
-            # Update frames based on movement direction
-            if direction.x > 0 and abs(direction.x) >= abs(direction.y):
-                self.frames = self.divided_frames[1]  # Moving right
-            elif direction.x < 0 and abs(direction.x) >= abs(direction.y):
-                self.frames = self.divided_frames[3]  # Moving left
-            elif direction.y < 0 and abs(direction.y) > abs(direction.x):
-                self.frames = self.divided_frames[2]  # Moving up
-            elif direction.y > 0 and abs(direction.y) > abs(direction.x):
-                self.frames = self.divided_frames[0]  # Moving down
-
-            # Update the direction attribute
-            self.direction = direction
-        else:
+        self.track_player()
+        self.attack_counter += 1
+        if self.player_distance() <= self.attack_range:
             if self.attack_counter >= self.attack_delay:
                 # Attack the player if within range
                 self.attack(self.target)
                 self.attack_counter = 0
-        self.attack_counter += 1
+
 
 
 
@@ -332,11 +290,9 @@ def generate_goblins(num_goblins, top, bottom, left, right, player, bullets_grou
         random_y += random.randint(-50, 50)
 
         # Create a new goblin at the random position with a random speed
-        goblin = Goblin((random_x, random_y), player, bullets_group)
+        goblin = Goblin((random_x, random_y), player, bullets_group, goblins_group)
         goblin.speed = random.uniform(5, 10)  # Speed range between 5 and 10
 
-        # Add the goblin to the existing group of enemies
-        goblins_group.add(goblin)
 
 class Andromaluis(Enemy):
     def __init__(self, pos, player, bullets_group, enemy_group):
@@ -363,7 +319,7 @@ class Andromaluis(Enemy):
         # Skill attributes
         self.generation_interval = 100
         self.generation_timer = 10
-        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group)
+        super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, enemy_group)
 
     def behavior(self):
         """
@@ -606,9 +562,9 @@ class EnemyWaveControler:
         self.collide_rects = collide_rects
         self.last_wave_time = -self.wave_timer
         self.enemy_types = {
-            "alienbat":(AlienBat, 0.2),
+            "alienbat":(AlienBat, 0.4),
             "Goblin":(Goblin, 0.3),
-            "Slime":(Slime, 0.4),
+            "Slime":(Slime, 0.2),
             "Andromaluis":(Andromaluis, 0.1)
         }
 
@@ -621,10 +577,10 @@ class EnemyWaveControler:
         if enemy_class == AlienBat:
             alien_bat = AlienBat(position, self.target, self.bullets_group, self.enemy_group)
         elif enemy_class == Goblin:
-            goblin = Goblin(position, self.target, self.bullets_group)
+            goblin = Goblin(position, self.target, self.bullets_group, self.enemy_group)
             goblin.colliders = self.collide_rects
         elif enemy_class == Slime:
-            slime = Slime(position, self.target, self.bullets_group, int(self.target_level)/2, self.enemy_group)
+            slime = Slime(position, self.target, self.bullets_group, 3, self.enemy_group)
             slime.colliders = self.collide_rects
         elif enemy_class == Andromaluis:
             andromaluis = Andromaluis(position, self.target, self.bullets_group, self.enemy_group)
@@ -633,6 +589,22 @@ class EnemyWaveControler:
         for _ in range(number):
             position = config.random_pos()
             self.generate_random_enemy(position)
+        
+    def update_target(self, target):
+        for each in self.enemy_group:
+            each.update_target(target)
+        self.target = target
+        
+    def reset_enemies(self):
+        for enemy in self.enemy_group:
+            enemy.kill()
 
     def update(self):
-        pass
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_wave_time >= self.wave_timer:
+            num_enemies = random.randint(3, 8)  
+            self.wave_generator(num_enemies)
+            self.last_wave_time = current_time
+        self.active_enemies = [enemy for enemy in self.active_enemies if enemy.alive()]
+
+        
