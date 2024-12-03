@@ -1,10 +1,6 @@
 import pygame
 from enemies import Enemy
 
-import pygame
-
-import pygame
-
 class Button:
     def __init__(self, pos, text_input, base_color, hovering_color, scale):
         # Font setup
