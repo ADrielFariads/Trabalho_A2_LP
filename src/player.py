@@ -168,7 +168,7 @@ class Player(pygame.sprite.Sprite):
         if action == "walkup":
             self.current_action = "walkup"
             self.sprite_sheet = self.sprite_sheet_dict['WALKUP']
-            self.frames = self.load_frames(self.sprite_sheet, 8)
+            self.frames = self.load_frames(self.sprite_sheet, 6)
 
         if action == "walkdown":
             self.current_action = "walkdown"
@@ -240,12 +240,14 @@ class Player(pygame.sprite.Sprite):
             self.set_action("walk")
 
         # Vertical movement only if no horizontal input
-        if self.direction.x == 0:
-            if keys[pygame.K_w]:  # Up
-                self.direction.y = -1
-                self.set_action("walkup")
-            elif keys[pygame.K_s]:  # Down
-                self.direction.y = 1
+        
+        if keys[pygame.K_w]:  # Up
+            self.direction.y = -1
+            if self.direction.x == 0:
+                    self.set_action("walkup")
+        elif keys[pygame.K_s]:  # Down
+            self.direction.y = 1
+            if self.direction.x == 0:
                 self.set_action("walkdown")
 
         # Set idle if no keys are pressed
