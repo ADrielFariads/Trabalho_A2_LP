@@ -65,8 +65,21 @@ class GameInterface:
         The experience bar's length is determined by the player's experience.
         """
         experience_rect = pygame.Rect(10, 50, self.player.experience/self.experience_ratio, 15)
+        border_rect = pygame.Rect(10, 50, self.experience_bar_lenght, 15)
+
+        font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 20)
+
+        if self.player.current_level < 10:
+            level_text = f"nivel {self.player.current_level}"
+        else:
+            level_text = f"nivel maximo"
+            experience_rect = pygame.Rect(10, 50, self.experience_bar_lenght, 15)
+        text_surface = font.render(level_text, True, (200, 200, 200))
+        text_rect = text_surface.get_rect(midleft=(border_rect.right + 10, border_rect.centery))
+        
         pygame.draw.rect(self.screen, (0, 0, 255), experience_rect)
         pygame.draw.rect(self.screen, (255, 255, 255), (10, 50, self.experience_bar_lenght, 15), 2)
+        self.screen.blit(text_surface, text_rect)
 
     def skills_interface(self):
         """
