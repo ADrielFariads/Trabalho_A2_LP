@@ -5,7 +5,7 @@ class Button:
     def __init__(self, pos, text_input, base_color, hovering_color, scale):
         # Font setup
         self.font = pygame.font.Font("assets/images/Menu/font.ttf", 20)
-        
+        scale = 1.1
         # Load images after pygame.init()
         self.normal_button = pygame.image.load("assets/images/Menu/button_normal.png").convert_alpha()
         self.selected_button = pygame.image.load("assets/images/Menu/button_pressed.png").convert_alpha()
