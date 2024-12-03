@@ -32,7 +32,7 @@ class Player(pygame.sprite.Sprite):
         colidders (list, optional): List of collidable objects for detecting collisions.
     """
 
-    def __init__(self, pos, health, speed, map_bounds, skills, spritesheet_dict, colidders=None):
+    def __init__(self, pos, health, speed, map_bounds, skills, spritesheet_dict, heroe, time_of_playing , colidders=None):
         """
         Initializes the player character with the given attributes.
 
@@ -52,10 +52,12 @@ class Player(pygame.sprite.Sprite):
         self.sprite_sheet = self.sprite_sheet_dict['IDLE']
         self.current_action = "idle"
 
+
         #calculating the frame size
         frames_x_axis = 4
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
         frame_height = self.sprite_sheet.get_height()
+
 
         #generating frames
         self.frames = []
@@ -99,6 +101,10 @@ class Player(pygame.sprite.Sprite):
         self.current_health = self.max_health
         self.armor = 0
         self.life_steal = 0
+
+        # Match info 
+        self.heroe = heroe
+        self.time_of_playing = time_of_playing
 
         #skills logic
         self.skills = skills
@@ -355,21 +361,21 @@ blademaster_skills = [skills.KnifeThrowerRender(), skills.Bloodlust(), skills.Ti
 berserker_skills = [skills.ShotgunRender(), skills.IronWill(), skills.GravitionVortex()]
 
 class Cyborg(Player):
-    def __init__(self, pos, map_bounds, colidders=None):
+    def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
         health = 1500
         speed = 8
-        super().__init__(pos, health, speed, map_bounds, cyborg_skills, cyborg_images_dict, colidders)
+        super().__init__(pos, health, speed, map_bounds, cyborg_skills, cyborg_images_dict, heroe, time_of_playing, colidders)
 
 class BladeMaster(Player):
-    def __init__(self, pos, map_bounds, colidders=None):
+    def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
 
         health = 1200
         speed = 10
-        super().__init__(pos, health, speed, map_bounds, blademaster_skills, blademaster_image_dict, colidders)
+        super().__init__(pos, health, speed, map_bounds, blademaster_skills, blademaster_image_dict, heroe, time_of_playing, colidders)
 
 class Berserker(Player):
-    def __init__(self, pos, map_bounds, colidders=None):
+    def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
 
         health = 2000
         speed = 7
-        super().__init__(pos, health, speed, map_bounds, berserker_skills, berserker_image_dict, colidders)
+        super().__init__(pos, health, speed, map_bounds, berserker_skills, berserker_image_dict, heroe, time_of_playing, colidders)

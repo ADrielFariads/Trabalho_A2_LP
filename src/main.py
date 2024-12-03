@@ -45,15 +45,15 @@ class Game:
         colliders_rects = config.collisionSpritesGenerator()
 
         # Players (heroes)
-        self.cyborg = player.Cyborg((1200, 1200), self.map_bounds, colliders_rects)
+        self.cyborg = player.Cyborg((1200, 1200), self.map_bounds, "Cyborg", 0, colliders_rects)
         self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
         self.cyborg.gun = self.machinegun
 
-        self.blade_master = player.BladeMaster((1200, 1200), self.map_bounds, colliders_rects)
+        self.blade_master = player.BladeMaster((1200, 1200), self.map_bounds, "Blade_master", 0,colliders_rects)
         self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
         self.blade_master.gun = self.knifeThrower
 
-        self.berserker = player.Berserker((1200, 1200), self.map_bounds, colliders_rects)
+        self.berserker = player.Berserker((1200, 1200), self.map_bounds, "Berserker", 0,colliders_rects)
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
@@ -91,7 +91,7 @@ class Game:
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
-        self.menu = Menu(self.display_surface, self.player, self.enemy_army, self.interface)
+        self.menu = Menu(self.display_surface, self.cyborg,self.blade_master,self.berserker, self.enemies_group, self.interface)
 
         # Update all enemies to track the new player
         for enemy in self.enemies_group:
@@ -132,8 +132,14 @@ class Game:
         while self.running:
             # Update the player dynamically if menu selection changes
             if self.player != self.character_dictionary[self.menu.char_selection]:
+                log = config.Log(self.player) # match information
+                self.log = log
                 self.player = self.character_dictionary[self.menu.char_selection]
                 self.initialize_player()
+            else: 
+                log = config.Log(self.player) # match information
+                self.log = log
+            
 
             if self.menu.playing:
                 self.clock.tick(60)
@@ -175,6 +181,7 @@ class Game:
                 self.interface.draw()
 
                 if self.player.target_health == 0:
+                    self.log.add_progress()
                     self.menu.options_menu = False
                     self.menu.pause_menu = False
                     self.menu.death_menu = True

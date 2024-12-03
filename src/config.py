@@ -2,6 +2,8 @@ import pygame
 from enum import Enum
 from background import CollisionSprite
 import random
+import json
+import uuid
 
 
 # info = pygame.display.get_window_size()
@@ -113,6 +115,83 @@ def load_enemies_images():
     subset = list(FilesPath)[2:]
     image_dict = {item.name: pygame.image.load(item.value) for item in subset}
     return image_dict
+
+class Log:
+    """
+    Class responsible for logging and storing the player's progress in a game.
+
+    The class creates a unique progress record for each player, including information such as the player's hero,
+    a unique record ID, the number of enemies killed, and the time spent playing.
+
+    Attributes:
+    player (Player): The player instance containing the game progress information.
+    data (dict): A dictionary storing the player's progress data.
+    """
+    
+    def __init__(self, player) -> None:
+        """
+        Initializes a new instance of the Log class.
+
+        Parameters:
+        player (Player): The player whose progress information will be logged.
+        """
+        self.player = player
+        self.data = {
+            "Heroe": f"{player.heroe}",
+            "Id": str(uuid.uuid4()),
+            "Kills": self.player.killed_enemies,
+            "Time": self.player.time_of_playing
+        }
+
+    def add_progress(self):
+        """
+        Adds a new game progress record to a JSON file.
+
+        This method attempts to open an existing JSON file named "progress_game.json" and append the current player
+        progress data. If the file does not exist or is empty, it creates a new file.
+
+        Exceptions:
+        ValueError: If the content of the JSON file is not a list.
+        FileNotFoundError: If the file does not exist.
+        JSONDecodeError: If the file contains corrupted data.
+        """
+        try:
+            # Try to open the file and load existing data
+            with open("progress_game.json", 'r', encoding='utf-8') as file:
+                data = json.load(file)
+            
+            # Check if the data is a list
+            if not isinstance(data, list):
+                raise ValueError("The content of the JSON is not a list.")
+        except (FileNotFoundError, json.JSONDecodeError):
+            # If the file doesn't exist or is empty, initialize a new list
+            data = []
+        
+        # Append the new object to the list
+        data.append(f"{self.data}")
+        
+        # Write the updated data back to the file
+        with open("progress_game.json", 'w', encoding='utf-8') as file:
+            json.dump(data, file, indent=4, ensure_ascii=False)
+
+
+def read_json(path):
+    """
+    Reads a JSON file and returns the data contained within it.
+
+    Parameters:
+    path (str): The path to the JSON file to be read.
+
+    Returns:
+    dict or list: The content of the JSON file, which could be a dictionary or a list, depending on the file content.
+
+    Exceptions:
+    FileNotFoundError: If the file is not found at the specified path.
+    JSONDecodeError: If the file content is not valid JSON.
+    """
+    with open(path, 'r', encoding='utf-8') as file:
+        data = json.load(file) 
+        return data
 
 
 def load_player_images():

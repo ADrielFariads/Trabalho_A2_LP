@@ -1,4 +1,7 @@
 import pygame
+import config
+import json 
+
 from enemies import Enemy
 
 class Button:
@@ -73,7 +76,7 @@ class Button:
 
 
 class Menu():
-    def __init__(self, screen, player, enemy, game_interface):
+    def __init__(self, screen, cyborg,blade,berseker, enemy, game_interface):
         '''
         Creates all button and text objects,
         and creates boolean variables to switch between the game and menus
@@ -84,8 +87,11 @@ class Menu():
 
         '''
 
+        #Players
+        self.characters_list = [cyborg, blade, berseker]
+        self.player = self.characters_list[1]
+
         #Will be reseted
-        self.player = player
         self.enemy = enemy
         self.game_interface = game_interface
 
@@ -99,15 +105,19 @@ class Menu():
         #Buttons
         self.play_button = Button([600,400], "JOGAR", (255,255,255), (0,0,0), 1)
         self.controls_button = Button([600, 550], "CONTROLES", (255, 255, 255), (0, 0, 0), 1)
-        self.play_again_button = Button([400,450], "JOGAR NOVAMENTE",(255,255,255), (0,0,0), 1.2)
+        self.play_again_button = Button([400,450], "NOVO JOGO",(255,255,255), (0,0,0), 1)
         self.back_options_button = Button([500,450], "VOLTAR",(255,255,255), (0,0,0), 1)
         self.back_paused_button = Button([400,450], "VOLTAR",(255,255,255), (0,0,0), 1)
-        self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1.2)
+        self.menu_button = Button([800,450], "MENU", (255,255,255), (0,0,0), 1)
+
         #Selection Characters
         self.char1_selection_button = Button([300, 600], "Cyborg", (255, 255, 255), (0, 0, 0), 1)
         self.char2_selection_button = Button([600, 600], "Blade Master", (255, 255, 255), (0, 0, 0), 1)
         self.char3_selection_button = Button([900, 600], "Berserk", (255, 255, 255), (0, 0, 0), 1)
         self.back_char_back_button = Button([600, 700], "Menu", (255, 255, 255), (0, 0, 0), 1)
+
+
+
         #character default selected
         self.char_selection = 1
 
@@ -117,6 +127,7 @@ class Menu():
         self.paused_text = Text(600,150,"Jogo Pausado", (255,255,255), 56)
         self.death_text = Text(600,150,"Você Perdeu!", (255,255,255), 56)
         self.char_selection_text = Text(600,150,"Personagens", (255,255,255), 56)
+    
 
         #Game states
         self.initial_menu = True
@@ -135,22 +146,23 @@ class Menu():
         self.char_selection_state = False
         self.playing = False
 
-    def change_current_game_state(self, button):
+    def change_current_game_state(self, button, alow_heroe):
         '''
         Verify the button and change the current game state or start the game
         through user interaction with the buttons.
         '''
         button_actions = {
             self.play_button: self.start_character_selection,
-            self.char1_selection_button: lambda: self.start_game(1),
-            self.char2_selection_button: lambda: self.start_game(2),
-            self.char3_selection_button: lambda: self.start_game(3),
+            self.char1_selection_button: lambda: self.start_game(1, alow_heroe),
+            self.char2_selection_button: lambda: self.start_game(2, alow_heroe),
+            self.char3_selection_button: lambda: self.start_game(3, alow_heroe),
             self.controls_button: self.open_controls_screen,
             self.back_options_button: self.back_to_main_menu,
             self.back_char_back_button: self.back_to_main_menu,
             self.back_paused_button: self.resume_game,
             self.menu_button: self.return_to_main_menu,
-            self.play_again_button: self.restart_game
+            self.play_again_button: self.restart_game,
+            
         }
         
         action = button_actions.get(button)
@@ -161,12 +173,29 @@ class Menu():
     def start_character_selection(self):
         self.reset_states()
         self.char_selection_state = True
+    
 
-    def start_game(self, character):
-        self.reset_states()
-        self.char_selection = character
-        self.playing = True
-        self.game_interface.reset_game_status()
+    def start_game(self, character, alow_heroe):
+        if(character == 1):
+            self.reset_states()
+            self.char_selection = character
+            self.player = self.characters_list[character-1]
+            self.playing = True
+            self.game_interface.reset_game_status()
+        elif (character == 2 and alow_heroe["Blade_master"] == True):
+            self.reset_states()
+            self.char_selection = character
+            self.player = self.characters_list[character-1]
+            self.playing = True
+            self.game_interface.reset_game_status()
+        elif (character == 3 and alow_heroe["Blade_master"] == True):
+            self.reset_states()
+            self.char_selection = character
+            self.player = self.characters_list[character-1]
+            self.playing = True
+            self.game_interface.reset_game_status()
+    
+        
 
     def open_controls_screen(self):
         self.reset_states()
@@ -204,6 +233,13 @@ class Menu():
         text: The text object to display on the screen.
         *button_args: Button objects that will be displayed and interacted with.
         '''
+
+        alow_heroe = {
+            "Cyborg": True,
+            "Blade_master": False,
+            "Berserker": False
+        }
+
         # If in character selection state, draw the character selection background on top of the existing background
         if self.char_selection_state:
             self.screen.blit(self.menu_background, (0, 0))  # Draw the menu background first
@@ -214,6 +250,23 @@ class Menu():
 
         # Capture all input events
         events = pygame.event.get()
+
+        data = config.read_json("progress_game.json")          
+        for obj in data:
+            # Replace single quotes with double quotes to ensure the string is valid JSON
+            json_correct = obj.replace("'", '"')
+                
+            # Parse the corrected JSON string into a dictionary
+            obj_dic = json.loads(json_correct)
+                
+            # Iterate over the key-value pairs in the dictionary
+            for key, value in obj_dic.items():
+                if key == "Kills" and value >= 15:
+                        # If the key is "Kills" and the value is 15 or more, enable "Blade_master"
+                    alow_heroe["Blade_master"] = True
+                if key == "Kills" and value >= 25:
+                    # If the key is "Kills" and the value is 25 or more, enable "Berserker"
+                    alow_heroe["Berserker"] = True
 
         # Handle global quit event
         for event in events:
@@ -230,8 +283,36 @@ class Menu():
             # Check for mouse click events on the button
             for event in events:
                 if button.checkForClick(event):
-                    # Perform the action assigned to the clicked button
-                    self.change_current_game_state(button)
+                    # Perform the action assigned to the clicked button                    
+                    self.change_current_game_state(button, alow_heroe)
+
+            if button == self.char2_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Blade_master"] == False:
+                    message = f"Personagem não liberado!! Nescessario recorde de 15 mortes"
+                    text_surface = pygame.font.Font(None, 24).render(message, True, (255, 255, 255))
+                    width, height = text_surface.get_size()
+                    height += 10
+
+                    tooltip_x = pygame.mouse.get_pos()[0] + 10
+                    tooltip_y = pygame.mouse.get_pos()[1] - height - 100
+
+                    pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
+
+                    self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
+            elif button == self.char3_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Berserker"] == False: 
+                    message = f"Personagem não liberado!! Nescessario recorde de 25 mortes"
+                    text_surface = pygame.font.Font(None, 24).render(message, True, (255, 255, 255))
+                    width, height = text_surface.get_size()
+                    height += 10
+
+                    tooltip_x = pygame.mouse.get_pos()[0] - width - 20
+                    tooltip_y = pygame.mouse.get_pos()[1] - height - 100
+
+                    pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
+
+                    self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
+
 
         # Draw the text on the screen
         text.draw(self.screen)
@@ -324,6 +405,7 @@ class Menu():
             self.draw(self.death_text, self.play_again_button, self.menu_button)
         elif self.char_selection_state:  # Fix typo here from char_selection to char_selection_state
             self.draw(self.char_selection_text, self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
+    
         
         self.game_interface.score_running = self.playing
 
