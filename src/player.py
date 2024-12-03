@@ -299,10 +299,10 @@ class Player(pygame.sprite.Sprite):
         for skill in self.skills:
             skill.update(self)
 
-        if keys[pygame.K_q]:
+        if keys[pygame.K_q] and self.current_level >= self.skills[-2].unlock_level:
             self.skills[-2].use(self)
 
-        if keys[pygame.K_e]:
+        if keys[pygame.K_e] and self.current_level >= self.skills[-1].unlock_level:
             self.skills[-1].use(self)
 
 ################# HEALTH LOGIC ##############################################################

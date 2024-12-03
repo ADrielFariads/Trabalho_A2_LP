@@ -26,6 +26,7 @@ class Skill:
         self.image = pygame.image.load(image)
         self.last_used_time = 0
         self.is_on_cooldown = False
+        self.unlock_level=0
 
     def use(self, player):
         """
@@ -60,6 +61,7 @@ class Skill:
                     
 
 class Heal(Skill):
+
     def __init__(self):
         """
         Initializes the Heal skill with specific values for healing, cooldown, and image.
@@ -96,7 +98,6 @@ class Heal(Skill):
                 player.get_healed(self.heal_value)
                 self.last_used_time = pygame.time.get_ticks()
                 self.is_on_cooldown = True
-
 
 class Adrenaline(Skill):
     def __init__(self):
@@ -192,6 +193,7 @@ class TimeManipulation(Skill):
         self.end_time = 0
         self.sound = pygame.mixer.Sound("assets\\audio\\skills\\heatbeating.wav")
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 7
 
     def use(self, player):
         """
@@ -260,6 +262,7 @@ class LethalTempo(Skill):
         self.original_damage = 0
         self.original_cooldown = 0
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 3
 
     def use(self, player):
         """
@@ -326,6 +329,7 @@ class IronWill(Skill):
         self.duration = 5000
         self.end_time = 0
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 3
 
     def use(self, player):
         """
@@ -392,6 +396,7 @@ class Bloodlust(Skill):
         self.original_damage = 0
         self.original_gun_cooldown = 0
         super().__init__(self.name, self.cooldown, self.image)
+        self.unlock_level = 3
 
     def use(self, player):
         """
@@ -463,6 +468,7 @@ class MissilRain(Skill):
         self.missile_number = 9
         self.explosion_damage = 5000
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
+        self.unlock_level = 7
 
     def use(self, player):
         """
@@ -539,6 +545,7 @@ class GravitionVortex(Skill):
         self.duration = 11000
         super().__init__(self.name, self.cooldown, self.image)
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
+        self.unlock_level = 7
 
     def use(self, player):
         """

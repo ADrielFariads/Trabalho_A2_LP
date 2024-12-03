@@ -98,6 +98,12 @@ class GameInterface:
             self.screen.blit(skill_icon, (x_pos + 3, y_pos + 3))
             skill_icon_rect = pygame.Rect(x_pos, y_pos, icon_size, icon_size)
 
+            if self.player.current_level < skill.unlock_level:
+                surface = pygame.Surface((50, 50))
+                surface.fill((30, 30, 30))
+                surface.set_alpha(200)
+                self.screen.blit(surface, (x_pos, y_pos))
+
             if skill.is_on_cooldown:  # Cooldown animation
                 surface = pygame.Surface((50, 50))
                 surface.fill((30, 30, 30))
@@ -116,8 +122,13 @@ class GameInterface:
             skill (Skill): The skill object to display information about.
             mouse_pos (tuple): The mouse cursor's position on the screen.
         """
+        unlock_text = f"HABILIDADE DESBLOQUEADA NO NIVEL {skill.unlock_level}"
+
         text = f"[{skill.key}]: {skill.name} - tempo de recarga: {skill.cooldown / 1000} segundos.\n{skill.description}"
-        text_surface = self.font.render(text, True, (255, 255, 255))
+        if self.player.current_level < skill.unlock_level:
+            text_surface = self.font.render(unlock_text, True, (255, 255, 255))
+        else:
+            text_surface = self.font.render(text, True, (255, 255, 255))
         width, height = text_surface.get_size()
         height += 10
 
