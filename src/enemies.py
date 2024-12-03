@@ -6,6 +6,10 @@ This module handles the creation and management of enemies. It provides classes 
 import pygame
 import random
 
+import config
+
+image_dict = config.load_enemies_images()
+
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, sprite_sheet, frames_x, frames_y, health, speed, damage, attack_range, attack_delay, player, bullets_group, group, colliders=None):
         """
@@ -13,7 +17,7 @@ class Enemy(pygame.sprite.Sprite):
 
         Args:
         pos (tuple): The position of the enemy (x, y).
-        sprite_sheet (str): Path to the sprite sheet image.
+        sprite_sheet (str): Sprite sheet loaded with pygame
         frames_x (int): The number of frames in the horizontal direction.
         frames_y (int): The number of frames in the vertical direction.
         health (int): The initial health of the enemy.
@@ -30,7 +34,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__()
 
         # Loading image
-        self.sprite_sheet = pygame.image.load(sprite_sheet).convert_alpha()
+        self.sprite_sheet = sprite_sheet
 
         self.frames_x = frames_x
         self.frames_y = frames_y

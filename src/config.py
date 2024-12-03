@@ -3,7 +3,6 @@ from enum import Enum
 from background import CollisionSprite
 import random
 
-pygame.init()
 
 # info = pygame.display.get_window_size()
 # ScreenWidth = info[0]
@@ -91,9 +90,12 @@ def load_enemies_images():
     """
     Placeholder for loading enemy images.
 
-    TODO:
-        Implement the logic to load enemy images as needed.
     """
-    pass
+    pygame.init()
+    subset = list(FilesPath)[2:]
+    image_dict = {item.name: pygame.image.load(item.value) for item in subset}
+    print(image_dict)
 
+
+load_enemies_images()
 
