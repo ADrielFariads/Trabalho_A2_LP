@@ -160,7 +160,7 @@ class Player(pygame.sprite.Sprite):
         if action == "walkdown":
             self.current_action = "walkdown"
             self.sprite_sheet = pygame.image.load("assets/images/Player/WalkDown.png").convert_alpha()
-            self.frames = self.load_frames(self.sprite_sheet, 8)
+            self.frames = self.load_frames(self.sprite_sheet, 6)
 
 ################# GETTER METHODS ###################################################
     def get_position(self):
@@ -212,38 +212,40 @@ class Player(pygame.sprite.Sprite):
 
         #movement logic
 
+        # Reset direction vector
         self.direction.x = 0
         self.direction.y = 0
-        if keys[pygame.K_a]:
+
+        # Horizontal movement first (priority)
+        if keys[pygame.K_a]:  # Left
             self.direction.x = -1
             self.facing_right = False
             self.set_action("walk")
-
-        if keys[pygame.K_d]:
+        elif keys[pygame.K_d]:  # Right
             self.direction.x = 1
             self.facing_right = True
-
-        if keys[pygame.K_w]:
-            self.direction.y = -1
-        if keys[pygame.K_s]:
-            self.direction.y = 1
-
-        if self.direction.length() > 0: #walk detection for animation
-            self.direction = self.direction.normalize()
             self.set_action("walk")
 
-        elif keys[pygame.K_w] and not keys[pygame.K_s]: # up only
-            self.direction.y = -1
-            self.set_action("walkup")
+        # Vertical movement only if no horizontal input
+        if self.direction.x == 0:
+            if keys[pygame.K_w]:  # Up
+                self.direction.y = -1
+                self.set_action("walkup")
+            elif keys[pygame.K_s]:  # Down
+                self.direction.y = 1
+                self.set_action("walkdown")
 
-        elif keys[pygame.K_s] and not keys[pygame.K_w]: # down only
-            self.direction.y = 1
-            self.set_action("walkdown")
-
-        if self.direction.length() == 0: #verify is player is idle
+        # Set idle if no keys are pressed
+        if self.direction.length() == 0:
             self.set_action("idle")
 
-        #collisions
+        # Update sprite flip for horizontal movement
+        if not self.facing_right:
+            self.image = pygame.transform.flip(self.frames[self.current_frame_index], True, False)
+        else:
+            self.image = self.frames[self.current_frame_index]
+
+        # Update position based on speed
         self.position.x += self.direction.x * self.speed
         self.rect.centerx = self.position.x
         self.collision("horizontal")
