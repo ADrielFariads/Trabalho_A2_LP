@@ -1,4 +1,7 @@
 import pygame
+import config
+import json 
+
 from enemies import Enemy
 
 class Button():
@@ -166,45 +169,38 @@ class Menu():
         Button that was pressed
         '''
 
+        alow_heroe = {
+            "Cyborg": True,
+            "Blade_master": False,
+            "Berserker": False
+        }
+
         if button == self.play_button:
             self.initial_menu = False
             self.char_selection_state = True
-        elif button == self.char1_selection_button:
-            self.char_selection_state = False
-            self.char_selection = 1
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.reset_game_status()
-        elif button == self.char2_selection_button:
-            self.char_selection_state = False
-            self.char_selection = 2
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.reset_game_status()
-        elif button == self.char3_selection_button:
-            self.char_selection_state = False
-            self.char_selection = 3
-            self.char_selection_state = False
-            self.playing = True
-            self.game_interface.reset_game_status()
+            self.game_interface.change_playing_status(False) 
         elif button == self.options_button:
             self.char_selection_state = False
             self.initial_menu = False
             self.options_menu = True
+            self.game_interface.change_playing_status(False) 
         elif button == self.back_options_button:
             self.char_selection_state = False
             self.options_menu = False
             self.playing = False
             self.initial_menu = True
+            self.game_interface.change_playing_status(False) 
         elif button == self.back_char_back_button:
             self.char_selection_state = False
             self.options_menu = False
             self.playing = False
             self.initial_menu = True
+            self.game_interface.change_playing_status(False) 
         elif button == self.back_paused_button:
             self.char_selection_state = False
             self.playing = True
             self.game_interface.resume_game()
+            self.game_interface.change_playing_status(False) 
         elif button == self.menu_button:
             #Reset the game when return to initial menu
             Enemy.reset_enemies(self,self.enemy)
@@ -214,6 +210,7 @@ class Menu():
             self.pause_menu = False
             self.death_menu = False
             self.initial_menu = True
+            self.game_interface.change_playing_status(False) 
         elif button == self.play_again_button:
             #Reset the game to play again
             Enemy.reset_enemies(self,self.enemy)
@@ -221,6 +218,50 @@ class Menu():
             self.char_selection_state = False
             self.game_interface.reset_game_status()
             self.playing = True
+            self.game_interface.change_playing_status(False) 
+        else: 
+
+            data = config.read_json("progress_game.json")
+            
+            for obj in data:
+                # Replace single quotes with double quotes to ensure the string is valid JSON
+                json_correct = obj.replace("'", '"')
+                
+                # Parse the corrected JSON string into a dictionary
+                obj_dic = json.loads(json_correct)
+                
+                # Iterate over the key-value pairs in the dictionary
+                for key, value in obj_dic.items():
+                    if key == "Kills" and value >= 15:
+                        # If the key is "Kills" and the value is 15 or more, enable "Blade_master"
+                        alow_heroe["Blade_master"] = True
+                    elif key == "Kills" and value >= 25:
+                        # If the key is "Kills" and the value is 25 or more, enable "Berserker"
+                        alow_heroe["Berserker"] = True
+                    else:
+                        # Do nothing for other keys or values
+                        pass
+            
+            if button == self.char1_selection_button:
+                self.char_selection_state = False
+                self.char_selection = 1
+                self.char_selection_state = False
+                self.playing = True
+                self.game_interface.reset_game_status()
+            elif button == self.char2_selection_button and alow_heroe["Blade_master"] == True:
+                self.char_selection_state = False
+                self.char_selection = 2
+                self.char_selection_state = False
+                self.playing = True
+                self.game_interface.reset_game_status()
+            elif button == self.char3_selection_button and alow_heroe["Berserker"] == True:
+                self.char_selection_state = False
+                self.char_selection = 3
+                self.char_selection_state = False
+                self.playing = True
+                self.game_interface.reset_game_status()
+            self.game_interface.change_playing_status(True)            
+        
             
 
 
@@ -284,7 +325,7 @@ class Menu():
             self.draw(self.death_text,self.play_again_button,self.menu_button)
         elif self.char_selection:
             self.draw(self.char_selection_text,self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
-        self.game_interface.score_running = self.playing
+            
 
 
 class Text():

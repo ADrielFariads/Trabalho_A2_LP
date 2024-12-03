@@ -60,15 +60,15 @@ class Game:
         berserker_skillset = [shotgun_render, iron_will, vortex]
 
         # Players (heroes)
-        self.cyborg = Player((1200, 1200), 1000, 7, self.map_bounds, cyborg_skillset, colliders_rects)
+        self.cyborg = Player((1200, 1200), 1000, 7, self.map_bounds, cyborg_skillset, "Cyborg", 0, colliders_rects)
         self.machinegun = guns.MachineGun(self.cyborg, self.map_bounds)
         self.cyborg.gun = self.machinegun
 
-        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, colliders_rects)
+        self.blade_master = Player((1200, 3000), 1000, 10, self.map_bounds, blade_master_skillset, "Blade_master", 0,colliders_rects)
         self.knifeThrower = guns.KnifeThrower(self.blade_master, self.map_bounds)
         self.blade_master.gun = self.knifeThrower
 
-        self.berserker = Player((1200, 1200), 2000, 7, self.map_bounds, berserker_skillset, colliders_rects)
+        self.berserker = Player((1200, 1200), 2000, 7, self.map_bounds, berserker_skillset, "Berserker", 0,colliders_rects)
         self.shotgun = guns.Shotgun(self.berserker, self.map_bounds)
         self.berserker.gun = self.shotgun
 
@@ -147,8 +147,14 @@ class Game:
         while self.running:
             # Update the player dynamically if menu selection changes
             if self.player != self.character_dictionary[self.menu.char_selection]:
+                log = config.log(self.player) # match information
+                self.log = log
                 self.player = self.character_dictionary[self.menu.char_selection]
                 self.initialize_player()
+            else: 
+                log = config.log(self.player) # match information
+                self.log = log
+            
 
             if self.menu.playing:
                 self.clock.tick(60)
@@ -189,6 +195,7 @@ class Game:
                 self.interface.draw()
 
                 if self.player.target_health == 0:
+                    self.log.add_progress()
                     self.menu.options_menu = False
                     self.menu.pause_menu = False
                     self.menu.death_menu = True

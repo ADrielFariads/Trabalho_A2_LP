@@ -22,7 +22,7 @@ class Player(pygame.sprite.Sprite):
         colidders (list, optional): List of collidable objects for detecting collisions.
     """
 
-    def __init__(self, pos, health, speed, map_bounds, skills, colidders=None):
+    def __init__(self, pos, health, speed, map_bounds, skills, heroe, time_of_playing ,colidders=None):
         """
         Initializes the player character with the given attributes.
 
@@ -39,10 +39,12 @@ class Player(pygame.sprite.Sprite):
         self.sprite_sheet = pygame.image.load("assets/images/Player/Idle1.png").convert_alpha()
         self.current_action = "idle"
 
+
         #calculating the frame size
         frames_x_axis = 4
         frame_widht = self.sprite_sheet.get_width() // frames_x_axis
         frame_height = self.sprite_sheet.get_height()
+
 
         #generating frames
         self.frames = []
@@ -85,6 +87,10 @@ class Player(pygame.sprite.Sprite):
         self.current_health = self.max_health
         self.armor = 0
         self.life_steal = 0
+
+        # Match info 
+        self.heroe = heroe
+        self.time_of_playing = time_of_playing
 
         #skills logic
         self.skills = skills
