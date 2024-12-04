@@ -116,6 +116,10 @@ class Menu():
         self.char3_selection_button = Button([900, 600], "Berserk", (255, 255, 255), (0, 0, 0), 1)
         self.back_char_back_button = Button([600, 700], "Menu", (255, 255, 255), (0, 0, 0), 1)
 
+        #Difficulty selection buttons
+        self.easy_button = Button([300, 500], "FACIL", (255, 255, 255), (0, 0, 0), 1)
+        self.medium_button = Button([600, 500], "MEDIO", (255, 255, 255), (0, 0, 0), 1)
+        self.hard_button = Button([900, 500], "DIFICIL", (255, 255, 255), (0, 0, 0), 1)
 
 
         #character default selected
@@ -127,6 +131,7 @@ class Menu():
         self.paused_text = Text(600,150,"Jogo Pausado", (255,255,255), 56)
         self.death_text = Text(600,150,"Você Perdeu!", (255,255,255), 56)
         self.char_selection_text = Text(600,150,"Personagens", (255,255,255), 56)
+        self.difficulty_selection_text = Text(600,150,"Dificuldade da partida", (255,255,255), 46)
     
 
         #Game states
@@ -136,6 +141,7 @@ class Menu():
         self.pause_menu = False
         self.playing = False
         self.char_selection_state = False
+        self.difficulty_selection_state = False
 
     def reset_states(self):
         """Reset all game states to avoid overlap."""
@@ -145,6 +151,7 @@ class Menu():
         self.pause_menu = False
         self.char_selection_state = False
         self.playing = False
+        self.difficulty_selection_state = False
 
     def change_current_game_state(self, button, alow_heroe):
         '''
@@ -162,6 +169,9 @@ class Menu():
             self.back_paused_button: self.resume_game,
             self.menu_button: self.return_to_main_menu,
             self.play_again_button: self.restart_game,
+            self.easy_button: lambda: self.game_difficulty(1.2,1.2),
+            self.medium_button: lambda: self.game_difficulty(1 ,1),
+            self.hard_button: lambda: self.game_difficulty(0.7, 0.85)
             
         }
         
@@ -180,21 +190,26 @@ class Menu():
             self.reset_states()
             self.char_selection = character
             self.player = self.characters_list[character-1]
-            self.playing = True
+            self.difficulty_selection_state = True
             self.game_interface.reset_game_status()
         elif (character == 2 and alow_heroe["Blade_master"] == True):
             self.reset_states()
             self.char_selection = character
             self.player = self.characters_list[character-1]
-            self.playing = True
+            self.difficulty_selection_state = True
             self.game_interface.reset_game_status()
         elif (character == 3 and alow_heroe["Blade_master"] == True):
             self.reset_states()
             self.char_selection = character
             self.player = self.characters_list[character-1]
-            self.playing = True
+            self.difficulty_selection_state = True
             self.game_interface.reset_game_status()
     
+    def game_difficulty(self, health_index, speed_index):
+        self.reset_states()
+        self.player.max_health = self.player.max_health * health_index
+        self.player.speed = self.player.speed * speed_index
+        self.playing = True
         
 
     def open_controls_screen(self):
@@ -408,7 +423,8 @@ class Menu():
             self.draw(self.death_text, self.play_again_button, self.menu_button)
         elif self.char_selection_state:  # Fix typo here from char_selection to char_selection_state
             self.draw(self.char_selection_text, self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
-    
+        elif self.difficulty_selection_state:
+            self.draw(self.difficulty_selection_text, self.easy_button, self.medium_button,self.hard_button)
         
         self.game_interface.score_running = self.playing
 

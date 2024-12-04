@@ -1,3 +1,10 @@
 [
-
+    "{'Heroe': 'Cyborg', 'Id': 'f1410e5f-f861-43df-9c79-8c4c08a91e3a', 'Kills': 27, 'Time': 67.526}",
+    "{'Heroe': 'Cyborg', 'Id': '258b57dd-22cf-4239-b07d-b22c95cf3702', 'Kills': 1, 'Time': 18.918}",
+    "{'Heroe': 'Blade_master', 'Id': 'bcc6f3c3-db0a-4327-ba6b-7f36825b3116', 'Kills': 0, 'Time': 0.0}",
+    "{'Heroe': 'Cyborg', 'Id': '53a68dcf-2dfe-4ebf-a637-b7716f5dcf6d', 'Kills': 0, 'Time': 26.879}",
+    "{'Heroe': 'Cyborg', 'Id': '6b006304-1d1a-4c11-aa32-aef0718c6538', 'Kills': 1, 'Time': 20.532}",
+    "{'Heroe': 'Cyborg', 'Id': '6d779597-c375-4a12-ae06-d17c802c5bc0', 'Kills': 3, 'Time': 16.445}",
+    "{'Heroe': 'Cyborg', 'Id': '46e296b0-7aa4-43d2-b13f-6ae179a208a0', 'Kills': 22, 'Time': 70.287}",
+    "{'Heroe': 'Cyborg', 'Id': 'a5009c69-5424-4ddb-870d-7b0b8062b759', 'Kills': 40, 'Time': 96.406}"
 ]
