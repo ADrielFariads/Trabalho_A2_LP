@@ -1,4 +1,5 @@
 [
+<<<<<<< HEAD
     "{'Heroe': 'Cyborg', 'Id': 'f1410e5f-f861-43df-9c79-8c4c08a91e3a', 'Kills': 27, 'Time': 67.526}",
     "{'Heroe': 'Cyborg', 'Id': '258b57dd-22cf-4239-b07d-b22c95cf3702', 'Kills': 1, 'Time': 18.918}",
     "{'Heroe': 'Blade_master', 'Id': 'bcc6f3c3-db0a-4327-ba6b-7f36825b3116', 'Kills': 0, 'Time': 0.0}",
@@ -8,4 +9,6 @@
     "{'Heroe': 'Cyborg', 'Id': '46e296b0-7aa4-43d2-b13f-6ae179a208a0', 'Kills': 22, 'Time': 70.287}",
     "{'Heroe': 'Cyborg', 'Id': 'a5009c69-5424-4ddb-870d-7b0b8062b759', 'Kills': 40, 'Time': 96.406}",
     "{'Heroe': 'Cyborg', 'Id': '944625b3-9598-4b80-95c3-f73ea37f6bcf', 'Kills': 13, 'Time': 36.909}"
+=======
+>>>>>>> main
 ]

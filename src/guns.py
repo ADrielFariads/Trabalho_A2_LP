@@ -6,8 +6,6 @@ import pygame
 import math
 import random
 
-import pygame
-
 class Gun(pygame.sprite.Sprite):
     def __init__(self, player, image, damage, cool_down, bullet, map_bounds):
         """

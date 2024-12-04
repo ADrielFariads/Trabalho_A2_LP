@@ -213,7 +213,7 @@ class Enemy(pygame.sprite.Sprite):
         """
         # Checks the mob's death
         if self.health <= 0:
-            self.target.experience += self.damage
+            self.target.experience += self.experience_given
             self.target.enemy_killed()
             self.kill()
             return None
@@ -417,6 +417,7 @@ class Slime(Enemy):
         self.rect = self.image.get_rect(center=pos)
         self.rect.size = (64 * self.level - 32, 64 * self.level - 32)
         self.experience_given = 100*self.level
+        self.sound = pygame.mixer.Sound("assets\\audio\\mobs\\slime_attack.wav")
         
 
     def load_frames(self):
@@ -471,6 +472,7 @@ class Slime(Enemy):
             self.frames_y = 1
             self.animation_speed = 15
             if self.attack_counter >= self.attack_delay:
+                self.sound.play()
                 self.attack(self.target)
                 self.attack_counter = 0
         else:
@@ -507,6 +509,11 @@ class Slime(Enemy):
         """
         if self.level <= 0:
             self.kill()
+        if self.health <= 0:
+            self.target.experience += self.experience_given
+            self.duplicate()
+            self.target.enemy_killed()
+            self.kill()
         return super().update()
 
     def kill(self):
@@ -515,7 +522,6 @@ class Slime(Enemy):
 
         :return: The result of the superclass kill method.
         """
-        self.duplicate()
         return super().kill()
 
 class AlienBat(Enemy):
@@ -541,6 +547,7 @@ class AlienBat(Enemy):
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, self.group)
         self.colliders = None
         self.duplicate = True
+        
 
     def behavior(self):
         """
@@ -586,8 +593,8 @@ class EnemyWaveControler:
         self.enemy_types = {
             "alienbat":(AlienBat, 0.5),
             "Goblin":(Goblin, 0.3),
-            "Slime":(Slime, 0.15),
-            "Andromaluis":(Andromaluis, 0.05)
+            "Slime":(Slime, 0.1),
+            "Andromaluis":(Andromaluis, 0.1)
         }
 
     def generate_random_enemy(self, position):
@@ -622,8 +629,20 @@ class EnemyWaveControler:
         for enemy in self.enemy_group:
             enemy.kill()
 
+    def count_slimes(self):
+        return sum(1 for enemy in self.enemy_group if isinstance(enemy, Slime))
+
+    def adjust_slime_weight(self):
+        slime_count = self.count_slimes()
+        if slime_count >= 5:
+            slime_weight = 0 
+        else:
+            slime_weight = 0.1
+        self.enemy_types["Slime"] = (Slime, slime_weight)
+
     def update(self):
         current_time = pygame.time.get_ticks()
+        self.adjust_slime_weight()
         if len(self.enemy_group) < self.target_level * 5:
             if current_time - self.last_wave_time >= self.wave_timer:
                 num_enemies = random.randint(1, 3)  
