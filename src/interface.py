@@ -66,7 +66,8 @@ class GameInterface:
 
         The experience bar's length is determined by the player's experience.
         """
-        experience_rect = pygame.Rect(10, 50, self.player.experience/self.experience_ratio, 15)
+        self.experience_ratio = self.player.experience_needed / self.experience_bar_lenght
+        experience_rect = pygame.Rect(10, 50, min(self.player.experience, self.player.experience_needed)/self.experience_ratio, 15)
         border_rect = pygame.Rect(10, 50, self.experience_bar_lenght, 15)
 
         font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 20)

@@ -90,6 +90,7 @@ class Player(pygame.sprite.Sprite):
         self.current_level = 1
         self.killed_enemies = 0
         self.experience_needed = 300
+        self.level_up_sound = pygame.mixer.Sound("assets\\audio\\skills\\level_upsound.wav")
 
         #colidders
         self.colliders = colidders
@@ -303,6 +304,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.experience >= self.experience_needed:
             self.level_up()
+            self.experience_needed = 300*self.current_level
         
         #skills
 
@@ -345,6 +347,8 @@ class Player(pygame.sprite.Sprite):
         """
         self.current_level += 1
         self.experience = 0
+        self.get_healed(self.current_level * 100)
+        self.level_up_sound.play()
 
 
     def enemy_killed(self):
