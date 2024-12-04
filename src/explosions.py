@@ -79,7 +79,7 @@ class Explosion(pygame.sprite.Sprite):
                     target.rect.centery - self.pos[1]
                 )
                 if distance <= self.radius and target not in self.hit_targets:
-                    target.get_damaged(self.damage)
+                    target.kill()
                     self.hit_targets.add(target)
 
     def update(self):
