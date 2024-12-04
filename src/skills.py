@@ -471,7 +471,7 @@ class MissilRain(Skill):
         self.missile_number = 3
         self.explosion_damage = 5000
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
-        self.unlock_level = 0
+        self.unlock_level = 7
         self.sound = pygame.mixer.Sound("assets\\audio\\skills\\missil_launch.wav")
 
     def use(self, player):
