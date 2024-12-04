@@ -6,6 +6,7 @@ and visual/sound effects.
 
 import pygame
 import random
+import math
 
 import explosions
 import config
@@ -186,7 +187,7 @@ class TimeManipulation(Skill):
         """
         self.key = "E"
         self.name = "Manipulação temporal"
-        self.description = "Altera o espaço-tempo ao seu redor, diminuindo drasticamente a velocidade dos inimigos."
+        self.description = "Altera o espaço-tempo ao seu redor, diminuindo drasticamente a velocidade dos inimigos. \nBladeMaster não é afetado pela lentidão."
         self.cooldown = 15000
         self.image = "assets\\images\\icons\\timemanipulation_icon.png"
         self.duration = 8000
@@ -208,8 +209,8 @@ class TimeManipulation(Skill):
         if not self.is_on_cooldown:
             self.sound.play()
             for enemy in player.enemies:
-                enemy.speed = max(int(enemy.speed /6), 2)  # Decreases enemy speed with a lower limit
-                enemy.animation_speed = min(enemy.animation_speed * 3, 30)  # Increases animation speed
+                enemy.speed = max(enemy.speed/6, 2)  # Decreases enemy speed with a lower limit
+                enemy.animation_speed = enemy.animation_speed * 2  # Increases animation speed
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True
             self.end_time = pygame.time.get_ticks() + self.duration
@@ -230,7 +231,8 @@ class TimeManipulation(Skill):
                 enemy.speed = enemy.original_speed
                 enemy.animation_speed = enemy.original_animation_speed
         return super().update(player)
-    
+
+
 class LethalTempo(Skill):
     """
     Represents the Lethal Tempo skill, where the cyborg energizes its gun, increasing the 
@@ -254,7 +256,7 @@ class LethalTempo(Skill):
     def __init__(self):
         self.key = "Q"
         self.name = "Ritmo letal"
-        self.description = "O cyborg energiza sua metralhadora, aumentando a frequência de disparos e o dano de cada projétil."
+        self.description = "Cyborg energiza sua metralhadora, aumentando a frequência de disparos e o dano de cada projétil."
         self.cooldown = 8000
         self.image = "assets\\images\\icons\\lethaltempo_icon.png"
         self.duration = 3500
@@ -389,7 +391,7 @@ class Bloodlust(Skill):
         self.key = "Q"
         self.name = "Sede de Sangue"
         self.description = "Por um breve período, BladeMaster causa mais dano, ataca com maior freqência e \n abater inimigos restaura vida, mas ele sofre dano aumentado de todas as fontes."
-        self.cooldown = 10000
+        self.cooldown = 12000
         self.image = "assets\\images\\icons\\bloodlust_icon.png"
         self.duration = 3500
         self.end_time = 0
@@ -460,12 +462,13 @@ class MissilRain(Skill):
     def __init__(self):
         self.key = "E"
         self.name = "Chuva de Mísseis"
-        self.description = "Comanda que limpem a área, lançando muitos mísseis que exterminam os inimigos atingidos."
-        self.cooldown = 15000
+        self.description = "Comanda que limpem a área, lançando vários mísseis que exterminam os inimigos atingidos.    \nA quantidade de mísseis aumenta de acordo com a quantidade de inimigos abatidos."
+        self.cooldown = 5000
         self.image = "assets\\images\\icons\\missiles_icon.png"
         super().__init__(self.name, self.cooldown, self.image) 
         # Explosion configuration
-        self.missile_number = 9
+        self.killed_enemies = 0
+        self.missile_number = 3
         self.explosion_damage = 5000
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
         self.unlock_level = 7
@@ -490,11 +493,11 @@ class MissilRain(Skill):
                 pos = player.position
                 # Create and launch missile with explosion parameters
                 missile = explosions.Missile(
-                    (pos.x + spread_value_x, pos.y - spread_value_y), 
+                    (pos.x + spread_value_x, -spread_value_y), 
                     (pos.x + spread_value_x, pos.y + spread_value_y), 
                     1, player.enemies, 100, self.explosion_damage, explosion_spritesheet, player.explosion_group
                 )
-                if i // 5 == 0:  # Set muted for first 5 missiles
+                if i % 5 == 0:  
                     missile.muted = False
                     
                 player.explosion_group.add(missile)  # Add missile to the explosion group
@@ -514,6 +517,8 @@ class MissilRain(Skill):
         Returns:
             None
         """
+        self.killed_enemies = player.killed_enemies
+        self.missile_number = 3 + math.floor(self.killed_enemies / 5)
         return super().update(player)
 
     
@@ -539,9 +544,9 @@ class GravitionVortex(Skill):
     def __init__(self):
         self.key = "E"
         self.name = "Campo Gravitacional"
-        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projeteis inimigos. Inimigos no centro da explosão são imediatamente obliterados. O Berserker não é afetado pelo Vortex."
+        self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projeteis inimigos. Inimigos no centro da explosão são \n imediatamente obliterados. O Berserker não é afetado pelo Vortex."
         self.image = "assets\\images\\explosions\\vortex\\vortex.png"
-        self.cooldown = 20000
+        self.cooldown = 25000
         self.duration = 11000
         super().__init__(self.name, self.cooldown, self.image)
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
@@ -629,9 +634,9 @@ class KnifeThrowerRender(Skill):
     def __init__(self):
         self.key = "Ataque básico"
         self.name = "Arremesso de facas"
-        self.cooldown = 1000
+        self.cooldown = 750
         self.image = "assets\\images\\Guns\\Knifeicon.png"
-        self.description = f"Arremessa uma faca no alvo, causando grande quantidade de dano."
+        self.description = f"Arremessa uma adaga no alvo, causando grande quantidade de dano a um único alvo"
         super().__init__(self.name, self.cooldown, self.image)
 
 
