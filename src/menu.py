@@ -26,7 +26,7 @@ class Button:
         # Rect setup for button and text positioning
         self.rect = self.button.get_rect(center=(self.x_pos, self.y_pos))
         self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
-        
+
         # Audio setup
         self.select_audio = pygame.mixer.Sound("assets/audio/menu/Menu_Selection.wav")
         self.click_audio = pygame.mixer.Sound("assets/audio/menu/Menu_Click.wav")
@@ -287,28 +287,28 @@ class Menu():
                     self.change_current_game_state(button, alow_heroe)
 
             if button == self.char2_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Blade_master"] == False:
-                    message = f"Personagem não liberado!! Nescessario recorde de 15 mortes"
-                    text_surface = pygame.font.Font(None, 24).render(message, True, (255, 255, 255))
+                    message = f"Personagem Bloquado! \n Libere-o conseguindo 15 abates em uma partida."
+                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (200, 0, 0))
                     width, height = text_surface.get_size()
                     height += 10
 
                     tooltip_x = pygame.mouse.get_pos()[0] + 10
                     tooltip_y = pygame.mouse.get_pos()[1] - height - 100
 
-                    pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (30, 30, 30), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
                     pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
 
                     self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
             elif button == self.char3_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Berserker"] == False: 
-                    message = f"Personagem não liberado!! Nescessario recorde de 25 mortes"
-                    text_surface = pygame.font.Font(None, 24).render(message, True, (255, 255, 255))
+                    message = f"Personagem Bloquado! \n Libere-o conseguindo 25 abates em uma partida."
+                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (200, 0, 0))
                     width, height = text_surface.get_size()
                     height += 10
 
                     tooltip_x = pygame.mouse.get_pos()[0] - width - 20
                     tooltip_y = pygame.mouse.get_pos()[1] - height - 100
 
-                    pygame.draw.rect(self.screen, (0, 0, 0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (30, 30, 30), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
                     pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
 
                     self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
