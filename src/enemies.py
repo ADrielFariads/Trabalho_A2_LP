@@ -403,7 +403,7 @@ class Slime(Enemy):
         self.original_image = self.sprite_sheet
         self.frames_x = 4
         self.frames_y = 2
-        self.level = min(level, 5)
+        self.level = min(level, 3)
         self.health = 500 * self.level
         self.speed = 8 - self.level
         self.damage = 20 * self.level
@@ -580,7 +580,7 @@ class EnemyWaveControler:
         self.bullets_group = bullets_group 
         self.target_level = self.target.current_level
         self.active_enemies = []
-        self.wave_timer = 800
+        self.wave_timer = 3000
         self.collide_rects = collide_rects
         self.last_wave_time = -self.wave_timer
         self.enemy_types = {
@@ -602,7 +602,7 @@ class EnemyWaveControler:
             goblin = Goblin(position, self.target, self.bullets_group, self.enemy_group)
             goblin.colliders = self.collide_rects
         elif enemy_class == Slime:
-            slime = Slime(position, self.target, self.bullets_group, self.target_level + 1, self.enemy_group)
+            slime = Slime(position, self.target, self.bullets_group, math.ceil(self.target_level/3), self.enemy_group)
             slime.colliders = self.collide_rects
         elif enemy_class == Andromaluis:
             andromaluis = Andromaluis(position, self.target, self.bullets_group, self.enemy_group)
@@ -624,8 +624,10 @@ class EnemyWaveControler:
 
     def update(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_wave_time >= self.wave_timer:
-            num_enemies = random.randint(0, self.target_level)  
-            self.wave_generator(num_enemies)
-            self.last_wave_time = current_time
+        if len(self.enemy_group) < self.target_level * 5:
+            if current_time - self.last_wave_time >= self.wave_timer:
+                num_enemies = random.randint(1, 3)  
+                self.wave_generator(num_enemies)
+                self.last_wave_time = current_time
+        self.target_level = self.target.current_level
         self.active_enemies = [enemy for enemy in self.active_enemies if enemy.alive()]

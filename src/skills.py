@@ -280,7 +280,7 @@ class LethalTempo(Skill):
             self.original_damage = player.gun.damage
             self.original_cooldown = player.gun.cool_down
             player.gun.cool_down = 500  # Reduces the cooldown between shots
-            player.gun.damage += 25  # Increases the damage of each shot
+            player.gun.damage += 50  # Increases the damage of each shot
             
             self.last_used_time = pygame.time.get_ticks()
             self.is_on_cooldown = True

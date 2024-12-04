@@ -89,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         self.experience = 0
         self.current_level = 1
         self.killed_enemies = 0
-        self.experience_needed = 500 * self.current_level
+        self.experience_needed = 300
 
         #colidders
         self.colliders = colidders
@@ -123,6 +123,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(self.initial_pos))
         self.current_action = "idle"
         self.target_health = self.health
+        self.current_level = 1
 
     def load_frames(self, sprite_sheet, frames_x):
         """
@@ -362,14 +363,14 @@ berserker_skills = [skills.ShotgunRender(), skills.IronWill(), skills.GravitionV
 
 class Cyborg(Player):
     def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
-        health = 1500
+        health = 1000
         speed = 8
         super().__init__(pos, health, speed, map_bounds, cyborg_skills, cyborg_images_dict, heroe, time_of_playing, colidders)
 
 class BladeMaster(Player):
     def __init__(self, pos, map_bounds, heroe, time_of_playing, colidders=None):
 
-        health = 1200
+        health = 800
         speed = 10
         super().__init__(pos, health, speed, map_bounds, blademaster_skills, blademaster_image_dict, heroe, time_of_playing, colidders)
 

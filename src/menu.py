@@ -264,8 +264,8 @@ class Menu():
                 if key == "Kills" and value >= 15:
                         # If the key is "Kills" and the value is 15 or more, enable "Blade_master"
                     alow_heroe["Blade_master"] = True
-                if key == "Kills" and value >= 25:
-                    # If the key is "Kills" and the value is 25 or more, enable "Berserker"
+                if key == "Time" and value >= 180:
+                    # If the key is "Time" and the value is 300 or more, enable "Berserker"
                     alow_heroe["Berserker"] = True
 
         # Handle global quit event
@@ -293,22 +293,23 @@ class Menu():
                     width +=10
                     height += 10
 
-                    tooltip_x = pygame.mouse.get_pos()[0] 
-                    tooltip_y = pygame.mouse.get_pos()[1] - height - 100
+                    tooltip_x = button.rect.x - 70
+                    tooltip_y = button.rect.y - 100
+
 
                     pygame.draw.rect(self.screen, (0,0,0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
                     pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
 
                     self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
             elif button == self.char3_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Berserker"] == False: 
-                    message = f"    -   -   -   Personagem Bloqueado!    -  -    -   \n Libere-o sobrevivendo 5 minutos em uma partida."
+                    message = f"    -   -   -   Personagem Bloqueado!    -  -    -   \n Libere-o sobrevivendo 3 minutos em uma partida."
                     text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (255, 255, 0))
                     width, height = text_surface.get_size()
                     width +=10
                     height += 10
 
-                    tooltip_x = pygame.mouse.get_pos()[0] - width - 20
-                    tooltip_y = pygame.mouse.get_pos()[1] - height - 100
+                    tooltip_x = button.rect.x - 70
+                    tooltip_y = button.rect.y - 100
 
                     pygame.draw.rect(self.screen, (0,0,0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
                     pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
@@ -341,7 +342,7 @@ class Menu():
             "Hablidade 1: Q",
             "Hablidade 2: E",
             "Pausa: Esc",
-            "Atirar: Botão Esquerdo"
+            "Atirar: Cursor"
         ]
 
         # Text positions
