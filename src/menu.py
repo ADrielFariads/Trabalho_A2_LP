@@ -2,8 +2,6 @@ import pygame
 import config
 import json 
 
-from enemies import Enemy
-
 class Button:
     def __init__(self, pos, text_input, base_color, hovering_color, scale):
         # Font setup

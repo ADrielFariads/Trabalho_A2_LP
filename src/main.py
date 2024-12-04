@@ -6,7 +6,6 @@ import guns
 import enemies
 from groups import AllSpritesgroup
 from interface import GameInterface
-import skills
 from menu import Menu
 
 class Game:
