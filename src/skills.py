@@ -471,7 +471,8 @@ class MissilRain(Skill):
         self.missile_number = 3
         self.explosion_damage = 5000
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
-        self.unlock_level = 7
+        self.unlock_level = 0
+        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\missil_launch.wav")
 
     def use(self, player):
         """
@@ -487,13 +488,14 @@ class MissilRain(Skill):
         """
         current_time = pygame.time.get_ticks()
         if current_time - self.last_used_time >= self.cooldown: 
+            self.sound.play()
             for i in range(self.missile_number):
                 spread_value_x = random.randint(-500, 500)  # Random horizontal spread
-                spread_value_y = random.randint(-200, 200)  # Random vertical spread  
+                spread_value_y = random.randint(-500, 200)  # Random vertical spread  
                 pos = player.position
                 # Create and launch missile with explosion parameters
                 missile = explosions.Missile(
-                    (pos.x + spread_value_x, -abs(spread_value_y)), 
+                    (pos.x + spread_value_x, -(abs(spread_value_y)*20)), 
                     (pos.x + spread_value_x, pos.y + spread_value_y), 
                     1, player.enemies, 300, self.explosion_damage, explosion_spritesheet, player.explosion_group
                 )
