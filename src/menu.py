@@ -167,9 +167,9 @@ class Menu():
             self.back_paused_button: self.resume_game,
             self.menu_button: self.return_to_main_menu,
             self.play_again_button: self.restart_game,
-            self.easy_button: lambda: self.game_difficulty(1.2,1.2),
-            self.medium_button: lambda: self.game_difficulty(1 ,1),
-            self.hard_button: lambda: self.game_difficulty(0.7, 0.85)
+            self.easy_button: lambda: self.game_difficulty(1.3),
+            self.medium_button: lambda: self.game_difficulty(1),
+            self.hard_button: lambda: self.game_difficulty(0.7)
             
         }
         
@@ -203,10 +203,10 @@ class Menu():
             self.difficulty_selection_state = True
             self.game_interface.reset_game_status()
     
-    def game_difficulty(self, health_index, speed_index):
+    def game_difficulty(self, enemy_index):
         self.reset_states()
-        self.player.max_health = self.player.max_health * health_index
-        self.player.speed = self.player.speed * speed_index
+        self.enemy.wave_timer = self.enemy.wave_timer * enemy_index
+
         self.playing = True
         
 
