@@ -31,7 +31,7 @@ class Game:
 
         # Soundtrack
         self.soundtrack = pygame.mixer.music.load("assets\\audio\\background2_music.mp3")
-        pygame.mixer.music.set_volume(0.25)
+        pygame.mixer.music.set_volume(0.15)
         
 
         # Initialize background
@@ -194,6 +194,7 @@ class Game:
 
             else:
                 self.menu.update()
+                pygame.mixer.music.stop()
 
             pygame.display.update()
 
