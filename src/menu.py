@@ -196,7 +196,7 @@ class Menu():
             self.player = self.characters_list[character-1]
             self.difficulty_selection_state = True
             self.game_interface.reset_game_status()
-        elif (character == 3 and alow_heroe["Blade_master"] == True):
+        elif (character == 3 and alow_heroe["Berserker"] == True):
             self.reset_states()
             self.char_selection = character
             self.player = self.characters_list[character-1]
@@ -246,7 +246,6 @@ class Menu():
         text: The text object to display on the screen.
         *button_args: Button objects that will be displayed and interacted with.
         '''
-
         alow_heroe = {
             "Cyborg": True,
             "Blade_master": False,
