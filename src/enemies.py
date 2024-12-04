@@ -417,6 +417,7 @@ class Slime(Enemy):
         self.rect = self.image.get_rect(center=pos)
         self.rect.size = (64 * self.level - 32, 64 * self.level - 32)
         self.experience_given = 100*self.level
+        self.sound = pygame.mixer.Sound("assets\\audio\\mobs\\slime_attack.wav")
         
 
     def load_frames(self):
@@ -471,6 +472,7 @@ class Slime(Enemy):
             self.frames_y = 1
             self.animation_speed = 15
             if self.attack_counter >= self.attack_delay:
+                self.sound.play()
                 self.attack(self.target)
                 self.attack_counter = 0
         else:
@@ -545,6 +547,7 @@ class AlienBat(Enemy):
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, self.group)
         self.colliders = None
         self.duplicate = True
+        
 
     def behavior(self):
         """
