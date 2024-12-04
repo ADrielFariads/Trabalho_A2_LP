@@ -287,28 +287,30 @@ class Menu():
                     self.change_current_game_state(button, alow_heroe)
 
             if button == self.char2_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Blade_master"] == False:
-                    message = f"Personagem Bloquado! \n Libere-o conseguindo 15 abates em uma partida."
-                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (200, 0, 0))
+                    message = f"    -   -   -   Personagem Bloqueado!    -  -    -   \n Libere-o conseguindo 20 abates em uma partida."
+                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (255, 255, 0))
                     width, height = text_surface.get_size()
+                    width +=10
                     height += 10
 
-                    tooltip_x = pygame.mouse.get_pos()[0] + 10
+                    tooltip_x = pygame.mouse.get_pos()[0] 
                     tooltip_y = pygame.mouse.get_pos()[1] - height - 100
 
-                    pygame.draw.rect(self.screen, (30, 30, 30), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (0,0,0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
                     pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
 
                     self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
             elif button == self.char3_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Berserker"] == False: 
-                    message = f"Personagem Bloquado! \n Libere-o conseguindo 25 abates em uma partida."
-                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (200, 0, 0))
+                    message = f"    -   -   -   Personagem Bloqueado!    -  -    -   \n Libere-o sobrevivendo 5 minutos em uma partida."
+                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (255, 255, 0))
                     width, height = text_surface.get_size()
+                    width +=10
                     height += 10
 
                     tooltip_x = pygame.mouse.get_pos()[0] - width - 20
                     tooltip_y = pygame.mouse.get_pos()[1] - height - 100
 
-                    pygame.draw.rect(self.screen, (30, 30, 30), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
+                    pygame.draw.rect(self.screen, (0,0,0), (tooltip_x, tooltip_y, width + 10, height + 10))  # Background
                     pygame.draw.rect(self.screen, (255, 255, 255), (tooltip_x, tooltip_y, width + 10, height + 10), 2)  # Border
 
                     self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))

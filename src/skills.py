@@ -463,7 +463,7 @@ class MissilRain(Skill):
         self.key = "E"
         self.name = "Chuva de Mísseis"
         self.description = "Comanda que limpem a área, lançando vários mísseis que exterminam os inimigos atingidos.    \nA quantidade de mísseis aumenta de acordo com a quantidade de inimigos abatidos."
-        self.cooldown = 5000
+        self.cooldown = 30000
         self.image = "assets\\images\\icons\\missiles_icon.png"
         super().__init__(self.name, self.cooldown, self.image) 
         # Explosion configuration
@@ -489,11 +489,11 @@ class MissilRain(Skill):
         if current_time - self.last_used_time >= self.cooldown: 
             for i in range(self.missile_number):
                 spread_value_x = random.randint(-500, 500)  # Random horizontal spread
-                spread_value_y = random.randint(100, 500)  # Random vertical spread  
+                spread_value_y = random.randint(-200, 200)  # Random vertical spread  
                 pos = player.position
                 # Create and launch missile with explosion parameters
                 missile = explosions.Missile(
-                    (pos.x + spread_value_x, -spread_value_y), 
+                    (pos.x + spread_value_x, -abs(spread_value_y)), 
                     (pos.x + spread_value_x, pos.y + spread_value_y), 
                     1, player.enemies, 300, self.explosion_damage, explosion_spritesheet, player.explosion_group
                 )
@@ -518,7 +518,7 @@ class MissilRain(Skill):
             None
         """
         self.killed_enemies = player.killed_enemies
-        self.missile_number = 3 + math.floor(self.killed_enemies / 5)
+        self.missile_number = min(3 + math.floor(self.killed_enemies / 10), 10)
         return super().update(player)
 
     
