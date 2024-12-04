@@ -278,7 +278,7 @@ class Menu():
                         # If the key is "Kills" and the value is 15 or more, enable "Blade_master"
                     alow_heroe["Blade_master"] = True
                 if key == "Time" and value >= 180:
-                    # If the key is "Time" and the value is 300 or more, enable "Berserker"
+                    # If the key is "Time" and the value is 180 or more, enable "Berserker"
                     alow_heroe["Berserker"] = True
 
         # Handle global quit event
