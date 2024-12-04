@@ -495,7 +495,7 @@ class MissilRain(Skill):
                 missile = explosions.Missile(
                     (pos.x + spread_value_x, -spread_value_y), 
                     (pos.x + spread_value_x, pos.y + spread_value_y), 
-                    1, player.enemies, 100, self.explosion_damage, explosion_spritesheet, player.explosion_group
+                    1, player.enemies, 300, self.explosion_damage, explosion_spritesheet, player.explosion_group
                 )
                 if i % 5 == 0:  
                     missile.muted = False

@@ -71,7 +71,7 @@ class Enemy(pygame.sprite.Sprite):
         self.attack_counter = 0
         self.target = player
         self.bullets = bullets_group
-        self.experience_given = 10
+        self.experience_given = 100
         self.colliders = colliders
 
         #groups
@@ -353,18 +353,18 @@ class Andromaluis(Enemy):
         self.sprite_sheet = image_dict["ANDROMALUIS"]
         self.frames_x = 8
         self.frames_y = 3
-        self.health = 1500
+        self.health = 1000
         self.speed = 1
         self.damage = 100
         self.attack_delay = 1000
         self.attack_range = 500
         self.enemy_group = enemy_group
-        self.experience_given = 100
         
         # Skill attributes
         self.generation_interval = 100
         self.generation_timer = 10
         super().__init__(pos, self.sprite_sheet, self.frames_x, self.frames_y, self.health, self.speed, self.damage, self.attack_range, self.attack_delay, player, bullets_group, enemy_group)
+        self.experience_given = 500
 
     def behavior(self):
         """
@@ -379,9 +379,9 @@ class Andromaluis(Enemy):
             if self.generation_timer <= 0:
                 generate_goblins(4, self.rect.top, self.rect.bottom, self.rect.left, self.rect.right, self.target, self.bullets, self.enemy_group)
                 self.generation_timer = self.generation_interval
-
         # Decrease the generation timer
         self.generation_timer -= 1
+
 
 class action(Enum):
     IDLE = 0
@@ -403,7 +403,7 @@ class Slime(Enemy):
         self.original_image = self.sprite_sheet
         self.frames_x = 4
         self.frames_y = 2
-        self.level = min(level, 3)
+        self.level = min(level, 5)
         self.health = 500 * self.level
         self.speed = 8 - self.level
         self.damage = 20 * self.level
@@ -416,6 +416,7 @@ class Slime(Enemy):
         self.load_frames()
         self.rect = self.image.get_rect(center=pos)
         self.rect.size = (64 * self.level - 32, 64 * self.level - 32)
+        self.experience_given = 100*self.level
         
 
     def load_frames(self):
@@ -579,14 +580,14 @@ class EnemyWaveControler:
         self.bullets_group = bullets_group 
         self.target_level = self.target.current_level
         self.active_enemies = []
-        self.wave_timer = 10000
+        self.wave_timer = 800
         self.collide_rects = collide_rects
         self.last_wave_time = -self.wave_timer
         self.enemy_types = {
             "alienbat":(AlienBat, 0.5),
             "Goblin":(Goblin, 0.3),
-            "Slime":(Slime, 0.1),
-            "Andromaluis":(Andromaluis, 0.1)
+            "Slime":(Slime, 0.15),
+            "Andromaluis":(Andromaluis, 0.05)
         }
 
     def generate_random_enemy(self, position):
@@ -601,10 +602,11 @@ class EnemyWaveControler:
             goblin = Goblin(position, self.target, self.bullets_group, self.enemy_group)
             goblin.colliders = self.collide_rects
         elif enemy_class == Slime:
-            slime = Slime(position, self.target, self.bullets_group, 3, self.enemy_group)
+            slime = Slime(position, self.target, self.bullets_group, self.target_level + 1, self.enemy_group)
             slime.colliders = self.collide_rects
         elif enemy_class == Andromaluis:
             andromaluis = Andromaluis(position, self.target, self.bullets_group, self.enemy_group)
+            
 
     def wave_generator(self, number):
         for _ in range(number):
@@ -623,7 +625,7 @@ class EnemyWaveControler:
     def update(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_wave_time >= self.wave_timer:
-            num_enemies = random.randint(3, 8)  
+            num_enemies = random.randint(0, self.target_level)  
             self.wave_generator(num_enemies)
             self.last_wave_time = current_time
         self.active_enemies = [enemy for enemy in self.active_enemies if enemy.alive()]
