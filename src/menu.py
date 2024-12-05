@@ -231,6 +231,8 @@ class Menu():
         self.enemy.reset_enemies()
         self.player.reset_player()
         self.game_interface.reset_game_status()
+        for sprite in self.explosions:
+            sprite.kill()
         self.initial_menu = True
 
     def restart_game(self):
@@ -238,6 +240,8 @@ class Menu():
         self.enemy.reset_enemies()
         self.player.reset_player()
         self.game_interface.reset_game_status()
+        for sprite in self.explosions:
+            sprite.kill()
         self.playing = True
 
     def draw(self, text, *button_args):

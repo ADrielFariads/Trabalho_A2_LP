@@ -552,7 +552,7 @@ class GravitionVortex(Skill):
         self.duration = 11000
         super().__init__(self.name, self.cooldown, self.image)
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
-        self.unlock_level = 0
+        self.unlock_level = 7
 
     def use(self, player):
         """
