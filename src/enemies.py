@@ -537,7 +537,7 @@ class AlienBat(Enemy):
         """
         self.group = group
         self.sprite_sheet = image_dict["ALIENBAT"]
-        self.frames_x = 6
+        self.frames_x = 5
         self.frames_y = 2
         self.health = 300
         self.speed = 5
