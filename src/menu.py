@@ -170,9 +170,9 @@ class Menu():
             self.back_paused_button: self.resume_game,
             self.menu_button: self.return_to_main_menu,
             self.play_again_button: self.restart_game,
-            self.easy_button: lambda: self.game_difficulty(1.3),
-            self.medium_button: lambda: self.game_difficulty(1),
-            self.hard_button: lambda: self.game_difficulty(0.7)
+            self.easy_button: lambda: self.game_difficulty(2.5),
+            self.medium_button: lambda: self.game_difficulty(1.5),
+            self.hard_button: lambda: self.game_difficulty(0.3)
             
         }
         

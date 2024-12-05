@@ -183,13 +183,6 @@ class GameInterface:
             time_survived = self.time_paused / 1000  # Use the last recorded time when paused
 
         self.player.time_of_playing = time_survived
-        
-        time_text = f"Tempo: {int(time_survived)}s"
-        time_surface = self.font.render(time_text, True, (255, 255, 255))
-
-        # Position the timer at the top-right corner of the screen, next to the score
-        time_rect = time_surface.get_rect(topright=(self.screen.get_width() - 100, 10))
-        self.screen.blit(time_surface, time_rect)
 
 
     def reset_game_status(self):
