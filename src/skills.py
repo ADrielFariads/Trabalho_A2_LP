@@ -82,7 +82,7 @@ class Heal(Skill):
         self.name = "Heal"
         self.cooldown = 5000
         self.heal_value = 200
-        self.image = "assets\\images\\icons\\heal_icon.png"
+        self.image = "assets/images/icons/heal_icon.png"
         self.description = f"Se cura em {self.heal_value} pontos de vida."
         super().__init__(self.name, self.cooldown, self.image)
 
@@ -125,8 +125,8 @@ class Adrenaline(Skill):
         self.cooldown = 5000
         self.duration = 3000
         self.dash_end_time = 0
-        self.image = "assets\\images\\icons\\dash_icon.png"
-        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\dash_sound.wav")
+        self.image = "assets/images/icons/dash_icon.png"
+        self.sound = pygame.mixer.Sound("assets/audio/skills/dash_sound.wav")
         self.original_speed = 0
         self.description = f"Aumenta a velocidade de movimento durante {self.duration/1000} segundos."
         self.sound.set_volume(0.5)
@@ -189,10 +189,10 @@ class TimeManipulation(Skill):
         self.name = "Manipulação temporal"
         self.description = "Altera o espaço-tempo ao seu redor, diminuindo drasticamente a velocidade dos inimigos. \nBladeMaster não é afetado pela lentidão."
         self.cooldown = 15000
-        self.image = "assets\\images\\icons\\timemanipulation_icon.png"
+        self.image = "assets/images/icons/timemanipulation_icon.png"
         self.duration = 8000
         self.end_time = 0
-        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\heatbeating.wav")
+        self.sound = pygame.mixer.Sound("assets/audio/skills/heatbeating.wav")
         super().__init__(self.name, self.cooldown, self.image)
         self.unlock_level = 7
 
@@ -258,7 +258,7 @@ class LethalTempo(Skill):
         self.name = "Ritmo letal"
         self.description = "Cyborg energiza sua metralhadora, aumentando a frequência de disparos e o dano de cada projétil."
         self.cooldown = 8000
-        self.image = "assets\\images\\icons\\lethaltempo_icon.png"
+        self.image = "assets/images/icons/lethaltempo_icon.png"
         self.duration = 3500
         self.end_time = 0
         self.original_damage = 0
@@ -327,7 +327,7 @@ class IronWill(Skill):
         self.name = "Vontade de Ferro"
         self.description = "O Berserker entra em um estado de fúria, reduzindo drasticamente o dano recebido de todas as fontes."
         self.cooldown = 15000
-        self.image = "assets\\images\\icons\\berserker_icon.png"
+        self.image = "assets/images/icons/berserker_icon.png"
         self.duration = 5000
         self.end_time = 0
         super().__init__(self.name, self.cooldown, self.image)
@@ -392,7 +392,7 @@ class Bloodlust(Skill):
         self.name = "Sede de Sangue"
         self.description = "Por um breve período, BladeMaster causa mais dano, ataca com maior freqência e \n abater inimigos restaura vida, mas ele sofre dano aumentado de todas as fontes."
         self.cooldown = 12000
-        self.image = "assets\\images\\icons\\bloodlust_icon.png"
+        self.image = "assets/images/icons/bloodlust_icon.png"
         self.duration = 3500
         self.end_time = 0
         self.original_damage = 0
@@ -464,7 +464,7 @@ class MissilRain(Skill):
         self.name = "Chuva de Mísseis"
         self.description = "Comanda que limpem a área, lançando vários mísseis que exterminam os inimigos atingidos.    \nA quantidade de mísseis aumenta de acordo com a quantidade de inimigos abatidos."
         self.cooldown = 30000
-        self.image = "assets\\images\\icons\\missiles_icon.png"
+        self.image = "assets/images/icons/missiles_icon.png"
         super().__init__(self.name, self.cooldown, self.image) 
         # Explosion configuration
         self.killed_enemies = 0
@@ -472,7 +472,7 @@ class MissilRain(Skill):
         self.explosion_damage = 5000
         self.last_used_time -= self.cooldown  # Ensures the skill is ready to use immediately
         self.unlock_level = 7
-        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\missil_launch.wav")
+        self.sound = pygame.mixer.Sound("assets/audio/skills/missil_launch.wav")
 
     def use(self, player):
         """
@@ -547,7 +547,7 @@ class GravitionVortex(Skill):
         self.key = "E"
         self.name = "Campo Gravitacional"
         self.description = "Cria uma área de gravidade aumentada, atraindo inimigos e projeteis inimigos. Inimigos no centro da explosão são \n imediatamente obliterados. O Berserker não é afetado pelo Vortex."
-        self.image = "assets\\images\\explosions\\vortex\\vortex.png"
+        self.image = "assets/images/explosions/vortex/vortex.png"
         self.cooldown = 25000
         self.duration = 11000
         super().__init__(self.name, self.cooldown, self.image)
@@ -614,7 +614,7 @@ class MachineGunRender(Skill):
         self.key = "Ataque básico"
         self.name = "Metralhadora"
         self.cooldown = 500
-        self.image = "assets\\images\\Guns\\machinegun1.png"
+        self.image = "assets/images/Guns/machinegun1.png"
         self.description = f"Dispara uma saraivada de balas no local alvo."
         super().__init__(self.name, self.cooldown, self.image)
 
@@ -637,7 +637,7 @@ class KnifeThrowerRender(Skill):
         self.key = "Ataque básico"
         self.name = "Arremesso de facas"
         self.cooldown = 750
-        self.image = "assets\\images\\Guns\\Knifeicon.png"
+        self.image = "assets/images/Guns/Knifeicon.png"
         self.description = f"Arremessa uma adaga no alvo, causando grande quantidade de dano a um único alvo"
         super().__init__(self.name, self.cooldown, self.image)
 
@@ -660,7 +660,7 @@ class ShotgunRender(Skill):
         self.key = "Ataque básico"
         self.name = "Espingarda"
         self.cooldown = 1500
-        self.image = "assets\\images\\Guns\\Shotgun_icon.png"
+        self.image = "assets/images/Guns/Shotgun_icon.png"
         self.description = f"Dispara uma rajada de balas em cone. Causa MUITO mais dano em alvos próximos."
         super().__init__(self.name, self.cooldown, self.image)
         self.image = pygame.transform.scale(self.image, (50, 25))  # Resizing the image for the shotgun icon

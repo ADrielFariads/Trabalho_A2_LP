@@ -44,7 +44,7 @@ class Explosion(pygame.sprite.Sprite):
         self.image = self.sprite_sheet[self.current_frame]
         self.rect = self.image.get_rect(center=self.pos)
         if not muted:
-            self.sound = pygame.mixer.Sound("assets\\audio\\skills\\explosion_sound_1.wav")
+            self.sound = pygame.mixer.Sound("assets/audio/skills/explosion_sound_1.wav")
             self.sound.set_volume(0.5)
             self.sound.play()
 
@@ -132,7 +132,7 @@ class Missile(pygame.sprite.Sprite):
         self.muted = muted
         self.z_index = 12
 
-        self.image = pygame.image.load("assets\\images\\Bullets\\missile1.png")
+        self.image = pygame.image.load("assets/images/Bullets/missile1.png")
         self.image = pygame.transform.rotate(self.image, 90)
         self.rect = self.image.get_rect(center=start_pos)
         self.direction = pygame.math.Vector2(target_pos) - pygame.math.Vector2(start_pos)
@@ -186,7 +186,7 @@ class Vortex(pygame.sprite.Sprite):
         self.damage = damage
         self.pos = pos
         self.target_group = target_group
-        self.image = pygame.image.load("assets\\images\\explosions\\vortex\\vortex.png")
+        self.image = pygame.image.load("assets/images/explosions/vortex/vortex.png")
         self.original_image = self.image
         self.current_frame = 0
         self.duration = duration
@@ -195,8 +195,8 @@ class Vortex(pygame.sprite.Sprite):
         self.last_displacement_time = self.start_time
         self.particles = pygame.sprite.Group()
         self.z_index = 1
-        self.sound = pygame.mixer.Sound("assets\\audio\\skills\\vortex_sound.wav")
-        self.kill_sound = pygame.mixer.Sound("assets\\audio\\skills\\vortex_kill_sound.wav")
+        self.sound = pygame.mixer.Sound("assets/audio/skills/vortex_sound.wav")
+        self.kill_sound = pygame.mixer.Sound("assets/audio/skills/vortex_kill_sound.wav")
         self.sound.play()
     
     def animate(self):

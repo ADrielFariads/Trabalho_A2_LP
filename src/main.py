@@ -29,7 +29,7 @@ class Game:
         self.running = False  # Set default value
 
         # Soundtrack
-        self.soundtrack = pygame.mixer.music.load("assets\\audio\\background2_music.mp3")
+        self.soundtrack = pygame.mixer.music.load("assets/audio/background2_music.mp3")
         pygame.mixer.music.set_volume(0.15)
         
 
@@ -90,7 +90,7 @@ class Game:
         self.all_sprites.add(self.enemies_group)
         self.player.offset = self.all_sprites.offset
 
-        self.menu = Menu(self.display_surface, self.cyborg,self.blade_master,self.berserker, self.enemy_army, self.interface)
+        self.menu = Menu(self.display_surface, self.cyborg,self.blade_master,self.berserker, self.enemy_army, self.interface, self.explosion_group)
 
         # Update all enemies to track the new player
         for enemy in self.enemies_group:

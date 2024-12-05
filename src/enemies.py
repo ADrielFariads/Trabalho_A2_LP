@@ -417,7 +417,7 @@ class Slime(Enemy):
         self.rect = self.image.get_rect(center=pos)
         self.rect.size = (64 * self.level - 32, 64 * self.level - 32)
         self.experience_given = 100*self.level
-        self.sound = pygame.mixer.Sound("assets\\audio\\mobs\\slime_attack.wav")
+        self.sound = pygame.mixer.Sound("assets/audio/mobs/slime_attack.wav")
         
 
     def load_frames(self):
