@@ -22,27 +22,28 @@ class FilesPath(Enum):
         SLIME (str): File path for the Slime enemy image.
         ALIENBAT (str): File path for the Alien Bat enemy image.
     """
-    EXPLOSION1 = [f"assets\\images\\explosions\\explosion1\\Explosion_{i}.png" for i in range(1, 10)]
-    BACKGROUND = "assets\\background_files\\map009.png"
+    EXPLOSION1 = [f"assets/images/explosions/explosion1/Explosion_{i}.png" for i in range(1, 10)]
+    BACKGROUND = "assets/background_files/map009.png"
 
-    ANDROMALUIS = "assets\\images\\enemies\\andromaluis\\andromalius.png"
-    SLIME = "assets\\images\\enemies\\Slime\\slime_idle.png"
-    SLIMEATTACK = "assets\\images\\enemies\\Slime\\slime_attack.png"
-    ALIENBAT = "assets\\images\\enemies\\alien_bat\\alien_bat.png"
-    GOBLIN = "assets\\images\\enemies\\goblins\\goblinsword.png"
+    ANDROMALUIS = "assets/images/enemies/andromaluis/andromalius.png"
+    SLIME = "assets/images/enemies/Slime/slime_idle.png"
+    SLIMEATTACK = "assets/images/enemies/Slime/slime_attack.png"
+    ALIENBAT = "assets/images/enemies/alien_bat/alien_bat.png"
+    GOBLIN = "assets/images/enemies/goblins/goblinsword.png"
 
-    CYBORGIDLE = "assets\\images\\Player\\cyborg\\Idle.png"
-    CYBORGWALK = "assets\\images\Player\cyborg\\Walk.png"
-    CYBORGWALKUP = "assets\\images\\Player\\cyborg\\WalkUp.png"
-    CYBORGWALKDOWN = "assets\\images\\Player\cyborg\\WalkDown.png"
-    BLADEMASTERIDLE = "assets\\images\\Player\\blademaster\\Idle.png"
-    BLADEMASTERWALK = "assets\\images\\Player\\blademaster\\Walk.png"
-    BLADEMASTERWALKUP = "assets\\images\\Player\\blademaster\\WalkUp.png"
-    BLADEMASTERWALKDOWN = "assets\\images\\Player\\blademaster\\WalkDown.png"
-    BERSERKERIDLE = "assets\\images\\Player\\berserker\\Idle.png"
-    BERSERKERWALK = "assets\\images\\Player\\berserker\\Walk.png"
-    BERSERKERWALKUP = "assets\\images\\Player\\berserker\\WalkUp.png"
-    BERSERKERWALKDOWN = "assets\\images\\Player\\berserker\\WalkDown.png"
+    CYBORGIDLE = "assets/images/Player/cyborg/Idle.png"
+    CYBORGWALK = "assets/images\Player\cyborg/Walk.png"
+    CYBORGWALKUP = "assets/images/Player/cyborg/WalkUp.png"
+    CYBORGWALKDOWN = "assets/images/Player/cyborg/WalkDown.png"
+    BLADEMASTERIDLE = "assets/images/Player/blademaster/Idle.png"
+    BLADEMASTERWALK = "assets/images/Player/blademaster/Walk.png"
+    BLADEMASTERWALKUP = "assets/images/Player/blademaster/WalkUp.png"
+    BLADEMASTERWALKDOWN = "assets/images/Player/blademaster/WalkDown.png"
+    BERSERKERIDLE = "assets/images/Player/berserker/Idle.png"
+    BERSERKERWALK = "assets/images/Player/berserker/Walk.png"
+    BERSERKERWALKUP = "assets/images/Player/berserker/WalkUp.png"
+    BERSERKERWALKDOWN = "assets/images/Player/berserker/WalkDown.png"
+
 
 
 

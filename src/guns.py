@@ -147,13 +147,13 @@ class MachineGun(Gun):
         :param player: The player object that the gun belongs to.
         :param map_bounds: The bounds of the map to constrain gun movement.
         """
-        texture = "assets\\images\\Guns\\machinegun1.png"
+        texture = "assets/images/Guns/machinegun1.png"
         damage = 50
         self.cool_down = 1000  # Cooldown between shots in milliseconds
         self.bullets = 5  # Number of bullets fired in a single shot
         
         bullet_class = Bullet  # Bullet class to be used
-        self.sound = pygame.mixer.Sound("assets\\audio\\gun\\machine_gun.wav")
+        self.sound = pygame.mixer.Sound("assets/audio/gun/machine_gun.wav")
         self.sound.set_volume(0.5)
         
         super().__init__(player, texture, damage, self.cool_down, bullet_class, map_bounds)
@@ -206,7 +206,7 @@ class MachineGun(Gun):
                 bullet = self.shoot_single_bullet(bullet_group, offset)
                 
                 # Load and scale the bullet's image
-                image = pygame.image.load("assets\\images\\Bullets\\7.png")
+                image = pygame.image.load("assets/images/Bullets/7.png")
                 width = image.get_width()
                 height = image.get_height()
 
@@ -318,7 +318,7 @@ class KnifeThrower(Gun):
         :param player: The player object, which this weapon belongs to.
         :param map_bounds: The bounds of the map, used to limit the weapon's range.
         """
-        texture = "assets\\images\\Guns\\Knifeicon.png"
+        texture = "assets/images/Guns/Knifeicon.png"
         damage = 200
         speed = 750
         self.bullets = 1
@@ -334,7 +334,7 @@ class KnifeThrower(Gun):
         self.image = self.original_image
         
         # Load and configure the sound for the knife throw
-        self.sound = pygame.mixer.Sound("assets\\audio\\gun\\knife_sound.wav")
+        self.sound = pygame.mixer.Sound("assets/audio/gun/knife_sound.wav")
     
     def shoot_a_knife(self, bullet_group, camera_offset):
         """
@@ -379,7 +379,7 @@ class KnifeThrower(Gun):
             
             # Create and configure the knife
             bullet = self.shoot_a_knife(bullet_group, offset)
-            image = pygame.image.load("assets\\images\\Guns\\Knifeicon.png")
+            image = pygame.image.load("assets/images/Guns/Knifeicon.png")
             image = pygame.transform.scale(image, (20, 20))
 
             # Adjust the image, position, and rotation of the knife
@@ -484,12 +484,12 @@ class Shotgun(Gun):
         :param player: The player object who is using the shotgun.
         :param map_bounds: The boundaries of the map, which may affect the shooting area.
         """
-        texture = "assets\\images\\Guns\\Shotgun_icon.png"
+        texture = "assets/images/Guns/Shotgun_icon.png"
         damage = 350
         self.cool_down = 1500  # Cooldown time between shots in milliseconds
         self.bullets = 25  # Number of bullets fired per shot
-        self.shoot_sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_sound.wav")
-        self.reload_sound = pygame.mixer.Sound("assets\\audio\\gun\\shotgun_reload.wav")
+        self.shoot_sound = pygame.mixer.Sound("assets/audio/gun/shotgun_sound.wav")
+        self.reload_sound = pygame.mixer.Sound("assets/audio/gun/shotgun_reload.wav")
         self.reload_sound.set_volume(0.5)
         self.reload_muted = True
         bullet_class = Shotgun_bullets  
@@ -561,7 +561,7 @@ class Shotgun(Gun):
                 bullet = self.shoot_single_bullet(bullet_group, offset)
                 bullet.dx = new_dx
                 bullet.dy = new_dy
-                image = pygame.image.load("assets\\images\\Bullets\\7.png")
+                image = pygame.image.load("assets/images/Bullets/7.png")
 
                 # Resize the bullet image and add to the sprites group
                 width = image.get_width()

@@ -74,7 +74,7 @@ class Button:
 
 
 class Menu():
-    def __init__(self, screen, cyborg,blade,berseker, enemy, game_interface):
+    def __init__(self, screen, cyborg,blade,berseker, enemy, game_interface, explosions):
         '''
         Creates all button and text objects,
         and creates boolean variables to switch between the game and menus
@@ -93,12 +93,15 @@ class Menu():
         self.enemy = enemy
         self.game_interface = game_interface
 
+        #Explosion
+        self.explosions = explosions
+
         #Screen/ Background
         self.screen = screen
-        self.menu_background = pygame.image.load("assets\\images\\Menu\\marte_background.jpg").convert_alpha()
+        self.menu_background = pygame.image.load("assets/images/Menu/marte_background.jpg").convert_alpha()
 
         # Load selectcharacters image 
-        self.char_selection_background = pygame.image.load("assets\\images\\Menu\\selectcharacters.png").convert_alpha()
+        self.char_selection_background = pygame.image.load("assets/images/Menu/selectcharacters.png").convert_alpha()
         
         #Buttons
         self.play_button = Button([600,400], "JOGAR", (255,255,255), (0,0,0), 1)
@@ -300,7 +303,7 @@ class Menu():
 
             if button == self.char2_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Blade_master"] == False:
                     message = f"    -   -   -   Personagem Bloqueado!    -  -    -   \n Libere-o conseguindo 20 abates em uma partida."
-                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (255, 255, 0))
+                    text_surface = pygame.font.Font("assets/images/Fonts/CyberpunkCraftpixPixel.otf", 14).render(message, True, (255, 255, 0))
                     width, height = text_surface.get_size()
                     width +=10
                     height += 10
@@ -315,7 +318,7 @@ class Menu():
                     self.screen.blit(text_surface, (tooltip_x + 10, tooltip_y + 10))
             elif button == self.char3_selection_button and button.rect.collidepoint(pygame.mouse.get_pos()) and alow_heroe["Berserker"] == False: 
                     message = f"    -   -   -   Personagem Bloqueado!    -  -    -   \n Libere-o sobrevivendo 3 minutos em uma partida."
-                    text_surface = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14).render(message, True, (255, 255, 0))
+                    text_surface = pygame.font.Font("assets/images/Fonts/CyberpunkCraftpixPixel.otf", 14).render(message, True, (255, 255, 0))
                     width, height = text_surface.get_size()
                     width +=10
                     height += 10

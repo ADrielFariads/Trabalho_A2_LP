@@ -25,7 +25,7 @@ class GameInterface:
         self.health_ratio = self.player.current_health / self.health_bar_length
         self.experience_ratio = self.player.experience_needed / self.experience_bar_lenght
         
-        self.back_icon = pygame.image.load("assets\\images\\icons\\back_icon.png")
+        self.back_icon = pygame.image.load("assets/images/icons/back_icon.png")
         self.back_icon = pygame.transform.scale(self.back_icon, (50, 50))
         self.font = pygame.font.Font(None, 24)
         self.current_time = pygame.time.get_ticks()
@@ -70,7 +70,7 @@ class GameInterface:
         experience_rect = pygame.Rect(10, 50, min(self.player.experience, self.player.experience_needed)/self.experience_ratio, 15)
         border_rect = pygame.Rect(10, 50, self.experience_bar_lenght, 15)
 
-        font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 20)
+        font = pygame.font.Font("assets/images/Fonts/CyberpunkCraftpixPixel.otf", 20)
 
         if self.player.current_level < 10:
             level_text = f"nivel {self.player.current_level}"
@@ -125,8 +125,8 @@ class GameInterface:
             skill (Skill): The skill object to display information about.
             mouse_pos (tuple): The mouse cursor's position on the screen.
         """
-        text_font = pygame.font.Font("assets\\images\\Fonts\\ShareTech-Regular.ttf", 16)
-        render_font = pygame.font.Font("assets\\images\\Fonts\\CyberpunkCraftpixPixel.otf", 14)
+        text_font = pygame.font.Font("assets/images/Fonts/ShareTech-Regular.ttf", 16)
+        render_font = pygame.font.Font("assets/images/Fonts/CyberpunkCraftpixPixel.otf", 14)
 
         locked_text = f"HABILIDADE DESBLOQUEIA NO NIVEL {skill.unlock_level}!"
         unlocked_text = "HABILIDADE DESBLOQUEADA"
