@@ -1,6 +1,7 @@
 import pygame
 import config
-import json 
+import json
+import ast
 
 class Button:
     def __init__(self, pos, text_input, base_color, hovering_color, scale):
@@ -93,6 +94,12 @@ class Menu():
         self.enemy = enemy
         self.game_interface = game_interface
 
+        #Load json file to create the record
+        with open('progress_game.json', 'r') as f:
+            self.progress_list = json.load(f)
+
+        self.record = self.highest_kills(self.progress_list)
+
         #Explosion
         self.explosions = explosions
 
@@ -133,6 +140,7 @@ class Menu():
         self.death_text = Text(600,150,"Você Perdeu!", (255,255,255), 56)
         self.char_selection_text = Text(600,150,"Personagens", (255,255,255), 56)
         self.difficulty_selection_text = Text(600,150,"Dificuldade da partida", (255,255,255), 46)
+        self.record_text = Text(600,230,f"O seu recorde de abates é: {self.record}", (255,255,255), 20)
     
 
         #Game states
@@ -153,6 +161,22 @@ class Menu():
         self.char_selection_state = False
         self.playing = False
         self.difficulty_selection_state = False
+    
+
+        # Function to get the highest 'Kills' value in the list
+    def highest_kills(self, progress_list):
+        # Initialize the variable to store the highest number of 'Kills'
+        max_kills = -1  
+
+        for item in progress_list:
+            # Convert the string to a dictionary
+            dictionary = ast.literal_eval(item)
+
+            # Check if the 'Kills' value is higher than the maximum found
+            if dictionary['Kills'] > max_kills:
+                max_kills = dictionary['Kills']
+
+        return max_kills
 
     def change_current_game_state(self, button, alow_heroe):
         '''
@@ -244,7 +268,7 @@ class Menu():
             sprite.kill()
         self.playing = True
 
-    def draw(self, text, *button_args):
+    def draw(self, text, other_text, *button_args):
         '''
         Draws the screen and handles button events.
 
@@ -338,6 +362,8 @@ class Menu():
 
         # Draw the text on the screen
         text.draw(self.screen)
+        if other_text:
+            other_text.draw(self.screen)
 
         # Update the display
         pygame.display.update()
@@ -418,17 +444,17 @@ class Menu():
         Calls the appropriate draw function based on the current menu state.
         """
         if self.initial_menu:
-            self.draw(self.menu_text, self.play_button, self.controls_button)
+            self.draw(self.menu_text,0, self.play_button, self.controls_button)
         elif self.controls_menu:
             self.draw_controls_screen()
         elif self.pause_menu:
-            self.draw(self.paused_text, self.menu_button, self.back_paused_button)
+            self.draw(self.paused_text,0, self.menu_button, self.back_paused_button)
         elif self.death_menu:
-            self.draw(self.death_text, self.play_again_button, self.menu_button)
+            self.draw(self.death_text,self.record_text, self.play_again_button, self.menu_button)
         elif self.char_selection_state:  # Fix typo here from char_selection to char_selection_state
-            self.draw(self.char_selection_text, self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
+            self.draw(self.char_selection_text,0, self.char1_selection_button, self.char2_selection_button, self.char3_selection_button, self.back_char_back_button)
         elif self.difficulty_selection_state:
-            self.draw(self.difficulty_selection_text, self.easy_button, self.medium_button,self.hard_button)
+            self.draw(self.difficulty_selection_text,0, self.easy_button, self.medium_button,self.hard_button)
         
         self.game_interface.score_running = self.playing
 
